@@ -32,7 +32,31 @@ public class Message {
     @Column(nullable=false)
     @Lob
     private String message;
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "message_user_1", nullable = false)
+    private Message messageUser1;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "message_user_2", nullable = false)
+    private Message messageUser2;
 
+    public Message getMessageUser1() {
+        return messageUser1;
+    }
+
+    public void setMessageUser1(Message messageUser1) {
+        this.messageUser1 = messageUser1;
+    }
+
+    public Message getMessageUser2() {
+        return messageUser2;
+    }
+
+    public void setMessageUser2(Message messageUser2) {
+        this.messageUser2 = messageUser2;
+    }
+
+    
     public Integer getId() {
         return Id;
     }
@@ -41,6 +65,30 @@ public class Message {
         this.Id = Id;
     }
 
+    public User getSender() {
+        return sender;
+    }
+
+    public void setSender(User sender) {
+        this.sender = sender;
+    }
+
+    public User getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(User receiver) {
+        this.receiver = receiver;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+    
     
     
     
