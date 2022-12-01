@@ -1,8 +1,8 @@
 
 package co.g2academy.kelarin.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  *

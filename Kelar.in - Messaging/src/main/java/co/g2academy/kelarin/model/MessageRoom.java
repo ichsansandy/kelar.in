@@ -1,15 +1,15 @@
 package co.g2academy.kelarin.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  *
@@ -23,18 +23,13 @@ public class MessageRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(optional=false)
-    @JoinColumn(name="user1_id",nullable=false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user1_id", nullable = false)
     private User user1;
-    
-    @ManyToOne(optional=false)
-    @JoinColumn(name="user2_id",nullable=false)
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user2_id", nullable = false)
     private User user2;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "messageUser1")
-    private List<Message> user1Messages;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "messageUser2")
-    private List<Message> user2Messages;
 
     public Integer getId() {
         return id;
@@ -60,21 +55,4 @@ public class MessageRoom {
         this.user2 = user2;
     }
 
-    public List<Message> getUser1Messages() {
-        return user1Messages;
-    }
-
-    public void setUser1Messages(List<Message> user1Messages) {
-        this.user1Messages = user1Messages;
-    }
-
-    public List<Message> getUser2Messages() {
-        return user2Messages;
-    }
-
-    public void setUser2Messages(List<Message> user2Messages) {
-        this.user2Messages = user2Messages;
-    }
-    
-    
 }

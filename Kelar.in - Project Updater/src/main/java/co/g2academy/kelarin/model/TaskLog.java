@@ -34,6 +34,10 @@ public class TaskLog {
     @ManyToOne(optional=false)
     @JoinColumn(name="task_id",nullable=false)
     private Task task;
+    
+    public String generateDesc(String action,String type, String date, String user){
+        return user + " just " +" "+action+" "+type+" "+date;
+    }
 
     public Integer getId() {
         return id;

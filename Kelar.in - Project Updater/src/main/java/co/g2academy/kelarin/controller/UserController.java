@@ -37,14 +37,5 @@ public class UserController {
         }
         return ResponseEntity.ok().body("OK");
     }
-
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestBody User user) {
-        User userFromDb = repository.findUserByUsername(user.getUsername());
-        if (userFromDb.getPassword().equals(user.getPassword())){
-            
-            return ResponseEntity.ok().body("Login Success");
-        }
-        return ResponseEntity.badRequest().body("Login failed");
-    }
+    
 }
