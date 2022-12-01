@@ -26,17 +26,22 @@ public class Task {
     
     @Column(nullable=false)
     private String taskName;
+    
     @Column(nullable=false)
     private String status;
+    
     @Column(nullable=false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
+    
     @Column(nullable=true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
+    
     @ManyToOne(optional=false)
     @JoinColumn(name="user_id",nullable=false)
     private User user;
+    
     @ManyToOne(optional=false)
     @JoinColumn(name="project_id",nullable=false)
     private Project project;
