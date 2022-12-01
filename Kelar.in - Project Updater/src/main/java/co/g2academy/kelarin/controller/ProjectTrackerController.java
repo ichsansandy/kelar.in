@@ -1,5 +1,6 @@
 package co.g2academy.kelarin.controller;
 
+import co.g2academy.kelarin.model.Comment;
 import co.g2academy.kelarin.model.Project;
 import co.g2academy.kelarin.model.Task;
 import co.g2academy.kelarin.model.TaskLog;
@@ -63,7 +64,6 @@ public class ProjectTrackerController {
                 pFromDb.setStartDate(project.getStartDate());
                 pFromDb.setEndDate(project.getEndDate());
                 pFromDb.setStatus(project.getStatus());
-                pFromDb.setUser(project.getUser());
                 projectRepo.save(pFromDb);
                 return ResponseEntity.ok().body("OK");
             }
@@ -72,7 +72,7 @@ public class ProjectTrackerController {
     }
 
     @GetMapping("/project")
-    public List<Project> getAllProject(@RequestBody Principal principal) {
+    public List<Project> getAllProject(Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         if (loggedInUser != null) {
             return projectRepo.findAll();
@@ -81,7 +81,7 @@ public class ProjectTrackerController {
     }
 
     @GetMapping("/api/project/{id}")
-    public Project getAllProject(@PathVariable Integer id, @RequestBody Principal principal) {
+    public Project getAllProject(@PathVariable Integer id, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         if (loggedInUser != null) {
             return projectRepo.findById(id).get();
@@ -112,14 +112,40 @@ public class ProjectTrackerController {
         if (!opt.isEmpty()) {
             Task tFromDb = opt.get();
             if (tFromDb.getUser().getUsername().equals(principal.getName())) {
+                tFromDb.setTaskName(task.getTaskName());
                 tFromDb.setStatus(task.getStatus());
-                tFromDb.setUser(task.getUser());
+                tFromDb.setStartDate(task.getStartDate());                
+                tFromDb.setEndDate(task.getEndDate());                
                 taskRepo.save(tFromDb);
                 return ResponseEntity.ok().body("OK");
             }
         }
         return ResponseEntity.badRequest().body("Project not found");
     }
-            
+    
+    @GetMapping("/project/{id}/task")
+    public List<Task> getTaskByProject(@PathVariable Integer idProject){
+        Project project = projectRepo.findById(idProject).get();
+        return taskRepo.findTaskByProject(project);
+    }
+    
+    @PostMapping("/comment")
+    public ResponseEntity createComment(@RequestBody Comment comment, Principal principal){
+        User loggedInUser = userRepo.findUserByUsername(principal.getName());
+        comment.setUser(loggedInUser);
+        commentRepo.save(comment);
+        return ResponseEntity.ok().body("OK");
+    }
 
+    @GetMapping("/task/{id-task}/comment")
+    public List<Comment> getCommentByTask(@PathVariable Integer idTask){
+        Task task = taskRepo.findById(idTask).get();
+        return commentRepo.findCommentByTask(task);
+    }
+    
+    @GetMapping("/task/{id-task}/log")
+    public List<TaskLog> getTaskLogByTask(@PathVariable Integer idProject){
+        Task task = taskRepo.findById(idProject).get();
+        return taskLogRepo.findTaskLogByTask(task);
+    }
 }
