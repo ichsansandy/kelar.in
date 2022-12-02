@@ -60,9 +60,8 @@ public class ProjectTrackerController {
             Project pFromDb = opt.get();
             if (pFromDb.getUser().getUsername().equals(principal.getName())) {
                 pFromDb.setName(project.getName());
-                pFromDb.setDescription(project.getDescription());
                 pFromDb.setStartDate(project.getStartDate());
-                pFromDb.setEndDate(project.getEndDate());
+                pFromDb.setDueDate(project.getDueDate());
                 pFromDb.setStatus(project.getStatus());
                 projectRepo.save(pFromDb);
                 return ResponseEntity.ok().body("OK");

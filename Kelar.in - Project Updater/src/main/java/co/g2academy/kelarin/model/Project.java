@@ -26,16 +26,19 @@ public class Project {
     
     @Column(nullable=false)
     private String name;
+    
     @Column(nullable=false)
     private String status;
-    @Column(nullable=false)
-    private String description;
+    
+    
     @Column(nullable=false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
+    
     @Column(nullable=true)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date endDate;
+    private Date dueDate;
+
     @ManyToOne(optional=false)
     @JoinColumn(name="user_id",nullable=false)
     private User user;
@@ -64,14 +67,6 @@ public class Project {
         this.status = status;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public Date getStartDate() {
         return startDate;
     }
@@ -80,14 +75,14 @@ public class Project {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public Date getDueDate() {
+        return dueDate;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
     }
-
+  
     public User getUser() {
         return user;
     }
