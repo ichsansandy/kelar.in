@@ -42,7 +42,7 @@ public class ProjectTrackerController {
     private CommentRepository commentRepo;
     @Autowired
     private TaskLogRepository taskLogRepo;
-
+    
     @PostMapping("/project")
     public ResponseEntity createProject(@RequestBody Project project, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
@@ -113,7 +113,6 @@ public class ProjectTrackerController {
             if (tFromDb.getUser().getUsername().equals(principal.getName())) {
                 tFromDb.setTaskName(task.getTaskName());
                 tFromDb.setStatus(task.getStatus());
-                tFromDb.setStartDate(task.getStartDate());                
                 tFromDb.setEndDate(task.getEndDate());                
                 taskRepo.save(tFromDb);
                 return ResponseEntity.ok().body("OK");
@@ -146,5 +145,13 @@ public class ProjectTrackerController {
     public List<TaskLog> getTaskLogByTask(@PathVariable Integer idProject){
         Task task = taskRepo.findById(idProject).get();
         return taskLogRepo.findTaskLogByTask(task);
+    }
+    
+    @GetMapping("/project/{id}/task/performance/current-week")
+    public Integer getPerformance(@PathVariable Integer id, Principal principal){
+        User loggedInUser = userRepo.findUserByUsername(principal.getName());
+        Project project = projectRepo.findById(id).get();
+        List<Task> allTask = taskRepo.findTaskByProjectAndUser(project,loggedInUser);
+        return null;
     }
 }
