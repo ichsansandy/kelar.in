@@ -34,6 +34,10 @@ public class Task {
     @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
     
+    @Column(nullable=false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dueDate;
+    
     @Column(nullable=true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
@@ -77,6 +81,15 @@ public class Task {
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+    
 
     public Date getEndDate() {
         return endDate;
