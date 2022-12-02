@@ -11,6 +11,9 @@ import co.g2academy.kelarin.repository.TaskLogRepository;
 import co.g2academy.kelarin.repository.TaskRepository;
 import co.g2academy.kelarin.repository.UserRepository;
 import java.security.Principal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +45,7 @@ public class ProjectTrackerController {
     private CommentRepository commentRepo;
     @Autowired
     private TaskLogRepository taskLogRepo;
-    
+
     @PostMapping("/project")
     public ResponseEntity createProject(@RequestBody Project project, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
@@ -87,7 +90,7 @@ public class ProjectTrackerController {
         }
         return null;
     }
-    
+
     @PostMapping("/task")
     public ResponseEntity createTask(@RequestBody Task task, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
@@ -102,9 +105,9 @@ public class ProjectTrackerController {
         taskLogRepo.save(log);
         return ResponseEntity.ok().body("OK");
     }
-    
+
     @PutMapping("/task")
-    public ResponseEntity editTask(@RequestBody Task task, Principal principal){
+    public ResponseEntity editTask(@RequestBody Task task, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         task.setUser(loggedInUser);
         Optional<Task> opt = taskRepo.findById(task.getId());
@@ -113,22 +116,22 @@ public class ProjectTrackerController {
             if (tFromDb.getUser().getUsername().equals(principal.getName())) {
                 tFromDb.setTaskName(task.getTaskName());
                 tFromDb.setStatus(task.getStatus());
-                tFromDb.setEndDate(task.getEndDate());                
+                tFromDb.setEndDate(task.getEndDate());
                 taskRepo.save(tFromDb);
                 return ResponseEntity.ok().body("OK");
             }
         }
         return ResponseEntity.badRequest().body("Project not found");
     }
-    
+
     @GetMapping("/project/{id}/task")
-    public List<Task> getTaskByProject(@PathVariable Integer idProject){
+    public List<Task> getTaskByProject(@PathVariable Integer idProject) {
         Project project = projectRepo.findById(idProject).get();
         return taskRepo.findTaskByProject(project);
     }
-    
+
     @PostMapping("/comment")
-    public ResponseEntity createComment(@RequestBody Comment comment, Principal principal){
+    public ResponseEntity createComment(@RequestBody Comment comment, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         comment.setUser(loggedInUser);
         commentRepo.save(comment);
@@ -136,22 +139,88 @@ public class ProjectTrackerController {
     }
 
     @GetMapping("/task/{id-task}/comment")
-    public List<Comment> getCommentByTask(@PathVariable Integer idTask){
+    public List<Comment> getCommentByTask(@PathVariable Integer idTask) {
         Task task = taskRepo.findById(idTask).get();
         return commentRepo.findCommentByTask(task);
     }
-    
+
     @GetMapping("/task/{id-task}/log")
-    public List<TaskLog> getTaskLogByTask(@PathVariable Integer idProject){
+    public List<TaskLog> getTaskLogByTask(@PathVariable Integer idProject) {
         Task task = taskRepo.findById(idProject).get();
         return taskLogRepo.findTaskLogByTask(task);
     }
+
+    @GetMapping("/project/{id}/task/performance/last-month")
+    public Integer getPerformanceLastMonth(@PathVariable Integer id, Principal principal) {
+        User loggedInUser = userRepo.findUserByUsername(principal.getName());
+
+        LocalDate lastMonth = LocalDate.now().minusDays(30);
+        Date lastMonthAgo = new Date(lastMonth.toEpochDay());
+
+        //query task by due date between current date - 7
+        List<Task> LastWeekTask = taskRepo.findTaskByEndDateBetween(new Date(), lastMonthAgo);
+
+        List<Integer> points = new ArrayList<>();
+        for (Task task : LastWeekTask) {
+            if (task.getEndDate().before(task.getDueDate())) {
+                points.add(100);
+            } else if (task.getEndDate().after(task.getDueDate())) {
+                points.add(50);
+            }
+        }
+        Integer sum = points.stream().mapToInt(Integer::intValue).sum();
+        Integer total = LastWeekTask.size();
+
+        return sum / total;
+    }
+    @GetMapping("/project/{id}/task/performance/last-week")
+    public Integer getPerformanceLastWeek(@PathVariable Integer id, Principal principal) {
+        User loggedInUser = userRepo.findUserByUsername(principal.getName());
+
+        LocalDate sevendaysago = LocalDate.now().minusDays(7);
+        Date sevenDays = new Date(sevendaysago.toEpochDay());
+
+        LocalDate fourteenDaysAgo = LocalDate.now().minusDays(14);
+        Date fourteenDays = new Date(fourteenDaysAgo.toEpochDay());
+        //query task by due date between current date - 7
+        List<Task> LastWeekTask = taskRepo.findTaskByEndDateBetween(sevenDays, fourteenDays);
+
+        List<Integer> points = new ArrayList<>();
+        for (Task task : LastWeekTask) {
+            if (task.getEndDate().before(task.getDueDate())) {
+                points.add(100);
+            } else if (task.getEndDate().after(task.getDueDate())) {
+                points.add(50);
+            }
+        }
+        Integer sum = points.stream().mapToInt(Integer::intValue).sum();
+        Integer total = LastWeekTask.size();
+
+        return sum / total;
+    }
     
     @GetMapping("/project/{id}/task/performance/current-week")
-    public Integer getPerformance(@PathVariable Integer id, Principal principal){
+    public Integer getPerformanceCurrentWeek(@PathVariable Integer id, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        Project project = projectRepo.findById(id).get();
-        List<Task> allTask = taskRepo.findTaskByProjectAndUser(project,loggedInUser);
-        return null;
+
+        LocalDate sevendaysago = LocalDate.now().minusDays(7);
+        Date sevenDays = new Date(sevendaysago.toEpochDay());
+
+       
+        //query task by due date between current date - 7
+        List<Task> CurrentWeekAgo = taskRepo.findTaskByEndDateBetween(new Date(), sevenDays);
+
+        List<Integer> points = new ArrayList<>();
+        for (Task task : CurrentWeekAgo) {
+            if (task.getEndDate().before(task.getDueDate())) {
+                points.add(100);
+            } else if (task.getEndDate().after(task.getDueDate())) {
+                points.add(50);
+            }
+        }
+        Integer sum = points.stream().mapToInt(Integer::intValue).sum();
+        Integer total = CurrentWeekAgo.size();
+
+        return sum / total;
     }
 }
