@@ -28,6 +28,8 @@ public class MessagingController {
     
     @PostMapping("/message-room")
     public ResponseEntity createRoom(Principal principal){
+        User loggedInUser = userRepo.findU
+        
         return ResponseEntity.ok().body("OK");
     }
 }
