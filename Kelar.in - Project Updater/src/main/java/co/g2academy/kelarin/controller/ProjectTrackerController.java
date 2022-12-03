@@ -17,7 +17,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import static org.springframework.data.redis.serializer.RedisSerializationContext.java;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -158,21 +157,12 @@ public class ProjectTrackerController {
         Date lastMonthAgo = new Date(lastMonth.toEpochDay());
 
         //query task by due date between current date - 7
-        List<Task> LastWeekTask = taskRepo.findTaskByEndDateBetween(new Date(), lastMonthAgo);
+        List<Task> LastMonthTasks = taskRepo.findTaskByEndDateBetween(new Date(), lastMonthAgo);
 
-        List<Integer> points = new ArrayList<>();
-        for (Task task : LastWeekTask) {
-            if (task.getEndDate().before(task.getDueDate())) {
-                points.add(100);
-            } else if (task.getEndDate().after(task.getDueDate())) {
-                points.add(50);
-            }
-        }
-        Integer sum = points.stream().mapToInt(Integer::intValue).sum();
-        Integer total = LastWeekTask.size();
-
-        return sum / total;
+        Integer performance = performanceCalc(LastMonthTasks);
+        return performance;
     }
+
     @GetMapping("/project/{id}/task/performance/last-week")
     public Integer getPerformanceLastWeek(@PathVariable Integer id, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
@@ -183,22 +173,12 @@ public class ProjectTrackerController {
         LocalDate fourteenDaysAgo = LocalDate.now().minusDays(14);
         Date fourteenDays = new Date(fourteenDaysAgo.toEpochDay());
         //query task by due date between current date - 7
-        List<Task> LastWeekTask = taskRepo.findTaskByEndDateBetween(sevenDays, fourteenDays);
+        List<Task> LastWeekTasks = taskRepo.findTaskByEndDateBetween(sevenDays, fourteenDays);
 
-        List<Integer> points = new ArrayList<>();
-        for (Task task : LastWeekTask) {
-            if (task.getEndDate().before(task.getDueDate())) {
-                points.add(100);
-            } else if (task.getEndDate().after(task.getDueDate())) {
-                points.add(50);
-            }
-        }
-        Integer sum = points.stream().mapToInt(Integer::intValue).sum();
-        Integer total = LastWeekTask.size();
-
-        return sum / total;
+        Integer performance = performanceCalc(LastWeekTasks);
+        return performance;
     }
-    
+
     @GetMapping("/project/{id}/task/performance/current-week")
     public Integer getPerformanceCurrentWeek(@PathVariable Integer id, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
@@ -206,21 +186,26 @@ public class ProjectTrackerController {
         LocalDate sevendaysago = LocalDate.now().minusDays(7);
         Date sevenDays = new Date(sevendaysago.toEpochDay());
 
-       
         //query task by due date between current date - 7
-        List<Task> CurrentWeekAgo = taskRepo.findTaskByEndDateBetween(new Date(), sevenDays);
+        List<Task> CurrentWeekAgoTasks = taskRepo.findTaskByEndDateBetween(new Date(), sevenDays);
 
+        Integer performance = performanceCalc(CurrentWeekAgoTasks);
+        return performance;
+    }
+
+    public Integer performanceCalc(List<Task> tasks) {
         List<Integer> points = new ArrayList<>();
-        for (Task task : CurrentWeekAgo) {
+
+        for (Task task : tasks) {
             if (task.getEndDate().before(task.getDueDate())) {
                 points.add(100);
             } else if (task.getEndDate().after(task.getDueDate())) {
-                points.add(50);
+                points.add(75);
             }
         }
         Integer sum = points.stream().mapToInt(Integer::intValue).sum();
-        Integer total = CurrentWeekAgo.size();
-
-        return sum / total;
+        Integer total = tasks.size();
+        Integer performance = sum / total;
+        return performance;
     }
 }
