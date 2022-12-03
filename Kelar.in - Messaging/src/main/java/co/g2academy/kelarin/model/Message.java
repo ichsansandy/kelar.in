@@ -35,29 +35,9 @@ public class Message {
     private String message;
     
     @ManyToOne(optional = false)
-    @JoinColumn(name = "message_user_1", nullable = false)
-    private Message messageUser1;
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "message_user_2", nullable = false)
-    private Message messageUser2;
+    @JoinColumn(name = "message_room_id", nullable = false)
+    private MessageRoom messageRoom;
 
-    public Message getMessageUser1() {
-        return messageUser1;
-    }
-
-    public void setMessageUser1(Message messageUser1) {
-        this.messageUser1 = messageUser1;
-    }
-
-    public Message getMessageUser2() {
-        return messageUser2;
-    }
-
-    public void setMessageUser2(Message messageUser2) {
-        this.messageUser2 = messageUser2;
-    }
-
-    
     public Integer getId() {
         return Id;
     }
@@ -89,9 +69,13 @@ public class Message {
     public void setMessage(String message) {
         this.message = message;
     }
-    
-    
-    
-    
+
+    public MessageRoom getMessageRoom() {
+        return messageRoom;
+    }
+
+    public void setMessageRoom(MessageRoom messageRoom) {
+        this.messageRoom = messageRoom;
+    }
     
 }
