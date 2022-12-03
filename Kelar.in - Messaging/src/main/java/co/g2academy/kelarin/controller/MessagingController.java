@@ -43,7 +43,7 @@ public class MessagingController {
                     || room.getUser2().getName().equals(loggedInUser.getName()))
                     && (room.getUser1().getName().equals(user2.getName())
                     || room.getUser2().getName().equals(user2.getName()))) {
-                // else found getRoom by id
+                // getRoom by id
             } else {
                 // if null create the room
                 MessageRoom newRoom = new MessageRoom();
