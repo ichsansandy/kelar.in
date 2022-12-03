@@ -57,9 +57,9 @@ public class MessagingController {
         }
         return ResponseEntity.badRequest().body("Something wrong with room validation");
     }
-    
+
     @GetMapping("/message-room")
-    public List<MessageRoom> getAllRoom(Principal principal){
+    public List<MessageRoom> getAllRoom(Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         List<MessageRoom> room1 = messageRoomRepo.findMessageRoomByUser1(loggedInUser);
         List<MessageRoom> room2 = messageRoomRepo.findMessageRoomByUser2(loggedInUser);
@@ -68,13 +68,26 @@ public class MessagingController {
         rooms.addAll(room2);
         return rooms;
     }
-    
+
     @GetMapping("/message-room/{id}")
-    public List<Message> getMessageById(@RequestBody MessageRoom messageRoom, Principal principal){
+    public List<Message> getMessageByMessageRoom(@RequestBody MessageRoom messageRoom, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         List<Message> messages = messageRepo.findMessageByMessageRoom(messageRoom);
         return messages;
     }
-    
+
+    @PostMapping("/message-room/message")
+    public ResponseEntity createMessage(@RequestBody Message message
+            , Principal principal){
+        User loggedInUser = userRepo.findUserByUsername(principal.getName());
+        message.setSender(loggedInUser);
+        if(message.getMessageRoom().getUser1().equals(loggedInUser)){
+            message.setReceiver(message.getMessageRoom().getUser2());
+        }else if(message.getMessageRoom().getUser2().equals(loggedInUser)){
+            message.setReceiver(message.getMessageRoom().getUser1());
+        }
+        messageRepo.save(message);
+        return ResponseEntity.ok().body("OK");
+    }
     
 }
