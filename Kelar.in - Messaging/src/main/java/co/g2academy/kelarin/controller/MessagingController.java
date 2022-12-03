@@ -70,9 +70,8 @@ public class MessagingController {
         return rooms;
     }
 
-    @GetMapping("/message-room/{id}")
+    @GetMapping("/message-room/{user1-id}/{user2-id}")
     public List<Message> getMessageByMessageRoom(@RequestBody MessageRoom messageRoom, Principal principal) {
-        User loggedInUser = userRepo.findUserByUsername(principal.getName());
         List<Message> messages = messageRepo.findMessageByMessageRoom(messageRoom);
         return messages;
     }
