@@ -45,9 +45,8 @@ public class UserController {
             //user dto
             UserDto dto = new UserDto(user);
             String json = mapper.writeValueAsString(dto);
-            //publish user to kelarin_messaging
+            //publish user to chaneel userCreation for kelarin_messaging kelarin_push_notification
             messagePublisherService.publish(json);
-            //publish user to kelarin_push_notification
         } else {
             return ResponseEntity.badRequest().body("user exist, email or password invalid");
         }
