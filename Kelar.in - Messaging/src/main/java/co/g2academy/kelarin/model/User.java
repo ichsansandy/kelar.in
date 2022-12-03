@@ -20,6 +20,17 @@ public class User {
     private Integer Id;
     @Column(nullable=false)
     private String name;
+    @Column(nullable=false)
+    private String username;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
 
     public Integer getId() {
         return Id;
