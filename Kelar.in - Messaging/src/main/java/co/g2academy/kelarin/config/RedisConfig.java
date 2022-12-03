@@ -35,7 +35,7 @@ public class RedisConfig {
     }
     @Bean 
     public RedisMessageListenerContainer messageContainer(MessageListenerAdapter adapter){
-        ChannelTopic topic = new ChannelTopic("");
+        ChannelTopic topic = new ChannelTopic("userCreationPubSub");
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(adapter, topic);
