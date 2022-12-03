@@ -8,6 +8,7 @@ import co.g2academy.kelarin.repository.MessageRoomRepository;
 import co.g2academy.kelarin.repository.UserRepository;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.data.redis.serializer.RedisSerializationContext.java;
@@ -86,6 +87,7 @@ public class MessagingController {
         }else if(message.getMessageRoom().getUser2().equals(loggedInUser)){
             message.setReceiver(message.getMessageRoom().getUser1());
         }
+        message.setCreateDate(new Date());
         messageRepo.save(message);
         return ResponseEntity.ok().body("OK");
     }
