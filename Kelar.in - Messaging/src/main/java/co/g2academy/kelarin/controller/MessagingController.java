@@ -6,10 +6,12 @@ import co.g2academy.kelarin.repository.MessageRepository;
 import co.g2academy.kelarin.repository.MessageRoomRepository;
 import co.g2academy.kelarin.repository.UserRepository;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.data.redis.serializer.RedisSerializationContext.java;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,5 +54,16 @@ public class MessagingController {
             }
         }
         return ResponseEntity.badRequest().body("Something wrong with room validation");
+    }
+    
+    @GetMapping("/message-room")
+    public List<MessageRoom> getAllRoom(Principal principal){
+        User loggedInUser = userRepo.findUserByUsername(principal.getName());
+        List<MessageRoom> room1 = messageRoomRepo.findMessageRoomByUser1(loggedInUser);
+        List<MessageRoom> room2 = messageRoomRepo.findMessageRoomByUser2(loggedInUser);
+        List<MessageRoom> rooms = new ArrayList<>();
+        rooms.addAll(room1);
+        rooms.addAll(room2);
+        return rooms;
     }
 }
