@@ -1,8 +1,13 @@
 package co.g2academy.kelarin.controller;
 
+import co.g2academy.kelarin.dto.UserDto;
 import co.g2academy.kelarin.model.User;
 import co.g2academy.kelarin.repository.UserRepository;
+import co.g2academy.kelarin.service.MessagePublisherService;
 import co.g2academy.kelarin.validator.UserPassRegex1;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,21 +29,29 @@ public class UserController {
     private UserRepository repository;
     @Autowired
     private UserPassRegex1 validator;
+    @Autowired
+    private MessagePublisherService messagePublisherService;
+    private ObjectMapper mapper = new JsonMapper();
     private PasswordEncoder encoder = new BCryptPasswordEncoder();
+
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody User user) {
+    public ResponseEntity register(@RequestBody User user) throws JsonProcessingException {
         User userFromDb = repository.findUserByUsername(user.getUsername());
         if (userFromDb == null
                 && validator.emailValidator(user.getUsername())
                 && validator.passwordValidator(user.getPassword())) {
-            //publish user to kelarin_messaging
-            //publish user to kelarin_push_notification
             user.setPassword(encoder.encode(user.getPassword()));
             repository.save(user);
+            //user dto
+            UserDto dto = new UserDto(user);
+            String json = mapper.writeValueAsString(dto);
+            //publish user to kelarin_messaging
+            messagePublisherService.publish(json);
+            //publish user to kelarin_push_notification
         } else {
             return ResponseEntity.badRequest().body("user exist, email or password invalid");
         }
         return ResponseEntity.ok().body("OK");
     }
-    
+
 }
