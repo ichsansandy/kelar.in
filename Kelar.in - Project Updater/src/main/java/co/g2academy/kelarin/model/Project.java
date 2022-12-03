@@ -35,7 +35,7 @@ public class Project {
     @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
     
-    @Column(nullable=true)
+    @Column(nullable=false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dueDate;
 
