@@ -1,5 +1,6 @@
 package co.g2academy.kelarin.controller;
 
+import co.g2academy.kelarin.model.Message;
 import co.g2academy.kelarin.model.MessageRoom;
 import co.g2academy.kelarin.model.User;
 import co.g2academy.kelarin.repository.MessageRepository;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.data.redis.serializer.RedisSerializationContext.java;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,4 +68,13 @@ public class MessagingController {
         rooms.addAll(room2);
         return rooms;
     }
+    
+    @GetMapping("/message-room/{id}")
+    public List<Message> getMessageById(@RequestBody MessageRoom messageRoom, Principal principal){
+        User loggedInUser = userRepo.findUserByUsername(principal.getName());
+        List<Message> messages = messageRepo.findMessageByMessageRoom(messageRoom);
+        return messages;
+    }
+    
+    
 }
