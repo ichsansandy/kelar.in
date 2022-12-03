@@ -1,10 +1,12 @@
 package co.g2academy.kelarin.controller;
 
+import co.g2academy.kelarin.model.User;
 import co.g2academy.kelarin.repository.MessageRepository;
 import co.g2academy.kelarin.repository.MessageRoomRepository;
 import co.g2academy.kelarin.repository.UserRepository;
 import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
+import static org.springframework.data.redis.serializer.RedisSerializationContext.java;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +30,7 @@ public class MessagingController {
     
     @PostMapping("/message-room")
     public ResponseEntity createRoom(Principal principal){
-        User loggedInUser = userRepo.findU
+        User loggedInUser = userRepo.findUserByUsername(principal.getName());
         
         return ResponseEntity.ok().body("OK");
     }
