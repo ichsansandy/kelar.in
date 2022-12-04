@@ -31,9 +31,9 @@ public class TaskLog {
     @ManyToOne(optional=false)
     @JoinColumn(name="user_id",nullable=false)
     private User user;
-    @ManyToOne(optional=false)
-    @JoinColumn(name="task_id",nullable=false)
-    private Task task;
+//    @ManyToOne(optional=false)
+//    @JoinColumn(name="task_id",nullable=false)
+//    private Task task;
     
     public String generateDesc(String user,String action,String type, String date){
         return user + " just " +" "+action+" "+type+" "+date;
@@ -71,13 +71,13 @@ public class TaskLog {
         this.user = user;
     }
 
-    public Task getTask() {
-        return task;
-    }
-
-    public void setTask(Task task) {
-        this.task = task;
-    }
+//    public Task getTask() {
+//        return task;
+//    }
+//
+//    public void setTask(Task task) {
+//        this.task = task;
+//    }
     
     
 }
