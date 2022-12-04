@@ -115,7 +115,7 @@ public class ProjectTrackerController {
             if (tFromDb.getUser().getUsername().equals(principal.getName())) {
                 tFromDb.setTaskName(task.getTaskName());
                 tFromDb.setStatus(task.getStatus());
-                tFromDb.setEndDate(task.getEndDate());
+                tFromDb.setEndDate(new Date());
                 taskRepo.save(tFromDb);
                 return ResponseEntity.ok().body("OK");
             }
