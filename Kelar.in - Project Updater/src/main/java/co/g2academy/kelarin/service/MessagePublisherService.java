@@ -18,4 +18,7 @@ public class MessagePublisherService {
     public void publishRegister(String message){
         template.convertAndSend("userCreationPubSub", message);
     }
+    public void publishEditUser(String message){
+        template.convertAndSend("userEditPubSub", message);
+    }
 }
