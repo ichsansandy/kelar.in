@@ -58,6 +58,7 @@ public class ProjectTrackerController {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         project.setUser(loggedInUser);
         projectRepo.save(project);
+        generateLogAndSendToNotification(action, type, loggedInUser, task);
         return ResponseEntity.ok().body("OK");
     }
 
