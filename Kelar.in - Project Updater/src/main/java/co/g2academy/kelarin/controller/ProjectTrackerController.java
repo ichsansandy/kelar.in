@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -102,9 +103,13 @@ public class ProjectTrackerController {
     @PostMapping("/project/{id}/task")
     public ResponseEntity createTask(@PathVariable Integer idProject,@RequestBody Task task, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        Optional<Project> project = projectRepo.findById(idProject);
+        Optional<Project> opt = projectRepo.findById(idProject);
+        if (opt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Product not found");
+        }
+        Project p = opt.get();
         task.setUser(loggedInUser);
-//        task.setProject(project);
+        task.setProject(p);
         taskRepo.save(task);
 
         return ResponseEntity.ok().body("OK");
