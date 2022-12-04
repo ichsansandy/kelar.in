@@ -35,26 +35,21 @@ public class RedisConfig {
         return new MessageListenerAdapter(service);
     }
     
-    @Bean 
-    public RedisMessageListenerContainer userMessageContainer(MessageListenerAdapter adapter){
-        ChannelTopic topic = new ChannelTopic("userCreationPubSub");
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(adapter, topic);
-        return container;
-    }
     @Bean
     public MessageListenerAdapter pushNotificationMessageListener(PushNotificationMessageListenerService service){
         return new MessageListenerAdapter(service);
     }
     
     @Bean 
-    public RedisMessageListenerContainer pushNotificationMessageContainer(MessageListenerAdapter adapter){
-        ChannelTopic topic = new ChannelTopic("pushNotificationPubSub");
+    public RedisMessageListenerContainer userMessageContainer(MessageListenerAdapter adapter){
+        ChannelTopic userTopic = new ChannelTopic("userCreationPubSub");
+        ChannelTopic pushNotificationTopic = new ChannelTopic("pushNotificationPubSub");
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
-        container.addMessageListener(adapter, topic);
+        container.addMessageListener(adapter, userTopic);
+        container.addMessageListener(adapter, pushNotificationTopic);
         return container;
     }
+    
     
 }
