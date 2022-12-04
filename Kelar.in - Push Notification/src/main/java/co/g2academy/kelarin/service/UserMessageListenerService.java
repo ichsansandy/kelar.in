@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
  * @author Ichsan S
  */
 @Service
-public class MessageListenerService implements MessageListener{
+public class UserMessageListenerService implements MessageListener{
     @Autowired
     @Qualifier("redisPubSubTemplate")
     private RedisTemplate<String,String> redisTemplate;

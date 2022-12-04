@@ -1,6 +1,6 @@
 package co.g2academy.kelarin.config;
 
-import co.g2academy.kelarin.service.MessageListenerService;
+import co.g2academy.kelarin.service.UserMessageListenerService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
@@ -30,7 +30,7 @@ public class RedisConfig {
     }
     
     @Bean
-    public MessageListenerAdapter messageListener(MessageListenerService service){
+    public MessageListenerAdapter messageListener(UserMessageListenerService service){
         return new MessageListenerAdapter(service);
     }
     @Bean 
