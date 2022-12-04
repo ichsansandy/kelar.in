@@ -12,5 +12,4 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TaskLogRepository extends JpaRepository<TaskLog, Integer>{
-    public List<TaskLog> findTaskLogByTask(Task task);
 }
