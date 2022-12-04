@@ -38,6 +38,10 @@ public class Project {
     @Column(nullable=false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dueDate;
+    
+    @Column(nullable=true)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endDate;
 
     @ManyToOne(optional=false)
     @JoinColumn(name="user_id",nullable=false)
@@ -90,6 +94,13 @@ public class Project {
     public void setUser(User user) {
         this.user = user;
     }
-    
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
     
 }
