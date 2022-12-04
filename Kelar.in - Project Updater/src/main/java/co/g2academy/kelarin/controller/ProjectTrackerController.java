@@ -145,7 +145,7 @@ public class ProjectTrackerController {
         return commentRepo.findCommentByProject(project);
     }
 
-    @GetMapping("/task/{id-task}/log")
+    @GetMapping("/project/{id}/log")
     public List<TaskLog> getTaskLogByTask(@PathVariable Integer idProject) {
         Task task = taskRepo.findById(idProject).get();
         return taskLogRepo.findTaskLogByTask(task);
