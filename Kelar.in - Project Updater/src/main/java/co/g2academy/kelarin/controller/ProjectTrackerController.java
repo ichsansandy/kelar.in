@@ -54,11 +54,11 @@ public class ProjectTrackerController {
     private ObjectMapper mapper = new JsonMapper();
 
     @PostMapping("/project")
-    public ResponseEntity createProject(@RequestBody Project project, Principal principal) {
+    public ResponseEntity createProject(@RequestBody Project project, Principal principal) throws JsonProcessingException {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         project.setUser(loggedInUser);
         projectRepo.save(project);
-        generateLogAndSendToNotification(action, type, loggedInUser, task);
+        generateLogAndSendToNotification("create new ", " project", loggedInUser);
         return ResponseEntity.ok().body("OK");
     }
 
@@ -214,10 +214,9 @@ public class ProjectTrackerController {
         return performance;
     }
 
-    public void generateLogAndSendToNotification(String action, String type, User loggedInUser, Task task) throws JsonProcessingException {
+    public void generateLogAndSendToNotification(String action, String type, User loggedInUser) throws JsonProcessingException {
         TaskLog log = new TaskLog();
         log.setLogType(type);
-        log.setTask(task);
         log.setUser(loggedInUser);
         String desc = log.generateDesc(log.getUser().getName(), action, log.getLogType(), String.valueOf(new Date()));
         log.setLogDescription(desc);
