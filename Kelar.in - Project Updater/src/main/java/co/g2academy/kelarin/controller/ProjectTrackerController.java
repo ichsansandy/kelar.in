@@ -1,5 +1,6 @@
 package co.g2academy.kelarin.controller;
 
+import co.g2academy.kelarin.dto.TaskLogToPushNotificationDto;
 import co.g2academy.kelarin.model.Comment;
 import co.g2academy.kelarin.model.Project;
 import co.g2academy.kelarin.model.Task;
@@ -10,6 +11,10 @@ import co.g2academy.kelarin.repository.ProjectRepository;
 import co.g2academy.kelarin.repository.TaskLogRepository;
 import co.g2academy.kelarin.repository.TaskRepository;
 import co.g2academy.kelarin.repository.UserRepository;
+import co.g2academy.kelarin.service.MessagePublisherService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -44,6 +49,9 @@ public class ProjectTrackerController {
     private CommentRepository commentRepo;
     @Autowired
     private TaskLogRepository taskLogRepo;
+    @Autowired
+    private MessagePublisherService messagePublisherService;
+    private ObjectMapper mapper = new JsonMapper();
 
     @PostMapping("/project")
     public ResponseEntity createProject(@RequestBody Project project, Principal principal) {
@@ -95,7 +103,7 @@ public class ProjectTrackerController {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         task.setUser(loggedInUser);
         taskRepo.save(task);
-        
+
         return ResponseEntity.ok().body("OK");
     }
 
@@ -204,8 +212,8 @@ public class ProjectTrackerController {
         Integer performance = sum / total;
         return performance;
     }
-    
-    public void generateLog(String action,String type,User loggedInUser,Task task){
+
+    public void generateLogAndSendToNotification(String action, String type, User loggedInUser, Task task) throws JsonProcessingException {
         TaskLog log = new TaskLog();
         log.setLogType(type);
         log.setTask(task);
@@ -213,5 +221,8 @@ public class ProjectTrackerController {
         String desc = log.generateDesc(log.getUser().getName(), action, log.getLogType(), String.valueOf(new Date()));
         log.setLogDescription(desc);
         taskLogRepo.save(log);
+        TaskLogToPushNotificationDto dto = new TaskLogToPushNotificationDto(log);
+        String json = mapper.writeValueAsString(dto);
+        messagePublisherService.
     }
 }
