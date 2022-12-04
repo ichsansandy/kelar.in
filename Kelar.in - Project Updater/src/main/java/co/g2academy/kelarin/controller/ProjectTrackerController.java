@@ -57,6 +57,7 @@ public class ProjectTrackerController {
     public ResponseEntity createProject(@RequestBody Project project, Principal principal) throws JsonProcessingException {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         project.setUser(loggedInUser);
+        project.setStartDate(new Date());
         projectRepo.save(project);
         generateLogAndSendToNotification("create new ", "project", loggedInUser);
         return ResponseEntity.ok().body("OK");
