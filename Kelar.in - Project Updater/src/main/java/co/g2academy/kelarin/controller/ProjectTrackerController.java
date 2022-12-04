@@ -101,13 +101,9 @@ public class ProjectTrackerController {
     }
 
     @PostMapping("/project/{id}/task")
-    public ResponseEntity createTask(@PathVariable Integer idProject,@RequestBody Task task, Principal principal) {
+    public ResponseEntity createTask(@PathVariable Integer idProject, @RequestBody Task task, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        Optional<Project> opt = projectRepo.findById(idProject);
-        if (opt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Product not found");
-        }
-        Project p = opt.get();
+        Project p = projectRepo.findById(idProject).get();
         task.setUser(loggedInUser);
         task.setProject(p);
         taskRepo.save(task);
@@ -116,7 +112,7 @@ public class ProjectTrackerController {
     }
 
     @PutMapping("/project/{id}/task")
-    public ResponseEntity editTask(@PathVariable Integer idProject,@RequestBody Task task, Principal principal) {
+    public ResponseEntity editTask(@PathVariable Integer idProject, @RequestBody Task task, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         task.setUser(loggedInUser);
         Optional<Task> opt = taskRepo.findById(task.getId());
