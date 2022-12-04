@@ -149,9 +149,8 @@ public class ProjectTrackerController {
     }
 
     @GetMapping("/project/{id}/log")
-    public List<TaskLog> getTaskLogByTask(@PathVariable Integer idProject) {
-        Task task = taskRepo.findById(idProject).get();
-        return taskLogRepo.findTaskLogByTask(task);
+    public Optional<TaskLog> getTaskLogByTask(@PathVariable Integer idProject) {
+        return taskLogRepo.findById(idProject);
     }
 
     @GetMapping("/project/{id}/task/performance/last-month")
