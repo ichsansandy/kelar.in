@@ -1,6 +1,5 @@
 package co.g2academy.kelarin.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
