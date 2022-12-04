@@ -223,6 +223,6 @@ public class ProjectTrackerController {
         taskLogRepo.save(log);
         TaskLogToPushNotificationDto dto = new TaskLogToPushNotificationDto(log);
         String json = mapper.writeValueAsString(dto);
-        messagePublisherService.
+        messagePublisherService.publishTaskLog(json);
     }
 }
