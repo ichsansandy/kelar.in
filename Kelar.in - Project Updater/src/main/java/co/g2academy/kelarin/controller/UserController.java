@@ -57,10 +57,16 @@ public class UserController {
         return ResponseEntity.ok().body("OK");
     }
     
-    @PutMapping("/profile/{id}/edit-save")
-    public ResponseEntity edit(@RequestBody User user, Principal principal){
-        User loggedInUser = repository.findUserByUsername(principal.getName());
-        
+    @PutMapping("/profile/{id}/edit-name-save")
+    public ResponseEntity edit(@RequestBody User user, Principal principal) throws JsonProcessingException{
+        User loggedInUserFromDb = repository.findUserByUsername(principal.getName());
+        loggedInUserFromDb.setName(user.getName());
+        repository.save(loggedInUserFromDb);
+        //user dto
+        UserDto dto = new UserDto(loggedInUserFromDb);
+        String json = mapper.writeValueAsString(dto);
+        //publish user to chaneel userCreation for kelarin_messaging kelarin_push_notification
+        messagePublisherService.publishEditUser(json);
         
         return ResponseEntity.ok().body("OK");
     }
