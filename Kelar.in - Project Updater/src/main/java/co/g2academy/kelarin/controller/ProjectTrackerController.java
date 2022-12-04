@@ -72,7 +72,6 @@ public class ProjectTrackerController {
             Project pFromDb = opt.get();
             if (pFromDb.getUser().getUsername().equals(principal.getName())) {
                 pFromDb.setName(project.getName());
-                pFromDb.setStartDate(project.getStartDate());
                 pFromDb.setDueDate(project.getDueDate());
                 pFromDb.setStatus(project.getStatus());
                 projectRepo.save(pFromDb);
@@ -100,17 +99,19 @@ public class ProjectTrackerController {
         return allProjects;
     }
 
-    @PostMapping("/task")
-    public ResponseEntity createTask(@RequestBody Task task, Principal principal) {
+    @PostMapping("/project/{id}/task")
+    public ResponseEntity createTask(@PathVariable Integer idProject,@RequestBody Task task, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
+        Optional<Project> project = projectRepo.findById(idProject);
         task.setUser(loggedInUser);
+//        task.setProject(project);
         taskRepo.save(task);
 
         return ResponseEntity.ok().body("OK");
     }
 
-    @PutMapping("/task")
-    public ResponseEntity editTask(@RequestBody Task task, Principal principal) {
+    @PutMapping("/project/{id}/task")
+    public ResponseEntity editTask(@PathVariable Integer idProject,@RequestBody Task task, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         task.setUser(loggedInUser);
         Optional<Task> opt = taskRepo.findById(task.getId());
@@ -124,7 +125,7 @@ public class ProjectTrackerController {
                 return ResponseEntity.ok().body("OK");
             }
         }
-        return ResponseEntity.badRequest().body("Project not found");
+        return ResponseEntity.badRequest().body("Task not found");
     }
 
     @GetMapping("/project/{id}/task")
