@@ -21,4 +21,7 @@ public class MessagePublisherService {
     public void publishEditUser(String message){
         template.convertAndSend("userEditPubSub", message);
     }
+    public void publishTaskLog(String message){
+        template.convertAndSend("pushNotificationPubSub", message);
+    }
 }
