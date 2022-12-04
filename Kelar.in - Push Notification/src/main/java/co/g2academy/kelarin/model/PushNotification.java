@@ -29,6 +29,9 @@ public class PushNotification {
     @Column(nullable=false)
     private String description;
     
+//    @Column(nullable=false)
+//    private List<User> userReceivers;
+    
     @Column(nullable=false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
