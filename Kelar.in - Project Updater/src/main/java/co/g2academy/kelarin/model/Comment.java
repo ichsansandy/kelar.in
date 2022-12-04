@@ -34,8 +34,8 @@ public class Comment{
     @JoinColumn(name="user_id",nullable=false)
     private User user;
     @ManyToOne(optional=false)
-    @JoinColumn(name="task_id",nullable=false)
-    private Task task;
+    @JoinColumn(name="project_id",nullable=false)
+    private Project project;
 
     public Integer getId() {
         return id;
@@ -69,13 +69,15 @@ public class Comment{
         this.user = user;
     }
 
-    public Task getTask() {
-        return task;
+    public Project getProject() {
+        return project;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
+    public void setProject(Project project) {
+        this.project = project;
     }
+
+   
     
     
 }
