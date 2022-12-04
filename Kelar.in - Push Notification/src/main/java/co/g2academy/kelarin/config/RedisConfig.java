@@ -1,5 +1,6 @@
 package co.g2academy.kelarin.config;
 
+import co.g2academy.kelarin.service.PushNotificationMessageListenerService;
 import co.g2academy.kelarin.service.UserMessageListenerService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,12 +31,26 @@ public class RedisConfig {
     }
     
     @Bean
-    public MessageListenerAdapter messageListener(UserMessageListenerService service){
+    public MessageListenerAdapter userMessageListener(UserMessageListenerService service){
         return new MessageListenerAdapter(service);
     }
+    
     @Bean 
-    public RedisMessageListenerContainer messageContainer(MessageListenerAdapter adapter){
+    public RedisMessageListenerContainer userMessageContainer(MessageListenerAdapter adapter){
         ChannelTopic topic = new ChannelTopic("userCreationPubSub");
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(jedisConnectionFactory());
+        container.addMessageListener(adapter, topic);
+        return container;
+    }
+    @Bean
+    public MessageListenerAdapter pushNotificationMessageListener(PushNotificationMessageListenerService service){
+        return new MessageListenerAdapter(service);
+    }
+    
+    @Bean 
+    public RedisMessageListenerContainer pushNotificationMessageContainer(MessageListenerAdapter adapter){
+        ChannelTopic topic = new ChannelTopic("pushNotificationPubSub");
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(jedisConnectionFactory());
         container.addMessageListener(adapter, topic);
