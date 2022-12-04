@@ -67,7 +67,6 @@ public class UserController {
         String json = mapper.writeValueAsString(dto);
         //publish user to chaneel userCreation for kelarin_messaging kelarin_push_notification
         messagePublisherService.publishEditUser(json);
-        
         return ResponseEntity.ok().body("OK");
     }
 
