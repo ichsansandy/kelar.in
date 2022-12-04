@@ -129,18 +129,20 @@ public class ProjectTrackerController {
         return taskRepo.findTaskByProject(project);
     }
 
-    @PostMapping("/comment")
-    public ResponseEntity createComment(@RequestBody Comment comment, Principal principal) {
+    @PostMapping("/project/{id}/comment")
+    public ResponseEntity createComment(@PathVariable Integer idProject,@RequestBody Comment comment, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
+        Project project = projectRepo.findById(idProject).get();
         comment.setUser(loggedInUser);
+        comment.setProject(project);
         commentRepo.save(comment);
         return ResponseEntity.ok().body("OK");
     }
 
-    @GetMapping("/task/{id-task}/comment")
-    public List<Comment> getCommentByTask(@PathVariable Integer idTask) {
-        Task task = taskRepo.findById(idTask).get();
-        return commentRepo.findCommentByTask(task);
+    @GetMapping("/project/{id}/comment")
+    public List<Comment> getCommentByTask(@PathVariable Integer idProject) {
+        Project project = projectRepo.findById(idProject).get();
+        return commentRepo.findCommentByProject(project);
     }
 
     @GetMapping("/task/{id-task}/log")
