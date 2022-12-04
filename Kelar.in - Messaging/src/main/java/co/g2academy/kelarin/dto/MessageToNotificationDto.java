@@ -18,7 +18,7 @@ public class MessageToNotificationDto {
         pushNotificationType = "message";
         String receiver = message.getReceiver().getName();
         String sender = message.getSender().getName();
-        description = "";
+        description = "New message from " + sender;
         date = message.getCreateDate();
     }
     
