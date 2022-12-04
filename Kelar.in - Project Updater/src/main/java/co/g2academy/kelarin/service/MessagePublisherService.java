@@ -15,7 +15,7 @@ public class MessagePublisherService {
     @Qualifier("redisPubSubTemplate")
     private RedisTemplate<String , String> template;
     
-    public void publish (String message){
+    public void publishRegister(String message){
         template.convertAndSend("userCreationPubSub", message);
     }
 }

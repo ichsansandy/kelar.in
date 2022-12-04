@@ -8,11 +8,13 @@ import co.g2academy.kelarin.validator.UserPassRegex1;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,8 +38,10 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody User user) throws JsonProcessingException {
-        User userFromDb = repository.findUserByUsername(user.getUsername());
-        if (userFromDb == null
+        User userFromDbByUsername = repository.findUserByUsername(user.getUsername());
+        User userFromDbByName = repository.findUserByName(user.getName());
+        if (userFromDbByUsername == null 
+                && userFromDbByName == null
                 && validator.emailValidator(user.getUsername())
                 && validator.passwordValidator(user.getPassword())) {
             user.setPassword(encoder.encode(user.getPassword()));
@@ -46,10 +50,18 @@ public class UserController {
             UserDto dto = new UserDto(user);
             String json = mapper.writeValueAsString(dto);
             //publish user to chaneel userCreation for kelarin_messaging kelarin_push_notification
-            messagePublisherService.publish(json);
+            messagePublisherService.publishRegister(json);
         } else {
             return ResponseEntity.badRequest().body("user exist, email or password invalid");
         }
+        return ResponseEntity.ok().body("OK");
+    }
+    
+    @PutMapping("/profile/{id}/edit-save")
+    public ResponseEntity edit(@RequestBody User user, Principal principal){
+        User loggedInUser = repository.findUserByUsername(principal.getName());
+        
+        
         return ResponseEntity.ok().body("OK");
     }
 
