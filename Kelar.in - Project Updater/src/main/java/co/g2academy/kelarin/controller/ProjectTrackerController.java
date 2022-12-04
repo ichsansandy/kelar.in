@@ -107,7 +107,6 @@ public class ProjectTrackerController {
         task.setUser(loggedInUser);
         task.setProject(p);
         taskRepo.save(task);
-
         return ResponseEntity.ok().body("OK");
     }
 
