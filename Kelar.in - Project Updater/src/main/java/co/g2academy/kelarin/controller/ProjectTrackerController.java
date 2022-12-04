@@ -72,22 +72,22 @@ public class ProjectTrackerController {
         return ResponseEntity.badRequest().body("Project not found");
     }
 
-    @GetMapping("/project")
-    public List<Project> getAllProject(Principal principal) {
+    @GetMapping("/project/user")
+    public List<Project> getAllYourProject(Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         if (loggedInUser != null) {
-            return projectRepo.findAll();
+            return projectRepo.findProjectByUser(loggedInUser);
         }
         return null;
     }
 
-    @GetMapping("/api/project/{id}")
-    public Project getAllProject(@PathVariable Integer id, Principal principal) {
+    @GetMapping("/project/other-user")
+    public List<Project> getAllOtherProject(Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        if (loggedInUser != null) {
-            return projectRepo.findById(id).get();
-        }
-        return null;
+        List<Project> allProjects = projectRepo.findAll();
+        List<Project> yourProjects = projectRepo.findProjectByUser(loggedInUser);
+        allProjects.removeAll(yourProjects);
+        return allProjects;
     }
 
     @PostMapping("/task")
@@ -130,7 +130,7 @@ public class ProjectTrackerController {
     }
 
     @PostMapping("/project/{id}/comment")
-    public ResponseEntity createComment(@PathVariable Integer idProject,@RequestBody Comment comment, Principal principal) {
+    public ResponseEntity createComment(@PathVariable Integer idProject, @RequestBody Comment comment, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         Project project = projectRepo.findById(idProject).get();
         comment.setUser(loggedInUser);
