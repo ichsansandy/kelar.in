@@ -95,13 +95,7 @@ public class ProjectTrackerController {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         task.setUser(loggedInUser);
         taskRepo.save(task);
-        TaskLog log = new TaskLog();
-        log.setLogType("task");
-        log.setTask(task);
-        log.setUser(loggedInUser);
-        String desc = log.generateDesc("create", log.getLogType(), log.getTask().getStartDate().toString(), log.getUser().getName());
-        log.setLogDescription(desc);
-        taskLogRepo.save(log);
+        
         return ResponseEntity.ok().body("OK");
     }
 
@@ -209,5 +203,15 @@ public class ProjectTrackerController {
         Integer total = tasks.size();
         Integer performance = sum / total;
         return performance;
+    }
+    
+    public void generateLog(String action,String type,User loggedInUser,Task task){
+        TaskLog log = new TaskLog();
+        log.setLogType(type);
+        log.setTask(task);
+        log.setUser(loggedInUser);
+        String desc = log.generateDesc(log.getUser().getName(), action, log.getLogType(), String.valueOf(new Date()));
+        log.setLogDescription(desc);
+        taskLogRepo.save(log);
     }
 }

@@ -35,7 +35,7 @@ public class TaskLog {
     @JoinColumn(name="task_id",nullable=false)
     private Task task;
     
-    public String generateDesc(String action,String type, String date, String user){
+    public String generateDesc(String user,String action,String type, String date){
         return user + " just " +" "+action+" "+type+" "+date;
     }
 
