@@ -3,7 +3,6 @@ package co.g2academy.kelarin.controller;
 import co.g2academy.kelarin.model.Comment;
 import co.g2academy.kelarin.model.Project;
 import co.g2academy.kelarin.model.Task;
-import co.g2academy.kelarin.model.TaskLog;
 import co.g2academy.kelarin.model.User;
 import co.g2academy.kelarin.repository.CommentRepository;
 import co.g2academy.kelarin.repository.ProjectRepository;
@@ -208,12 +207,12 @@ public class ProjectTrackerController {
     }
 
     public void generateLogAndSendToNotification(String action, String type, User loggedInUser) throws JsonProcessingException {
-        TaskLog log = new TaskLog();
-        log.setLogType(type);
-        log.setUser(loggedInUser);
-        String desc = log.generateDesc(log.getUser().getName(), action, log.getLogType(), String.valueOf(new Date()));
-        log.setLogDescription(desc);
-        String json = mapper.writeValueAsString(log);
-        messagePublisherService.publishTaskLog(json);
+//        TaskLog log = new TaskLog();
+//        log.setLogType(type);
+//        log.setUser(loggedInUser);
+//        String desc = log.generateDesc(log.getUser().getName(), action, log.getLogType(), String.valueOf(new Date()));
+//        log.setLogDescription(desc);
+//        String json = mapper.writeValueAsString(log);
+//        messagePublisherService.publishTaskLog(json);
     }
 }
