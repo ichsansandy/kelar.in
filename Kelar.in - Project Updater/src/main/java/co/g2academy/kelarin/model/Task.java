@@ -49,7 +49,19 @@ public class Task {
     @ManyToOne(optional=false)
     @JoinColumn(name="project_id",nullable=false)
     private Project project;
+    
+    @ManyToOne(optional=false)
+    @JoinColumn(name="assign_user_id",nullable=false)
+    private User assignUser;
 
+    public User getAssignUser() {
+        return assignUser;
+    }
+
+    public void setAssignUser(User assignUser) {
+        this.assignUser = assignUser;
+    }
+    
     public Integer getId() {
         return id;
     }

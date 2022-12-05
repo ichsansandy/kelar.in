@@ -96,9 +96,14 @@ public class ProjectTrackerController {
     }
 
     @GetMapping("/project/{id}/membership")
-    public List<Membership> getMemberProject(@PathVariable Integer idProject, Principal principal) {
+    public List<User> getMemberProject(@PathVariable Integer idProject, Principal principal) {
         Project project = projectRepo.findById(idProject).get();
-        return membershipRepo.findMembershipByProject(project);
+        List<Membership> ms = membershipRepo.findMembershipByProject(project);
+        List<User> users = new ArrayList<>();
+        for (Membership m : ms) {
+            users.add(m.getUser());
+        }
+        return users;
     }
 
     @GetMapping("/project/cerated-by-you")
@@ -122,13 +127,19 @@ public class ProjectTrackerController {
     }
 
     @PostMapping("/project/{id}/task")
-    public ResponseEntity createTask(@PathVariable Integer idProject, @RequestBody Task task, Principal principal) {
+    public ResponseEntity createTask(@PathVariable Integer idProject, @RequestBody Task task, @RequestBody User user, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         Project p = projectRepo.findById(idProject).get();
-        task.setUser(loggedInUser);
-        task.setProject(p);
-        taskRepo.save(task);
-        return ResponseEntity.ok().body("OK");
+        if (loggedInUser.equals(p.getUser())) {
+            task.setUser(loggedInUser);
+            task.setProject(p);
+            task.setAssignUser(user);
+            task.setStartDate(new Date());
+            task.setStatus("ASSIGN");
+            taskRepo.save(task);
+            return ResponseEntity.ok().body("OK");
+        }
+        return ResponseEntity.badRequest().body("You are not the project owner");
     }
 
     @PutMapping("/project/{id}/task")
