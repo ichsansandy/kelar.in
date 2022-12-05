@@ -62,4 +62,13 @@ public class User {
         this.name = name;
     }
 
+    public List<Membership> getMemberships() {
+        return memberships;
+    }
+
+    public void setMemberships(List<Membership> memberships) {
+        this.memberships = memberships;
+    }
+    
+
 }

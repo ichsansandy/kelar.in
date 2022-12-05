@@ -107,5 +107,13 @@ public class Project {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+
+    public List<Membership> getMemberships() {
+        return memberships;
+    }
+
+    public void setMemberships(List<Membership> memberships) {
+        this.memberships = memberships;
+    }
     
 }

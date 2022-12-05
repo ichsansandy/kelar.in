@@ -1,10 +1,12 @@
 package co.g2academy.kelarin.controller;
 
 import co.g2academy.kelarin.model.Comment;
+import co.g2academy.kelarin.model.Membership;
 import co.g2academy.kelarin.model.Project;
 import co.g2academy.kelarin.model.Task;
 import co.g2academy.kelarin.model.User;
 import co.g2academy.kelarin.repository.CommentRepository;
+import co.g2academy.kelarin.repository.MembershipRepository;
 import co.g2academy.kelarin.repository.ProjectRepository;
 import co.g2academy.kelarin.repository.TaskRepository;
 import co.g2academy.kelarin.repository.UserRepository;
@@ -19,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import static org.springframework.data.redis.serializer.RedisSerializationContext.java;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +49,7 @@ public class ProjectTrackerController {
     @Autowired
     private CommentRepository commentRepo;
     @Autowired
-    private CommentRepository membershipRepo;
+    private MembershipRepository membershipRepo;
     @Autowired
     private MessagePublisherService messagePublisherService;
     private ObjectMapper mapper = new JsonMapper();
@@ -77,6 +80,25 @@ public class ProjectTrackerController {
             }
         }
         return ResponseEntity.badRequest().body("Project not found");
+    }
+
+    @PostMapping("/project/{id}/membership")
+    public ResponseEntity addNewMember(@RequestBody User addUser, @PathVariable Integer idProject, Principal principal) {
+        User loggedInUser = userRepo.findUserByUsername(principal.getName());
+        Project project = projectRepo.findById(idProject).get();
+        if (project.getUser().equals(loggedInUser)) {
+            Membership m = new Membership();
+            m.setProject(project);
+            m.setUser(addUser);
+            membershipRepo.save(m);
+        }
+        return ResponseEntity.ok().body("OK");
+    }
+
+    @GetMapping("/project/{id}/membership")
+    public List<Membership> getMemberProject(@PathVariable Integer idProject, Principal principal) {
+        Project project = projectRepo.findById(idProject).get();
+        return membershipRepo.findMembershipByProject(project);
     }
 
     @GetMapping("/project/user")
@@ -146,7 +168,6 @@ public class ProjectTrackerController {
         Project project = projectRepo.findById(idProject).get();
         return commentRepo.findCommentByProject(project);
     }
-
 
     @GetMapping("/project/{id}/task/performance/last-month")
     public Integer getPerformanceLastMonth(@PathVariable Integer id, Principal principal) {
