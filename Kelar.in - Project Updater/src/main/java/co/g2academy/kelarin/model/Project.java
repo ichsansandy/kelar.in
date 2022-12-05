@@ -30,7 +30,6 @@ public class Project {
     @Column(nullable=false)
     private String status;
     
-    
     @Column(nullable=false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
