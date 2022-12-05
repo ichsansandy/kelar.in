@@ -1,6 +1,5 @@
 package co.g2academy.kelarin.controller;
 
-import co.g2academy.kelarin.dto.TaskLogToPushNotificationDto;
 import co.g2academy.kelarin.model.Comment;
 import co.g2academy.kelarin.model.Project;
 import co.g2academy.kelarin.model.Task;
@@ -8,7 +7,6 @@ import co.g2academy.kelarin.model.TaskLog;
 import co.g2academy.kelarin.model.User;
 import co.g2academy.kelarin.repository.CommentRepository;
 import co.g2academy.kelarin.repository.ProjectRepository;
-import co.g2academy.kelarin.repository.TaskLogRepository;
 import co.g2academy.kelarin.repository.TaskRepository;
 import co.g2academy.kelarin.repository.UserRepository;
 import co.g2academy.kelarin.service.MessagePublisherService;
@@ -48,8 +46,6 @@ public class ProjectTrackerController {
     private TaskRepository taskRepo;
     @Autowired
     private CommentRepository commentRepo;
-    @Autowired
-    private TaskLogRepository taskLogRepo;
     @Autowired
     private MessagePublisherService messagePublisherService;
     private ObjectMapper mapper = new JsonMapper();
@@ -150,11 +146,6 @@ public class ProjectTrackerController {
         return commentRepo.findCommentByProject(project);
     }
 
-    @GetMapping("/project/{id}/log")
-    public List<TaskLog> getTaskLogByTask(@PathVariable Integer idProject) {
-        Project project = projectRepo.findById(idProject).get();
-        return taskLogRepo.findTaskLogByProject(project);
-    }
 
     @GetMapping("/project/{id}/task/performance/last-month")
     public Integer getPerformanceLastMonth(@PathVariable Integer id, Principal principal) {
@@ -222,9 +213,7 @@ public class ProjectTrackerController {
         log.setUser(loggedInUser);
         String desc = log.generateDesc(log.getUser().getName(), action, log.getLogType(), String.valueOf(new Date()));
         log.setLogDescription(desc);
-        taskLogRepo.save(log);
-        TaskLogToPushNotificationDto dto = new TaskLogToPushNotificationDto(log);
-        String json = mapper.writeValueAsString(dto);
+        String json = mapper.writeValueAsString(log);
         messagePublisherService.publishTaskLog(json);
     }
 }
