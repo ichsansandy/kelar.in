@@ -101,7 +101,7 @@ public class ProjectTrackerController {
         return membershipRepo.findMembershipByProject(project);
     }
 
-    @GetMapping("/project/user")
+    @GetMapping("/project/cerated-by-you")
     public List<Project> getAllYourProject(Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         if (loggedInUser != null) {
@@ -110,13 +110,15 @@ public class ProjectTrackerController {
         return null;
     }
 
-    @GetMapping("/project/other-user")
+    @GetMapping("/project/assign-to-you")
     public List<Project> getAllOtherProject(Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        List<Project> allProjects = projectRepo.findAll();
-        List<Project> yourProjects = projectRepo.findProjectByUser(loggedInUser);
-        allProjects.removeAll(yourProjects);
-        return allProjects;
+        List<Membership> ms = membershipRepo.findMembershipByUser(loggedInUser);
+        List<Project> p = new ArrayList<>();
+        for (Membership m : ms) {
+            p.add(projectRepo.findById(m.getProject().getId()).get());
+        }
+        return p;
     }
 
     @PostMapping("/project/{id}/task")
