@@ -46,6 +46,8 @@ public class ProjectTrackerController {
     @Autowired
     private CommentRepository commentRepo;
     @Autowired
+    private CommentRepository membershipRepo;
+    @Autowired
     private MessagePublisherService messagePublisherService;
     private ObjectMapper mapper = new JsonMapper();
 
