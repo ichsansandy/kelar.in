@@ -1,8 +1,6 @@
 package co.g2academy.kelarin.dto;
 
-import co.g2academy.kelarin.model.TaskLog;
 import java.util.Date;
-import static org.springframework.data.redis.serializer.RedisSerializationContext.java;
 
 /**
  *
@@ -14,11 +12,7 @@ public class TaskLogToPushNotificationDto {
     private String description;
     private Date date;
 
-   public TaskLogToPushNotificationDto(TaskLog tasklog){
-       pushNotificationType = tasklog.getLogType();
-       description = tasklog.getLogDescription();
-       date = new Date();
-   }
+   
     
     public String getPushNotificationType() {
         return pushNotificationType;
