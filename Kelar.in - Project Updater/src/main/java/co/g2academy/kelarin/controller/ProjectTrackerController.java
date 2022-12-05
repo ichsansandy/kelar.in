@@ -145,19 +145,21 @@ public class ProjectTrackerController {
     @PutMapping("/project/{id}/task")
     public ResponseEntity editTask(@PathVariable Integer idProject, @RequestBody Task task, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        task.setUser(loggedInUser);
-        Optional<Task> opt = taskRepo.findById(task.getId());
-        if (!opt.isEmpty()) {
-            Task tFromDb = opt.get();
-            if (tFromDb.getUser().getUsername().equals(principal.getName())) {
-                tFromDb.setTaskName(task.getTaskName());
-                tFromDb.setStatus(task.getStatus());
-                tFromDb.setEndDate(new Date());
-                taskRepo.save(tFromDb);
-                return ResponseEntity.ok().body("OK");
+        Project project =  projectRepo.findById(idProject).get();
+        if (task.getAssignUser().equals(loggedInUser) || loggedInUser.equals(project.getUser())) {
+            Optional<Task> opt = taskRepo.findById(task.getId());
+            if (!opt.isEmpty()) {
+                Task tFromDb = opt.get();
+                if (tFromDb.getUser().getUsername().equals(principal.getName())) {
+                    tFromDb.setTaskName(task.getTaskName());
+                    tFromDb.setStatus(task.getStatus());
+                    tFromDb.setEndDate(new Date());
+                    taskRepo.save(tFromDb);
+                    return ResponseEntity.ok().body("OK");
+                }
             }
         }
-        return ResponseEntity.badRequest().body("Task not found");
+        return ResponseEntity.badRequest().body("You are not allowed to do this");
     }
 
     @GetMapping("/project/{id}/task")
