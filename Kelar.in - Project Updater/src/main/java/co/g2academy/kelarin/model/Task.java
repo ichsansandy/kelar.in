@@ -30,7 +30,7 @@ public class Task {
     @Column(nullable=false)
     private String status;
     
-    @Column(nullable=false)
+    @Column(nullable=true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
     
