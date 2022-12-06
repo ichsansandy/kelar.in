@@ -167,7 +167,7 @@ public class ProjectTrackerController {
             Optional<Task> opt = taskRepo.findById(task.getId());
             if (!opt.isEmpty()) {
                 Task tFromDb = opt.get();
-                if (tFromDb.getUser().getUsername().equals(principal.getName())) {
+                if (tFromDb.getAssignUser().getUsername().equals(principal.getName())) {
                     if (task.getStatus().equals("ASSIGN")) {
                         tFromDb.setStatus("INPROGRESS");
                         task.setStartDate(new Date());
@@ -187,26 +187,45 @@ public class ProjectTrackerController {
     }
 
     @GetMapping("/project/{id}/task")
-    public List<Task> getTaskByProject(@PathVariable Integer idProject,Principal principal) {
+    public List<Task> getTaskByProject(@PathVariable Integer idProject, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         Project project = projectRepo.findById(idProject).get();
-        return taskRepo.findTaskByProject(project);
+        List<Membership> ms = project.getMemberships();
+        for (Membership m : ms) {
+            if (m.getUser().equals(loggedInUser)) {
+                return taskRepo.findTaskByProject(project);
+            }
+        }
+        if (project.getUser().equals(loggedInUser)) {
+            return taskRepo.findTaskByProject(project);
+        }
+        return null;
     }
 
     @PostMapping("/project/{id}/comment")
     public ResponseEntity createComment(@PathVariable Integer idProject, @RequestBody Comment comment, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         Project project = projectRepo.findById(idProject).get();
-        comment.setUser(loggedInUser);
-        comment.setProject(project);
-        commentRepo.save(comment);
-        return ResponseEntity.ok().body("OK");
+        Boolean validation = validateUserOwnerOrMembership(project, loggedInUser);
+        if (validation == true) {
+            comment.setUser(loggedInUser);
+            comment.setProject(project);
+            comment.setCommentDate(new Date());
+            commentRepo.save(comment);
+            return ResponseEntity.ok().body("OK");
+        }
+        return ResponseEntity.badRequest().body("OK");
     }
 
     @GetMapping("/project/{id}/comment")
-    public List<Comment> getCommentByTask(@PathVariable Integer idProject) {
+    public List<Comment> getCommentByTask(@PathVariable Integer idProject, Principal principal) {
+        User loggedInUser = userRepo.findUserByUsername(principal.getName());
         Project project = projectRepo.findById(idProject).get();
-        return commentRepo.findCommentByProject(project);
+        Boolean validation = validateUserOwnerOrMembership(project, loggedInUser);
+        if (validation == true) {
+            return commentRepo.findCommentByProject(project);
+        }
+        return null;
     }
 
     @GetMapping("/project/{id}/task/performance/last-month")
@@ -277,5 +296,18 @@ public class ProjectTrackerController {
 //        log.setLogDescription(desc);
 //        String json = mapper.writeValueAsString(log);
 //        messagePublisherService.publishTaskLog(json);
+    }
+
+    public Boolean validateUserOwnerOrMembership(Project project, User user) {
+        List<Membership> ms = project.getMemberships();
+        for (Membership m : ms) {
+            if (m.getUser().equals(user)) {
+                return true;
+            }
+        }
+        if (project.getUser().equals(user)) {
+            return true;
+        }
+        return false;
     }
 }

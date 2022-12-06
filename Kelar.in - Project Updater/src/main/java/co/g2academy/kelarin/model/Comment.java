@@ -26,6 +26,7 @@ public class Comment{
     @Column (nullable = false)
     @Lob
     private String commentBody;
+    
     @Column(nullable=false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date commentDate;
