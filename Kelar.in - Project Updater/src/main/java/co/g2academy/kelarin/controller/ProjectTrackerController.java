@@ -187,7 +187,8 @@ public class ProjectTrackerController {
     }
 
     @GetMapping("/project/{id}/task")
-    public List<Task> getTaskByProject(@PathVariable Integer idProject) {
+    public List<Task> getTaskByProject(@PathVariable Integer idProject,Principal principal) {
+        User loggedInUser = userRepo.findUserByUsername(principal.getName());
         Project project = projectRepo.findById(idProject).get();
         return taskRepo.findTaskByProject(project);
     }
