@@ -1,6 +1,7 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
 
 function NavCopy() {
   const [navigation, setNavigation] = useState([
@@ -14,7 +15,7 @@ function NavCopy() {
   }
 
   return (
-    <Disclosure as="nav" className="bg-secondary-color drop-shadow-lg">
+    <Disclosure as="nav" className="bg-secondary-color drop-shadow-lg ">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-9xl px-2 sm:px-6 lg:px-8">
@@ -34,13 +35,13 @@ function NavCopy() {
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
+                      <Link
+                        // key={item.name}
+                        to={item.href}
                         className={classNames(item.current ? "bg-fourth-color text-secondary-color" : "text-black font-bold hover:bg-third-color hover:text-white", "px-3 py-2 rounded-md text-xl font-bold")}
                         aria-current={item.current ? "page" : undefined}>
                         {item.name}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -48,7 +49,7 @@ function NavCopy() {
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <button type="button" className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                   <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
+                  <BellIcon className="h-7 w-7" aria-hidden="true" />
                 </button>
 
                 {/* Profile dropdown */}
@@ -56,7 +57,7 @@ function NavCopy() {
                   <div>
                     <Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="sr-only">Open user menu</span>
-                      <img className="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                      <img className="h-9 w-9 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
                     </Menu.Button>
                   </div>
                   <Transition
