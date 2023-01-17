@@ -1,6 +1,7 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -8,11 +9,13 @@ import NavCopy from "./component/NavCopy";
 import Home from "./pages/Home";
 import Projects from "./pages/Projects";
 import Calendar from "./pages/Calendar";
+import { useDispatch } from "react-redux";
 
 function App() {
+
+
   return (
     <div className="App">
-      {/* <Navbar /> */}
       <NavCopy />
       <Routes>
         <Route path="/" element={<Home />} />

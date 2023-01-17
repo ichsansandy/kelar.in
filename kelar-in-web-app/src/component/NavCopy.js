@@ -1,14 +1,30 @@
 import { Fragment, useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function NavCopy() {
-  const [navigation, setNavigation] = useState([
-    { name: "Home", href: "/", current: true },
-    { name: "Projects", href: "/projects", current: false },
-    { name: "Calendar", href: "/calendar", current: false },
-  ]);
+  // const [navigation, setNavigation] = useState([
+  //   { name: "Home", href: "/", current: true },
+  //   { name: "Projects", href: "/projects", current: false },
+  //   { name: "Calendar", href: "/calendar", current: false },
+  // ]);
+  const navigationMenu = useSelector((s) => s.menu);
+  const location = useLocation();
+  const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   // if (location.pathname === "/") {
+  //   //   dispatch({ type: "HOME" });
+  //   //   dispatch({ type: "NOT_CALENDAR" });
+  //   //   dispatch({ type: "NOT_PROJECTS" });
+  //   // } else if (location.pathname === "/projects") {
+  //   //   dispatch({ type: "NOT_HOME" });
+  //   //   dispatch({ type: "PROJECTS" });
+  //   //   dispatch({ type: "NOT_CALENDAR" });
+  //   // }
+  // }, [navigationMenu]);
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -34,7 +50,7 @@ function NavCopy() {
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
-                    {navigation.map((item) => (
+                    {navigationMenu.map((item) => (
                       <Link
                         // key={item.name}
                         to={item.href}
@@ -99,7 +115,7 @@ function NavCopy() {
 
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 px-2 pt-2 pb-3">
-              {navigation.map((item) => (
+              {navigationMenu.map((item) => (
                 <Disclosure.Button
                   key={item.name}
                   as="a"
