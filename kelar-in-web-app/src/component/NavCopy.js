@@ -2,7 +2,7 @@ import { Fragment, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Link, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 
 function NavCopy() {
   // const [navigation, setNavigation] = useState([
@@ -51,13 +51,19 @@ function NavCopy() {
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigationMenu.map((item) => (
-                      <Link
-                        // key={item.name}
+                      // <Link
+                      //   // key={item.name}
+                      //   to={item.href}
+                      //   className={classNames(item.current ? "bg-fourth-color text-secondary-color" : "text-black font-bold hover:bg-third-color hover:text-white", "px-3 py-2 rounded-md text-xl font-bold")}
+                      //   aria-current={item.current ? "page" : undefined}>
+                      //   {item.name}
+                      // </Link>
+                      <NavLink
                         to={item.href}
-                        className={classNames(item.current ? "bg-fourth-color text-secondary-color" : "text-black font-bold hover:bg-third-color hover:text-white", "px-3 py-2 rounded-md text-xl font-bold")}
-                        aria-current={item.current ? "page" : undefined}>
+                        className={({isActive}) => isActive ? "bg-fourth-color text-secondary-color px-3 py-2 rounded-md text-xl font-bold" : "text-black font-bold hover:bg-third-color hover:text-white px-3 py-2 rounded-md text-xl font-bold"}
+                      >
                         {item.name}
-                      </Link>
+                      </NavLink>
                     ))}
                   </div>
                 </div>
