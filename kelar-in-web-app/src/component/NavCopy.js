@@ -60,8 +60,9 @@ function NavCopy() {
                       // </Link>
                       <NavLink
                         to={item.href}
-                        className={({isActive}) => isActive ? "bg-fourth-color text-secondary-color px-3 py-2 rounded-md text-xl font-bold" : "text-black font-bold hover:bg-third-color hover:text-white px-3 py-2 rounded-md text-xl font-bold"}
-                      >
+                        className={({ isActive }) =>
+                          isActive ? "bg-fourth-color text-secondary-color px-3 py-2 rounded-md text-xl font-bold" : "text-black hover:bg-third-color hover:text-white px-3 py-2 rounded-md text-xl font-bold"
+                        }>
                         {item.name}
                       </NavLink>
                     ))}
@@ -69,7 +70,7 @@ function NavCopy() {
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <button type="button" className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                <button type="button" className="rounded-full bg-third-color p-1 text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-7 w-7" aria-hidden="true" />
                 </button>

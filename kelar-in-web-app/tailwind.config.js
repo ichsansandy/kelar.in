@@ -18,6 +18,12 @@ module.exports = {
     //   sm: { max: "640px" },
     //   // => @media (max-width: 639px) { ... }
     // },
+
+    minWidth: {
+      "1/4": "25%",
+      "1/3": "33.33%",
+      "1/2": "50%",
+    },
     extend: {
       colors: {
         "primary-color": "#D8D9CF",
