@@ -9,8 +9,8 @@ function AssignProject() {
   ];
 
   return (
-    <div className="bg-secondary-color flex-col justify-self-end items-end m-5 p-2 rounded-lg ">
-      <div className=" w-fit py-2 px-4 text-3xl mr-6 border-b-4 border-b-third-color ">Assign Project to You</div>
+    <div className="bg-secondary-color flex-col justify-self-end items-end m-5 p-5 rounded-lg ">
+      <div className=" w-fit py-2 px-4 text-3xl mr-6 mb-4 border-b-4 border-b-third-color ">Assign Project to You</div>
       <div className="flex ">
         <ul className=
         {

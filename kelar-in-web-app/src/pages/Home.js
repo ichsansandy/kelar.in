@@ -14,7 +14,10 @@ function Home() {
   ];
 
   return (
-    <div className="flex-col bg-primary-color m-7 p-2">
+    <div
+      className="flex-col bg-repeat m-7 p-2"
+      // style={{ backgroundImage: "url(/asset/background-repeat-removebg-preview.png)" }}
+    >
       <h1 className="text-left text-7xl m-5">Hi Ichsan</h1>
       <h3 className="text-left text-2xl m-6">{quotes[random]}</h3>
       <YourProjectContainer />
