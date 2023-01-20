@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Login() {
   return (
@@ -9,7 +10,7 @@ function Login() {
             className="absolute top-0 w-full h-full bg-repeat"
             style={{
               backgroundSize: "100%",
-              backgroundImage: "url('url(/asset/background-repeat-removebg-preview.png)')",
+              backgroundImage: "url('/asset/redd-f-5U_28ojjgms-unsplash.jpg')",
             }}></div>
           <div className="container mx-auto px-4 h-full">
             <div className="flex content-center items-center justify-center h-full">
@@ -81,18 +82,18 @@ function Login() {
                         </button>
                       </div>
                     </form>
-                  </div>
-                </div>
-                <div className="flex justify-around items-center mt-6">
-                  <div className="">
-                    <a href="#pablo" onClick={(e) => e.preventDefault()} className="text-third-color">
-                      <small>Forgot password?</small>
-                    </a>
-                  </div>
-                  <div className="">
-                    <a href="#pablo" onClick={(e) => e.preventDefault()} className="text-third-color ">
-                      <small>Create new account</small>
-                    </a>
+                    <div className="flex justify-around items-center mt-6">
+                      <div className="">
+                        <Link to="" className="text-third-color hover:text-fourth-color">
+                          <medium>Forgot password?</medium>
+                        </Link>
+                      </div>
+                      <div className="">
+                        <Link to="/register" className="text-third-color hover:text-fourth-color ">
+                          <medium>Create new account</medium>
+                        </Link>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -8,7 +8,7 @@ function NavCopy() {
   const navigationMenu = useSelector((s) => s.menu);
   const dispatch = useDispatch();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     if (isLoggedIn === false) {
@@ -36,10 +36,13 @@ function NavCopy() {
                 </Disclosure.Button>
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                <div className="flex flex-shrink-0 items-center">
-                  <h1 className="text-3xl font-bold ml sm:text-4xl">kelar</h1>
-                  <h1 className="text-3xl font-bold mr text-fourth-color sm:text-4xl">.in</h1>
-                </div>
+                <NavLink to="/landingpage">
+                  <div className="flex flex-shrink-0 items-center">
+                    <h1 className="text-3xl font-bold ml sm:text-4xl">kelar</h1>
+
+                    <h1 className="text-3xl font-bold mr text-fourth-color sm:text-4xl">.in</h1>
+                  </div>
+                </NavLink>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigationMenu.map((item) => (
