@@ -5,33 +5,14 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
 function NavCopy() {
-  // const [navigation, setNavigation] = useState([
-  //   { name: "Home", href: "/", current: true },
-  //   { name: "Projects", href: "/projects", current: false },
-  //   { name: "Calendar", href: "/calendar", current: false },
-  // ]);
   const navigationMenu = useSelector((s) => s.menu);
-  const location = useLocation();
-  const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   // if (location.pathname === "/") {
-  //   //   dispatch({ type: "HOME" });
-  //   //   dispatch({ type: "NOT_CALENDAR" });
-  //   //   dispatch({ type: "NOT_PROJECTS" });
-  //   // } else if (location.pathname === "/projects") {
-  //   //   dispatch({ type: "NOT_HOME" });
-  //   //   dispatch({ type: "PROJECTS" });
-  //   //   dispatch({ type: "NOT_CALENDAR" });
-  //   // }
-  // }, [navigationMenu]);
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
 
   return (
-    <Disclosure as="nav" className="bg-secondary-color drop-shadow-lg ">
+    <Disclosure as="nav" className="bg-secondary-color drop-shadow-lg">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-9xl px-2 sm:px-6 lg:px-8">
@@ -60,9 +41,7 @@ function NavCopy() {
                       // </Link>
                       <NavLink
                         to={item.href}
-                        className={({ isActive }) =>
-                          isActive ? "bg-fourth-color text-secondary-color px-3 py-2 rounded-md text-xl font-bold" : "text-black hover:bg-third-color hover:text-white px-3 py-2 rounded-md text-xl font-bold"
-                        }>
+                        className={({ isActive }) => (isActive ? "bg-fourth-color text-secondary-color px-3 py-2 rounded-md text-xl font-bold" : "text-black hover:bg-third-color hover:text-white px-3 py-2 rounded-md text-xl font-bold")}>
                         {item.name}
                       </NavLink>
                     ))}
