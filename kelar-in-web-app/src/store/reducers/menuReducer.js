@@ -7,21 +7,23 @@ const menuReducer = (
   action
 ) => {
   switch (action.type) {
-    case "HOME":
-      return [...state, (state[0].current = true)];
-    case "PROJECTS":
-      return [...state, (state[1].current = true)];
-    case "CALENDAR":
-      return [...state, (state[2].current = true)];
-    case "NOT_HOME":
-      return [...state, (state[0].current = false)];
-    case "NOT_PROJECTS":
-      return [...state, (state[1].current = false)];
-    case "NOT_CALENDAR":
-      return [...state, (state[2].current = false)];
+    case "MENU_LOGIN":
+      return menuLogin;
+    case "MENU_NOT_LOGIN":
+      return menuNotLoggin;
     default:
       return state;
   }
 };
+
+const menuNotLoggin = [
+  { name: "Register", href: "/register", current: false },
+  { name: "Login", href: "/login", current: false },
+];
+const menuLogin = [
+  { name: "Home", href: "/", current: true },
+  { name: "Projects", href: "/projects", current: false },
+  { name: "Calendar", href: "/calendar", current: false },
+];
 
 export default menuReducer;

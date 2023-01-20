@@ -6,6 +6,17 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 
 function NavCopy() {
   const navigationMenu = useSelector((s) => s.menu);
+  const dispatch = useDispatch();
+
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  useEffect(() => {
+    if (isLoggedIn === false) {
+      dispatch({ type: "MENU_NOT_LOGIN" });
+    } else {
+      dispatch({ type: "MENU_LOGIN" });
+    }
+  }, []);
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -48,7 +59,7 @@ function NavCopy() {
                   </div>
                 </div>
               </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              <div className={classNames(isLoggedIn ? "" : "hidden ", "absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0")}>
                 <button type="button" className="rounded-full bg-third-color p-1 text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-7 w-7" aria-hidden="true" />

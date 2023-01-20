@@ -8,10 +8,6 @@ function Home() {
 
   const random = Math.floor(Math.random() * quotes.length);
 
-  const projects = [
-    { id: 1, projectName: "kelar-in-WebApp", projectOwner: "Ichsan" },
-    { id: 1, projectName: "kelar-in-WebApp", projectOwner: "Ichsan" },
-  ];
 
   return (
     <div
