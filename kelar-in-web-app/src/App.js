@@ -10,10 +10,9 @@ import Home from "./pages/Home";
 import Projects from "./pages/Projects";
 import Calendar from "./pages/Calendar";
 import { useDispatch } from "react-redux";
+import Footer from "./component/Footer";
 
 function App() {
-
-
   return (
     <div className="App">
       <NavCopy />
@@ -25,6 +24,7 @@ function App() {
         <Route path="/projects" element={<Projects />} />
         <Route path="/calendar" element={<Calendar />} />
       </Routes>
+      <Footer />
     </div>
   );
 }
