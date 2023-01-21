@@ -8,17 +8,26 @@ import co.g2academy.kelarin.validator.UserPassRegex1;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import static org.springframework.data.redis.serializer.RedisSerializationContext.java;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -46,9 +55,8 @@ public class UserController {
         User userFromDbByUsername = repository.findUserByUsername(user.getUsername());
         User userFromDbByName = repository.findUserByName(user.getName());
         if (userFromDbByUsername == null
-                && userFromDbByName == null 
-                 && validator.emailValidator(user.getUsername())
-                // && validator.passwordValidator(user.getPassword())
+                && userFromDbByName == null
+                && validator.emailValidator(user.getUsername()) // && validator.passwordValidator(user.getPassword())
                 ) {
             user.setPassword(encoder.encode(user.getPassword()));
             repository.save(user);
@@ -62,8 +70,13 @@ public class UserController {
         }
         return ResponseEntity.ok().body("OK");
     }
+    
+    @GetMapping("/all-user")
+    public List<User> getAllUser(){
+        return repository.findAll();
+    }
 
-    @PutMapping("/profile/{id}/edit-name-save")
+    @PutMapping("/profile/edit-name")
     public ResponseEntity edit(@RequestBody User user, Principal principal) throws JsonProcessingException {
         User loggedInUserFromDb = repository.findUserByUsername(principal.getName());
         loggedInUserFromDb.setName(user.getName());
@@ -74,6 +87,34 @@ public class UserController {
         //publish user to chaneel userCreation for kelarin_messaging kelarin_push_notification
         messagePublisherService.publishEditUser(json);
         return ResponseEntity.ok().body("OK");
+    }
+
+    @PutMapping("/profile/edit-picture")
+    public ResponseEntity editProfilePicture(Principal principal,@RequestParam("image") MultipartFile file) throws JsonProcessingException {
+        User loggedInUserFromDb = repository.findUserByUsername(principal.getName());
+        if (file != null) {
+            try {
+                loggedInUserFromDb.setProfileImage(file.getBytes());
+            } catch (IOException ex) {
+                Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            repository.save(loggedInUserFromDb);
+            //user dto
+            //UserDto dto = new UserDto(loggedInUserFromDb);
+            //String json = mapper.writeValueAsString(dto);
+            //publish user to chaneel userCreation for kelarin_messaging kelarin_push_notification
+            //messagePublisherService.publishEditUser(json);
+            return ResponseEntity.ok().body("OK");
+        }
+        return ResponseEntity.badRequest().body("file not found");
+    }
+    
+    @GetMapping("/profile/get-picture")
+    public ResponseEntity getProfilePicture(Principal principal){
+        User loggedInUserFromDB = repository.findUserByUsername(principal.getName());
+        
+        byte[] image = loggedInUserFromDB.getProfileImage();
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
     }
 
 }

@@ -7,8 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import static org.springframework.data.redis.serializer.RedisSerializationContext.java;
 
 /**
  *
@@ -27,6 +29,10 @@ public class User {
     private String password;
     @Column(nullable = false)
     private String name;
+    @Lob
+    @Column(nullable=true, length = 1000)
+    private byte[] profileImage;
+    
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Membership> memberships;
 
@@ -69,6 +75,14 @@ public class User {
     public void setMemberships(List<Membership> memberships) {
         this.memberships = memberships;
     }
-    
 
+    public byte[] getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(byte[] profileImage) {
+        this.profileImage = profileImage;
+    }
+    
+    
 }
