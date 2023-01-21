@@ -31,8 +31,8 @@ public class UserController {
 
     @Autowired
     private UserRepository repository;
-//    @Autowired
-//    private UserPassRegex1 validator;
+    @Autowired
+    private UserPassRegex1 validator;
     @Autowired
     private MessagePublisherService messagePublisherService;
     private ObjectMapper mapper = new JsonMapper();
@@ -47,7 +47,7 @@ public class UserController {
         User userFromDbByName = repository.findUserByName(user.getName());
         if (userFromDbByUsername == null
                 && userFromDbByName == null 
-                // && validator.emailValidator(user.getUsername())
+                 && validator.emailValidator(user.getUsername())
                 // && validator.passwordValidator(user.getPassword())
                 ) {
             user.setPassword(encoder.encode(user.getPassword()));
