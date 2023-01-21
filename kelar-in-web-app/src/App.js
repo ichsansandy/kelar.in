@@ -1,6 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import Register from "./pages/Register";
@@ -11,11 +11,25 @@ import Projects from "./pages/Projects";
 import Calendar from "./pages/Calendar";
 import { useDispatch } from "react-redux";
 import Footer from "./component/Footer";
+import axios from "axios";
+import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+   
+
+
+  function login() {
+    setIsLoggedIn(true);
+  }
+  function logout() {
+    setIsLoggedIn(false);
+  }
+
   return (
     <div className="App">
-      <NavCopy />
+      <Toaster/>
+      <NavCopy isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />

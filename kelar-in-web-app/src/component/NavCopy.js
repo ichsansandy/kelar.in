@@ -2,13 +2,19 @@ import { Fragment, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 
-function NavCopy() {
+function NavCopy({isLoggedIn, setIsLoggedIn}) {
   const navigationMenu = useSelector((s) => s.menu);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  function logout(){
+    setIsLoggedIn(false)
+    
+  }
 
   useEffect(() => {
     if (isLoggedIn === false) {
@@ -101,7 +107,7 @@ function NavCopy() {
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <a href="#" className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
+                          <a onClick={logout} className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
                             Sign out
                           </a>
                         )}

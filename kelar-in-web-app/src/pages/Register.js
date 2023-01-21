@@ -1,7 +1,55 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function Register() {
+  const [user, setUser] = useState({ username: "", password: "", name: "" });
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    console.log(user);
+    const value = e.target.value;
+    return setUser((values) => ({ ...values, [e.target.id]: value }));
+  };
+
+  const handleTest = (e) => {
+    console.log(e.target.value);
+  };
+
+  const register = () => {
+    console.log(user);
+    fetch("http://localhost:8081/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.body;
+        } else {
+          return toast.error("This didn't work. user or email exist.");
+        }
+      })
+      .then((data) => {
+        if (data === "OK") {
+          toast.success("User Created Successfully !");
+          navigate("/login");
+        }
+      })
+      .catch((err) => {
+        toast.error("This didn't work.");
+        console.log(err);
+      });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    register();
+  };
+
   return (
     <div>
       <main className="">
@@ -41,16 +89,19 @@ function Register() {
                     </div>
                     <hr className="mt-6 border-b-1 border-third-color" />
                   </div>
+
                   <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-                    <form>
+                    <form onSubmit={handleSubmit}>
                       <div className="relative w-full mb-3">
                         <label className="block uppercase text-gray-700 text-sm text-left font-bold mb-2" htmlFor="grid-password">
                           Your name
                         </label>
                         <input
-                          type="email"
+                          id="name"
+                          type="text"
                           className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
                           placeholder="Full Name"
+                          onChange={handleChange}
                           style={{ transition: "all .15s ease" }}
                         />
                       </div>
@@ -60,8 +111,10 @@ function Register() {
                         </label>
                         <input
                           type="email"
+                          id="username"
                           className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
                           placeholder="Email"
+                          onChange={handleChange}
                           style={{ transition: "all .15s ease" }}
                         />
                       </div>
@@ -72,8 +125,10 @@ function Register() {
                         </label>
                         <input
                           type="password"
+                          id="password"
                           className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
                           placeholder="Password"
+                          onChange={handleChange}
                           style={{ transition: "all .15s ease" }}
                         />
                       </div>
@@ -90,7 +145,7 @@ function Register() {
                             aria-describedby="terms"
                             type="checkbox"
                             class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                            required=""
+                            required={true}
                           />
                         </div>
                         <div class="ml-3 text-sm">
@@ -106,7 +161,7 @@ function Register() {
                       <div className="text-center mt-6">
                         <button
                           className="bg-third-color text-white active:bg-fourth-color text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
-                          type="button"
+                          type="submit"
                           style={{ transition: "all .15s ease" }}>
                           Create an Accout
                         </button>

@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.data.redis.serializer.RedisSerializationContext.java;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins="*")
 public class ProjectTrackerController {
 
     @Autowired
@@ -141,23 +143,23 @@ public class ProjectTrackerController {
         return ResponseEntity.badRequest().body("You are not the project owner");
     }
 
-    @PutMapping("/project/{id}/task")
-    public ResponseEntity editTaskName(@PathVariable Integer idProject, @RequestBody Task task, Principal principal) {
-        User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        Project project = projectRepo.findById(idProject).get();
-        if (task.getAssignUser().equals(loggedInUser) || loggedInUser.equals(project.getUser())) {
-            Optional<Task> opt = taskRepo.findById(task.getId());
-            if (!opt.isEmpty()) {
-                Task tFromDb = opt.get();
-                if (tFromDb.getUser().getUsername().equals(principal.getName())) {
-                    tFromDb.setTaskName(task.getTaskName());
-                    taskRepo.save(tFromDb);
-                    return ResponseEntity.ok().body("OK");
-                }
-            }
-        }
-        return ResponseEntity.badRequest().body("You are not allowed to do this");
-    }
+//    @PutMapping("/project/{id}/task")
+//    public ResponseEntity editTaskName(@PathVariable Integer idProject, @RequestBody Task task, Principal principal) {
+//        User loggedInUser = userRepo.findUserByUsername(principal.getName());
+//        Project project = projectRepo.findById(idProject).get();
+//        if (task.getAssignUser().equals(loggedInUser) || loggedInUser.equals(project.getUser())) {
+//            Optional<Task> opt = taskRepo.findById(task.getId());
+//            if (!opt.isEmpty()) {
+//                Task tFromDb = opt.get();
+//                if (tFromDb.getUser().getUsername().equals(principal.getName())) {
+//                    tFromDb.setTaskName(task.getTaskName());
+//                    taskRepo.save(tFromDb);
+//                    return ResponseEntity.ok().body("OK");
+//                }
+//            }
+//        }
+//        return ResponseEntity.badRequest().body("You are not allowed to do this");
+//    }
 
     @PutMapping("/project/{id}/task")
     public ResponseEntity editTaskStatus(@PathVariable Integer idProject, @RequestBody Task task, Principal principal) {
