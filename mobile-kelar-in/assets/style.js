@@ -7,10 +7,6 @@ const colorVar = {
   fourthColor: "#E26868",
 };
 
-const option = {
-  
-}
-
 const styles = StyleSheet.create({
   textPrimary: {
     color: colorVar.primaryColor,
@@ -40,6 +36,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
+    width: "100%",
+    height: "100%",
   },
 });
 

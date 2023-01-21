@@ -38,7 +38,7 @@ const Register = () => {
           Alert.alert("account created successfully");
           navigation.navigate("Login");
         } else {
-        //   Alert.alert("Error " + d);
+          //   Alert.alert("Error " + d);
         }
       })
       .catch((err) => {

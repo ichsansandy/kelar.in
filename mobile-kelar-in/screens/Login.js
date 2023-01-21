@@ -8,9 +8,11 @@ import { useNavigation } from "@react-navigation/native";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
-  const login = () => {};
+  const login = () => {
+    navigation.navigate("HomeNavigation")
+  };
 
   return (
     <SafeAreaView>
@@ -38,6 +40,7 @@ const Login = () => {
               },
               shadowOpacity: 1,
             }}
+            onPress={login}
             title="Login"
           />
         </Card>
