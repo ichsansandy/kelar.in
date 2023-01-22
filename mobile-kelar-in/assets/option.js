@@ -1,9 +1,4 @@
-const colorVar = {
-  primaryColor: "#D8D9CF",
-  secondaryColor: "#EDEDED",
-  thirdColor: "#FF8787",
-  fourthColor: "#E26868",
-};
+import colorVar from "./colorVar";
 
 const option = {
   barOption: {

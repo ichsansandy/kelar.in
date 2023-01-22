@@ -1,6 +1,11 @@
 import { View, Text } from "react-native";
 import React, { useState } from "react";
 import PerformanceCard from "../components/PerformanceCard";
+import styles from "../assets/style";
+import { Card } from "@rneui/base";
+import { CardDivider } from "@rneui/base/dist/Card/Card.Divider";
+import { SafeAreaView } from "react-native-safe-area-context";
+import colorVar from "../assets/colorVar";
 
 const Home = () => {
   const [user, setuser] = useState("Ichsan");
@@ -10,19 +15,37 @@ const Home = () => {
 
   return (
     <>
-      <View style={{ marginVertical: 10, marginHorizontal: 5 }}>
+      <View style={{ marginVertical: 15, marginHorizontal: 20 }}>
         <Text style={{ fontSize: 30 }}>Hi {user}</Text>
         <Text>{quotes[random]} </Text>
       </View>
-      <View>
-        <Text style={{textAlign:"right"}}>Your Performance</Text>
-        
-        <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 5 }}>
-          <PerformanceCard />
-          <PerformanceCard />
-          <PerformanceCard />
+      <Card style={[styles.bgPrimary]}>
+        <Card.Title style={{ textAlign: "right" }}>Your Performance</Card.Title>
+        <Card.Divider width={5} style={{ width: "38%", alignSelf: "flex-end" }} color={colorVar.thirdColor} />
+        <View style={[{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 5, paddingHorizontal: 5, paddingVertical: 10 }]}>
+          <PerformanceCard value={25} title={"Current Week"} />
+          <PerformanceCard value={67} title={"Last Week"} />
+          <PerformanceCard value={80} title={"Last Month"} />
         </View>
-      </View>
+      </Card>
+      <Card>
+        <Card.Title style={{ textAlign: "right" }}>Your Project</Card.Title>
+        <Card.Divider width={5} style={{ width: "38%", alignSelf: "flex-end" }} color={colorVar.thirdColor} />
+        <View style={[{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 5, paddingHorizontal: 5, paddingVertical: 10 }]}>
+          <Card></Card>
+          <Card></Card>
+          <Card></Card>
+        </View>
+      </Card>
+      <Card>
+        <Card.Title style={{ textAlign: "right" }}>Project Assign to you</Card.Title>
+        <Card.Divider width={5} style={{ width: "38%", alignSelf: "flex-end" }} color={colorVar.thirdColor} />
+        <View style={[{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 5, paddingHorizontal: 5, paddingVertical: 10 }]}>
+          <Card></Card>
+          <Card></Card>
+          <Card></Card>
+        </View>
+      </Card>
     </>
   );
 };
