@@ -1,6 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./node_modules/flowbite/**/*.js",
+],
   theme: {
     // screens: {
     //   "2xl": { max: "1536px" },
@@ -23,6 +26,9 @@ module.exports = {
       "1/4": "25%",
       "1/3": "33.33%",
       "1/2": "50%",
+      100: "100px",
+      200: "200px",
+      300: "300px",
     },
     extend: {
       colors: {
@@ -33,5 +39,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("flowbite/plugin")],
 };

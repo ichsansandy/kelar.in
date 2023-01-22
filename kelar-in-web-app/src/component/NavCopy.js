@@ -4,16 +4,17 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 
-function NavCopy({isLoggedIn, setIsLoggedIn}) {
+function NavCopy({ isLoggedIn, setIsLoggedIn }) {
   const navigationMenu = useSelector((s) => s.menu);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  function logout(){
-    setIsLoggedIn(false)
-    
+  function logout() {
+    setIsLoggedIn(false);
+    dispatch({ type: "MENU_NOT_LOGIN" });
+    navigate("/landingpage");
   }
 
   useEffect(() => {

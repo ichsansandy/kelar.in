@@ -1,7 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
-function Login() {
+function Login({ setIsLoggedIn }) {
+  const dispatch = useDispatch();
+  const navigation = useNavigate();
+
+  function login(e) {
+    e.preventDefault();
+    setIsLoggedIn(true);
+    dispatch({ type: "MENU_LOGIN" });
+    navigation("/");
+  }
+
   return (
     <div>
       <main className="">
@@ -42,7 +53,7 @@ function Login() {
                     <div className="text-gray-500 text-center mb-3 font-bold">
                       <h1 className="text-xl">Login</h1>
                     </div>
-                    <form>
+                    <form onSubmit={login}>
                       <div className="relative w-full mb-3">
                         <label className="block uppercase text-gray-700 text-sm text-left font-bold mb-2" htmlFor="grid-password">
                           Email
@@ -76,7 +87,7 @@ function Login() {
                       <div className="text-center mt-6">
                         <button
                           className="bg-third-color text-white active:bg-fourth-color text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
-                          type="button"
+                          type="submit"
                           style={{ transition: "all .15s ease" }}>
                           Sign In
                         </button>

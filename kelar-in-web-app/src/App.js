@@ -12,30 +12,23 @@ import Calendar from "./pages/Calendar";
 import { useDispatch } from "react-redux";
 import Footer from "./component/Footer";
 import axios from "axios";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
+import NewProject from "./pages/NewProject";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-   
-
-
-  function login() {
-    setIsLoggedIn(true);
-  }
-  function logout() {
-    setIsLoggedIn(false);
-  }
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   return (
     <div className="App">
-      <Toaster/>
+      <Toaster />
       <NavCopy isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/landingpage" element={<LandingPage />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path="/new-project" element={<NewProject />} />
         <Route path="/calendar" element={<Calendar />} />
       </Routes>
       <Footer />

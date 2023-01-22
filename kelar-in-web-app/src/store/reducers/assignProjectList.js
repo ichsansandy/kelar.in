@@ -3,6 +3,11 @@ const assignProjectListReducer = (
     { id: 1, projectName: "HealMe", projectOwner: "Hilmi" },
     { id: 2, projectName: "Takoni", projectOwner: "Oka" },
     { id: 3, projectName: "Mosewa", projectOwner: "Ammar" },
+    { id: 4, projectName: "Mosewa", projectOwner: "Ammar" },
+    { id: 5, projectName: "Mosewa", projectOwner: "Ammar" },
+    { id: 6, projectName: "Mosewa", projectOwner: "Ammar" },
+    { id: 7, projectName: "Mosewa", projectOwner: "Ammar" },
+    { id: 8, projectName: "Mosewa", projectOwner: "Ammar" },
   ],
   action
 ) => {

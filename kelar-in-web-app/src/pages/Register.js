@@ -13,10 +13,6 @@ function Register() {
     return setUser((values) => ({ ...values, [e.target.id]: value }));
   };
 
-  const handleTest = (e) => {
-    console.log(e.target.value);
-  };
-
   const register = () => {
     console.log(user);
     fetch("http://localhost:8081/api/register", {
@@ -55,7 +51,7 @@ function Register() {
       <main className="">
         <section className="absolute w-full h-full">
           <div
-            className="absolute top-0 w-full h-full bg-repeat"
+            className="absolute top-0 w-full h-full "
             style={{
               backgroundSize: "100%",
               backgroundImage: "url('/asset/redd-f-5U_28ojjgms-unsplash.jpg')",
