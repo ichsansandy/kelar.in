@@ -24,7 +24,7 @@ function Register() {
     })
       .then((response) => {
         if (response.status === 200) {
-          return response.body;
+          return response.text();
         } else {
           return toast.error("This didn't work. user or email exist.");
         }

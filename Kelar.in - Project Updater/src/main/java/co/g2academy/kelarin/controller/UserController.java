@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -75,6 +76,16 @@ public class UserController {
     public List<User> getAllUser(){
         return repository.findAll();
     }
+    
+    @GetMapping("/all-user-nameonly")
+    public ResponseEntity getAllUserNameOnly(){
+        List<User> allUsers = repository.findAll();
+        List<String> allUsersNameOnly = new ArrayList<>();
+        for (User allUser : allUsers) {
+            allUsersNameOnly.add(allUser.getName());
+        }
+        return ResponseEntity.ok().body(allUsersNameOnly);
+    }
 
     @PutMapping("/profile/edit-name")
     public ResponseEntity edit(@RequestBody User user, Principal principal) throws JsonProcessingException {
@@ -112,7 +123,6 @@ public class UserController {
     @GetMapping("/profile/get-picture")
     public ResponseEntity getProfilePicture(Principal principal){
         User loggedInUserFromDB = repository.findUserByUsername(principal.getName());
-        
         byte[] image = loggedInUserFromDB.getProfileImage();
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
     }

@@ -186,8 +186,8 @@ public class ProjectTrackerController {
 //        return ResponseEntity.badRequest().body("You are not allowed to do this");
 //    }
 
-    @PutMapping("/project/{id}/task")
-    public ResponseEntity editTaskStatus(@PathVariable Integer idProject, @RequestBody Task task, Principal principal) {
+    @PutMapping("/project/{id}/task-status")
+    public ResponseEntity editTaskStatus(@PathVariable Integer idProject,@RequestBody Task task, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         Project project = projectRepo.findById(idProject).get();
         if (task.getAssignUser().equals(loggedInUser) || loggedInUser.equals(project.getUser())) {
