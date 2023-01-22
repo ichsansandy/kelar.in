@@ -14,12 +14,15 @@ import co.g2academy.kelarin.service.MessagePublisherService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.data.redis.serializer.RedisSerializationContext.java;
 import org.springframework.http.HttpStatus;
@@ -31,7 +34,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -63,9 +68,9 @@ public class ProjectTrackerController {
         project.setStartDate(new Date());
         projectRepo.save(project);
         generateLogAndSendToNotification("create new ", "project", loggedInUser);
-        return ResponseEntity.ok().body("OK");
+        return ResponseEntity.ok().body("Project created Succesfully");
     }
-
+    
     @PutMapping("/project/{id}")
     public ResponseEntity editPorject(@RequestBody Project project, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
@@ -78,11 +83,32 @@ public class ProjectTrackerController {
                 pFromDb.setDueDate(project.getDueDate());
                 pFromDb.setStatus(project.getStatus());
                 projectRepo.save(pFromDb);
-                return ResponseEntity.ok().body("OK");
+                return ResponseEntity.ok().body("Project edited Succesfully");
             }
         }
         return ResponseEntity.badRequest().body("Project not found");
     }
+    
+    @PutMapping("/project/{id}/edit-picture")
+    public ResponseEntity editProjectImage(@RequestParam("image") MultipartFile file, Principal principal, Integer id){
+        User LoggedInUserFromDb= userRepo.findUserByUsername(principal.getName());
+         Optional<Project> opt = projectRepo.findById(id);
+        if (!opt.isEmpty()) {
+            Project pFromDb = opt.get();
+            if (pFromDb.getUser().getUsername().equals(principal.getName())) {
+                try {
+                    pFromDb.setProjectLogoImage(file.getBytes());
+                } catch (IOException ex) {
+                    Logger.getLogger(ProjectTrackerController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                projectRepo.save(pFromDb);
+                return ResponseEntity.ok().body("Project Image Uploaded");
+            }
+        }
+        return ResponseEntity.badRequest().body("Project not found");
+    }
+    
+    
 
     @PostMapping("/project/{id}/membership")
     public ResponseEntity addNewMember(@RequestBody User addUser, @PathVariable Integer idProject, Principal principal) {
@@ -94,7 +120,7 @@ public class ProjectTrackerController {
             m.setUser(addUser);
             membershipRepo.save(m);
         }
-        return ResponseEntity.ok().body("OK");
+        return ResponseEntity.ok().body("Succesfully assign user to project member");
     }
 
     @GetMapping("/project/{id}/membership")
@@ -108,7 +134,7 @@ public class ProjectTrackerController {
         return users;
     }
 
-    @GetMapping("/project/cerated-by-you")
+    @GetMapping("/project/created-by-you")
     public List<Project> getAllYourProject(Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         if (loggedInUser != null) {
@@ -133,7 +159,6 @@ public class ProjectTrackerController {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         Project p = projectRepo.findById(idProject).get();
         if (loggedInUser.equals(p.getUser())) {
-            task.setUser(loggedInUser);
             task.setProject(p);
             task.setAssignUser(user);
             task.setStatus("ASSIGN");

@@ -42,9 +42,6 @@ public class Task {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
     
-    @ManyToOne(optional=false)
-    @JoinColumn(name="user_id",nullable=false)
-    private User user;
     
     @ManyToOne(optional=false)
     @JoinColumn(name="project_id",nullable=false)
@@ -111,13 +108,6 @@ public class Task {
         this.endDate = endDate;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     public Project getProject() {
         return project;

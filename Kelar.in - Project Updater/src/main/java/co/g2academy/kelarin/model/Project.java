@@ -9,11 +9,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import static org.springframework.data.redis.serializer.RedisSerializationContext.java;
 
 /**
  *
@@ -44,7 +46,11 @@ public class Project {
     @Column(nullable=true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
-
+    
+    @Lob
+    @Column(nullable=true, length=1000)
+    private byte[] projectLogoImage;
+    
     @ManyToOne(optional=false)
     @JoinColumn(name="user_id",nullable=false)
     private User user;
@@ -115,5 +121,14 @@ public class Project {
     public void setMemberships(List<Membership> memberships) {
         this.memberships = memberships;
     }
+
+    public byte[] getProjectLogoImage() {
+        return projectLogoImage;
+    }
+
+    public void setProjectLogoImage(byte[] projectLogoImage) {
+        this.projectLogoImage = projectLogoImage;
+    }
+    
     
 }
