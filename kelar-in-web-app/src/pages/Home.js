@@ -4,16 +4,9 @@ import AssignProject from "../component/AssignProject";
 import ProjectCard from "../component/ProjectCard";
 import YourProjectContainer from "../component/YourProjectContainer";
 
-function Home({loggedInUser}) {
-  
+function Home({ loggedInUser }) {
   const quotes = ["it's looking like a slow day", "Every day is a chance to begin again.", "Do or Do not, there is no try", "Be patient with yourself. Self-growth is tender"];
   const random = Math.floor(Math.random() * quotes.length);
-
-  
-
-
-
-
 
   return (
     <div

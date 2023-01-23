@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
-import { useSelector } from "react-redux";
 
-const Selector = ({selected, setSelected,  setLists, lists}) => {
+const Selector = ({ selected, setSelected, setLists, lists }) => {
   const [inputValue, setInputValue] = useState("");
   const [open, setOpen] = useState(false);
 

@@ -19,27 +19,12 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
     navigate("/landingpage");
   }
 
-  const profileImage = () => {
-    fetch("http://192.168.100.82:8081/api/profile/get-picture", {
-      headers: {
-        Authorization: `${localStorage.getItem("Authorization")}`,
-      },
-    })
-      .then((response) => response.blob())
-      .then((myBlob) => {
-        setObjectURL(myBlob);
-        console.log("tes gambar" + objectURL);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   useEffect(() => {
     if (!localStorage.getItem("Authorization")) {
       dispatch({ type: "MENU_NOT_LOGIN" });
     } else {
       dispatch({ type: "MENU_LOGIN" });
+      //fetch profile picture
       fetch("http://192.168.100.82:8081/api/profile/get-picture", {
         headers: {
           Authorization: `${localStorage.getItem("Authorization")}`,
@@ -47,7 +32,7 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
       })
         .then((response) => response.blob())
         .then((myBlob) => {
-          objectURL = URL.createObjectURL(myBlob);
+          setObjectURL(URL.createObjectURL(myBlob));
         });
     }
   }, []);

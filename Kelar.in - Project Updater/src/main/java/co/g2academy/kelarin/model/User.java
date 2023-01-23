@@ -1,5 +1,6 @@
 package co.g2academy.kelarin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,6 +34,7 @@ public class User {
     @Column(nullable=true, length = 1000)
     private byte[] profileImage;
     
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Membership> memberships;
 

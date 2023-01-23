@@ -75,7 +75,14 @@ public class ProjectTrackerController {
             project.setDueDate(inputProject.getDueDate());
             project.setStatus("INPROGRESS");
             projectRepo.save(project);
-            generateLogAndSendToNotification("create new ", "project", loggedInUser);
+            //generateLogAndSendToNotification("create new ", "project", loggedInUser);
+            for (String member : inputProject.getMembers()) {
+                User addUser = userRepo.findUserByName(member);
+                Membership m = new Membership();
+                m.setProject(project);
+                m.setUser(addUser);
+                membershipRepo.save(m);
+            }
             return ResponseEntity.ok().body(project);
         }
     }

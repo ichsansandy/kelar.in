@@ -8,15 +8,8 @@ function YourProjectContainer() {
   const navigate = useNavigate();
 
   const addNewProject = () => {
-    console.log("masuk new project");
     navigate("/projects/new-project");
   };
-  // [
-  //   { id: 1, projectName: "kelar-in-WebApp", projectOwner: "Ichsan" },
-  //   { id: 2, projectName: "kelar-in-WebApp", projectOwner: "Ichsan" },
-  //   { id: 3, projectName: "kelar-in-WebApp", projectOwner: "Ichsan" },
-  //   { id: 4, projectName: "kelar-in-WebApp", projectOwner: "Ichsan" },
-  // ]
 
   return (
     <div className="bg-secondary-color/50 w-7/12 flex-col justify-self-end items-end m-5 p-5 rounded-lg border-4 border-secondary-color-200 border-y-third-color ">
