@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
 import Selector from "../component/Selector";
+import { toast } from "react-hot-toast";
 
 function NewProject() {
   const listUser = useSelector((s) => s.listUser);
@@ -17,14 +18,14 @@ function NewProject() {
   };
 
   useEffect(() => {
-    setListEditable(listUser);
+    setListEditable(listUser.sort());
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
   };
 
-  const removeMember = (member) => {
+  const removeFromMember = (member) => {
     setMembers((currMember) => {
       return currMember.filter((m) => {
         if (m !== member) {
@@ -32,6 +33,25 @@ function NewProject() {
         }
       });
     });
+    setListEditable([...listEditable, member]);
+  };
+
+  const addToMember = (input) => {
+    if (input !== "") {
+      setMembers([...members, input]);
+      toast.success("succesfully added to member");
+      //remove from list editable to prevent duplicate
+      setListEditable((state) => {
+        return state.filter((s) => {
+          if (s !== input) {
+            return s;
+          }
+        });
+      });
+      setSelected("");
+    } else {
+      toast.error("Please Choose User");
+    }
   };
 
   return (
@@ -66,18 +86,20 @@ function NewProject() {
                       placeholder="Search User"
                       style={{ transition: "all .15s ease" }}
                     /> */}
-                    <div className="w-4/6 "><Selector selected={selected} setSelected={setSelected} lists={listEditable} /></div>
+                    <div className="w-4/6 ">
+                      <Selector selected={selected} setSelected={setSelected} lists={listEditable} />
+                    </div>
                     <button
                       className="bg-third-color text-white px-5 ml-auto rounded hover:bg-primary-color hover:ring-third-color"
                       onClick={() => {
-                        setMembers([...members, selected]);
+                        addToMember(selected);
                       }}>
                       ADD
                     </button>
                   </div>
                   <ul className="list-disc my-5 w-full h-52 overflow-x-auto py-2 px-10 bg-white rounded">
                     {members.map((member) => (
-                      <div className="group" onClick={() => removeMember(member)}>
+                      <div className="group" onClick={() => removeFromMember(member)}>
                         <li className=" p-0 text-left ">
                           {member}
                           <span className="text-third-color invisible group-hover:visible"> click to remove</span>

@@ -23,7 +23,7 @@ const Selector = ({selected, setSelected,  setLists, lists}) => {
             key={user}
             className={`p-2 text-sm hover:bg-sky-600 hover:text-white
             ${user?.toLowerCase() === selected?.toLowerCase() && "bg-sky-600 text-white"}
-            ${user?.toLowerCase().startsWith(inputValue) ? "block" : "hidden"}`}
+            ${user?.toLowerCase().includes(inputValue) ? "block" : "hidden"}`}
             onClick={() => {
               if (user?.toLowerCase() !== selected.toLowerCase()) {
                 setSelected(user);

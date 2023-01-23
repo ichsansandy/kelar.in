@@ -16,13 +16,14 @@ import NewProject from "./pages/NewProject";
 import PrivateRoute from "./component/PrivateRoute";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({});
   const dispatch = useDispatch();
   const listUser = useSelector((s) => s.listUser);
 
   function fetchUser() {
-    fetch("http://192.168.100.82:8081/api/user-loggedIn", {
+    console.log("fetching user data");
+    fetch("http://localhost:8081/api/user-loggedIn", {
       headers: {
         "Content-Type": "application/json",
         Authorization: `${localStorage.getItem("Authorization")}`,
@@ -38,7 +39,8 @@ function App() {
   }
 
   function fetchListUser() {
-    fetch(`http://192.168.100.82:8081/api/all-user-nameonly`, {
+    console.log("fetching all user list only name data");
+    fetch(`http://localhost:8081/api/all-user-nameonly`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `${localStorage.getItem("Authorization")}`,
@@ -46,10 +48,7 @@ function App() {
     })
       .then((r) => r.json())
       .then((d) => {
-        console.log(d);
-        console.log(listUser);
         dispatch({ type: "SET_USER_LIST", payload: d });
-        console.log(listUser);
       })
       .catch((err) => {
         console.log(err);
@@ -58,6 +57,7 @@ function App() {
 
   useEffect(() => {
     if (localStorage.getItem("Authorization")) {
+      setIsLoggedIn(true);
       fetchUser();
       fetchListUser();
     }

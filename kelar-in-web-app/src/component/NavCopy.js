@@ -6,6 +6,7 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 
 function NavCopy({ isLoggedIn, setIsLoggedIn }) {
   const navigationMenu = useSelector((s) => s.menu);
+  const [objectURL, setObjectURL] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -18,8 +19,6 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
     navigate("/landingpage");
   }
 
-  let objectURL = "";
-
   const profileImage = () => {
     fetch("http://192.168.100.82:8081/api/profile/get-picture", {
       headers: {
@@ -28,7 +27,8 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
     })
       .then((response) => response.blob())
       .then((myBlob) => {
-        objectURL = URL.createObjectURL(myBlob);
+        setObjectURL(myBlob);
+        console.log("tes gambar" + objectURL);
       })
       .catch((err) => {
         console.log(err);

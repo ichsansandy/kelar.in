@@ -1,5 +1,6 @@
 package co.g2academy.kelarin.controller;
 
+import co.g2academy.kelarin.dto.NewProjectDto;
 import co.g2academy.kelarin.model.Comment;
 import co.g2academy.kelarin.model.Membership;
 import co.g2academy.kelarin.model.Project;
@@ -44,7 +45,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins="*")
+@CrossOrigin(origins = "*")
 public class ProjectTrackerController {
 
     @Autowired
@@ -62,15 +63,40 @@ public class ProjectTrackerController {
     private ObjectMapper mapper = new JsonMapper();
 
     @PostMapping("/project")
-    public ResponseEntity createProject(@RequestBody Project project, Principal principal) throws JsonProcessingException {
+    public ResponseEntity createProject(@RequestBody NewProjectDto inputProject, Principal principal) throws JsonProcessingException {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        project.setUser(loggedInUser);
-        project.setStartDate(new Date());
-        projectRepo.save(project);
-        generateLogAndSendToNotification("create new ", "project", loggedInUser);
-        return ResponseEntity.ok().body("Project created Succesfully");
+        Project pfromDb = projectRepo.findProjectByNameAndUser(inputProject.getName(), loggedInUser);
+        if (pfromDb != null) {
+            return ResponseEntity.badRequest().body("Project name already exist");
+        } else {
+            Project project = new Project();
+            project.setName(inputProject.getName());            project.setUser(loggedInUser);
+            project.setStartDate(inputProject.getStartDate());
+            project.setDueDate(inputProject.getDueDate());
+            project.setStatus("INPROGRESS");
+            projectRepo.save(project);
+            generateLogAndSendToNotification("create new ", "project", loggedInUser);
+            return ResponseEntity.ok().body(project);
+        }
     }
-    
+
+    @PostMapping("/project/{id}/membership")
+    public ResponseEntity addNewMember(@RequestBody NewProjectDto inputProject, @PathVariable Integer id, Principal principal) {
+        User loggedInUser = userRepo.findUserByUsername(principal.getName());
+        Project project = projectRepo.findById(id).get();
+        if (project.getUser().equals(loggedInUser)) {
+            for (String member : inputProject.getMembers()) {
+                User addUser = userRepo.findUserByName(member);
+                Membership m = new Membership();
+                m.setProject(project);
+                m.setUser(addUser);
+                membershipRepo.save(m);
+            }
+            return ResponseEntity.ok().body("Succesfully assign user to project member");
+        }
+        return ResponseEntity.badRequest().body("You're not the owner");
+    }
+
     @PutMapping("/project/{id}")
     public ResponseEntity editPorject(@RequestBody Project project, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
@@ -88,11 +114,11 @@ public class ProjectTrackerController {
         }
         return ResponseEntity.badRequest().body("Project not found");
     }
-    
+
     @PutMapping("/project/{id}/edit-picture")
-    public ResponseEntity editProjectImage(@RequestParam("image") MultipartFile file, Principal principal, Integer id){
-        User LoggedInUserFromDb= userRepo.findUserByUsername(principal.getName());
-         Optional<Project> opt = projectRepo.findById(id);
+    public ResponseEntity editProjectImage(@RequestParam("image") MultipartFile file, Principal principal, Integer id) {
+        User LoggedInUserFromDb = userRepo.findUserByUsername(principal.getName());
+        Optional<Project> opt = projectRepo.findById(id);
         if (!opt.isEmpty()) {
             Project pFromDb = opt.get();
             if (pFromDb.getUser().getUsername().equals(principal.getName())) {
@@ -106,21 +132,6 @@ public class ProjectTrackerController {
             }
         }
         return ResponseEntity.badRequest().body("Project not found");
-    }
-    
-    
-
-    @PostMapping("/project/{id}/membership")
-    public ResponseEntity addNewMember(@RequestBody User addUser, @PathVariable Integer idProject, Principal principal) {
-        User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        Project project = projectRepo.findById(idProject).get();
-        if (project.getUser().equals(loggedInUser)) {
-            Membership m = new Membership();
-            m.setProject(project);
-            m.setUser(addUser);
-            membershipRepo.save(m);
-        }
-        return ResponseEntity.ok().body("Succesfully assign user to project member");
     }
 
     @GetMapping("/project/{id}/membership")
@@ -185,9 +196,8 @@ public class ProjectTrackerController {
 //        }
 //        return ResponseEntity.badRequest().body("You are not allowed to do this");
 //    }
-
     @PutMapping("/project/{id}/task-status")
-    public ResponseEntity editTaskStatus(@PathVariable Integer idProject,@RequestBody Task task, Principal principal) {
+    public ResponseEntity editTaskStatus(@PathVariable Integer idProject, @RequestBody Task task, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         Project project = projectRepo.findById(idProject).get();
         if (task.getAssignUser().equals(loggedInUser) || loggedInUser.equals(project.getUser())) {
