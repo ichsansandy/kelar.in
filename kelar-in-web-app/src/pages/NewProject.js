@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
-import Selector from "../component/SearchDropdown";
+import Selector from "../component/Selector";
 
 function NewProject() {
   const listUser = useSelector((s) => s.listUser);
+  const [listEditable, setListEditable] = useState([]);
   const [newProject, setNewProject] = useState({});
   const [members, setMembers] = useState([]);
 
   const [selected, setSelected] = useState("");
-
   const handleChange = (e) => {
     const value = e.target.value;
     return setNewProject((values) => ({ ...values, [e.target.id]: value }));
   };
+
+  useEffect(() => {
+    setListEditable(listUser);
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -62,9 +66,7 @@ function NewProject() {
                       placeholder="Search User"
                       style={{ transition: "all .15s ease" }}
                     /> */}
-                    <div className="w-4/6 ">
-                      <Selector selected={selected} setSelected={setSelected} />
-                    </div>
+                    <div className="w-4/6 "><Selector selected={selected} setSelected={setSelected} lists={listEditable} /></div>
                     <button
                       className="bg-third-color text-white px-5 ml-auto rounded hover:bg-primary-color hover:ring-third-color"
                       onClick={() => {
@@ -75,7 +77,7 @@ function NewProject() {
                   </div>
                   <ul className="list-disc my-5 w-full h-52 overflow-x-auto py-2 px-10 bg-white rounded">
                     {members.map((member) => (
-                      <div className="group" onClick={()=>removeMember(member)}>
+                      <div className="group" onClick={() => removeMember(member)}>
                         <li className=" p-0 text-left ">
                           {member}
                           <span className="text-third-color invisible group-hover:visible"> click to remove</span>

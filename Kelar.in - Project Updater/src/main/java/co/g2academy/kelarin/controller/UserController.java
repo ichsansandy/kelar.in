@@ -50,9 +50,9 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody User user) throws JsonProcessingException {
-        System.out.println(user.getName());
-        System.out.println(user.getUsername());
-        System.out.println(user.getPassword());
+//        System.out.println(user.getName());
+//        System.out.println(user.getUsername());
+//        System.out.println(user.getPassword());
         User userFromDbByUsername = repository.findUserByUsername(user.getUsername());
         User userFromDbByName = repository.findUserByName(user.getName());
         if (userFromDbByUsername == null
@@ -70,6 +70,11 @@ public class UserController {
             return ResponseEntity.badRequest().body("user exist, email or password invalid");
         }
         return ResponseEntity.ok().body("OK");
+    }
+    
+    @GetMapping("/user-loggedIn")
+    public User getUserLoggeIn(Principal principal){
+        return repository.findUserByUsername(principal.getName());
     }
     
     @GetMapping("/all-user")

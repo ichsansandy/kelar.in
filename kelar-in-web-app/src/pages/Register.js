@@ -36,7 +36,7 @@ function Register() {
         }
       })
       .catch((err) => {
-        toast.error("This didn't work.");
+        toast.error("This didn't work. Server Error");
         console.log(err);
       });
   };
@@ -64,22 +64,6 @@ function Register() {
                     {/* <div className="text-center mb-3">
                       <h6 className="text-gray-600 text-lg font-bold">Welcome, Partners</h6>
                     </div> */}
-                    {/* <div className="btn-wrapper text-center">
-                    <button
-                      className="bg-white active:bg-gray-100 text-gray-800 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs"
-                      type="button"
-                      disabled="true"
-                      style={{ transition: "all .15s ease" }}>
-                      Github
-                    </button>
-                    <button
-                      className="bg-white active:bg-gray-100 text-gray-800 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs"
-                      type="button"
-                      disabled="true"
-                      style={{ transition: "all .15s ease" }}>
-                      Google
-                    </button>
-                  </div> */}
                     <div className="text-gray-500 text-center mb-3 font-bold">
                       <h1 className="text-xl">Join Us</h1>
                     </div>

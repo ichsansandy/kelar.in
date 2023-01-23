@@ -4,11 +4,6 @@ import ProjectCard from "./ProjectCard";
 
 function AssignProject() {
   const projects = useSelector((s) => s.assignProjects);
-  // [
-  //   { id: 1, projectName: "HealMe", projectOwner: "Hilmi" },
-  //   { id: 2, projectName: "Takoni", projectOwner: "Oka" },
-  //   { id: 3, projectName: "Mosewa", projectOwner: "Ammar" },
-  // ];
 
   return (
     <div className="bg-secondary-color/50 flex-col justify-self-end items-end m-5 p-5 rounded-lg border-4 border-secondary-color-200 border-y-third-color ">
@@ -16,7 +11,9 @@ function AssignProject() {
       <div className="flex ">
         <ul className={"flex items-center w-full snap-x overflow-x-auto p-4 mx-1 " + (projects.length >= 3 ? "h-72 " : "h-80")}>
           {projects.map((project) => (
-            <ProjectCard project={project} />
+            <div className="h-full" key={project.id}>
+              <ProjectCard project={project} />
+            </div>
           ))}
         </ul>
       </div>

@@ -12,16 +12,43 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   function logout() {
+    localStorage.clear();
     setIsLoggedIn(false);
     dispatch({ type: "MENU_NOT_LOGIN" });
     navigate("/landingpage");
   }
 
+  let objectURL = "";
+
+  const profileImage = () => {
+    fetch("http://192.168.100.82:8081/api/profile/get-picture", {
+      headers: {
+        Authorization: `${localStorage.getItem("Authorization")}`,
+      },
+    })
+      .then((response) => response.blob())
+      .then((myBlob) => {
+        objectURL = URL.createObjectURL(myBlob);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
-    if (isLoggedIn === false) {
+    if (!localStorage.getItem("Authorization")) {
       dispatch({ type: "MENU_NOT_LOGIN" });
     } else {
       dispatch({ type: "MENU_LOGIN" });
+      fetch("http://192.168.100.82:8081/api/profile/get-picture", {
+        headers: {
+          Authorization: `${localStorage.getItem("Authorization")}`,
+        },
+      })
+        .then((response) => response.blob())
+        .then((myBlob) => {
+          objectURL = URL.createObjectURL(myBlob);
+        });
     }
   }, []);
 
@@ -61,6 +88,7 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
                       //   {item.name}
                       // </Link>
                       <NavLink
+                        key={item.id}
                         to={item.href}
                         className={({ isActive }) => (isActive ? "bg-fourth-color text-secondary-color px-3 py-2 rounded-md text-xl font-bold" : "text-black hover:bg-third-color hover:text-white px-3 py-2 rounded-md text-xl font-bold")}>
                         {item.name}
@@ -80,7 +108,12 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
                   <div>
                     <Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="sr-only">Open user menu</span>
-                      <img className="h-9 w-9 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                      <img
+                        className="h-9 w-9 rounded-full"
+                        // src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        src={objectURL}
+                        alt=""
+                      />
                     </Menu.Button>
                   </div>
                   <Transition
@@ -139,4 +172,5 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
     </Disclosure>
   );
 }
+
 export default NavCopy;

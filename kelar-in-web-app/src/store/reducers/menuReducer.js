@@ -1,8 +1,8 @@
 const menuReducer = (
   state = [
-    { name: "Home", href: "/", current: true },
-    { name: "Projects", href: "/projects", current: false },
-    { name: "Calendar", href: "/calendar", current: false },
+    { id: 1, name: "Home", href: "/", current: true },
+    { id: 2, name: "Projects", href: "/projects", current: false },
+    { id: 3, name: "Calendar", href: "/calendar", current: false },
   ],
   action
 ) => {
@@ -17,13 +17,13 @@ const menuReducer = (
 };
 
 const menuNotLoggin = [
-  { name: "Register", href: "/register", current: false },
-  { name: "Login", href: "/login", current: false },
+  { id: 1, name: "Register", href: "/register", current: false },
+  { id: 2, name: "Login", href: "/login", current: false },
 ];
 const menuLogin = [
-  { name: "Home", href: "/", current: true },
-  { name: "Projects", href: "/projects", current: false },
-  { name: "Calendar", href: "/calendar", current: false },
+  { id: 1, name: "Home", href: "/", current: false },
+  { id: 2, name: "Projects", href: "/projects", current: false },
+  { id: 3, name: "Messaging", href: "/messaging", current: false },
 ];
 
 export default menuReducer;

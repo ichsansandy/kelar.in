@@ -3,7 +3,6 @@ import React from "react";
 function ProjectCard({ project, isYourProject }) {
   return (
     <div
-      key={project.id}
       className={
         "scroll-ml-6 snap-start min-h-full bg-third-color mx-4 rounded-3xl shadow-xl py-4 min-w-200 flex flex-col justify-center "
         // + (isYourProject ? "min-w-200 " : "min-w-1/4")
