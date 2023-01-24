@@ -95,7 +95,10 @@ function MemberCard() {
         </button>
       </div>
       <div className={"absolute p-2 inset-x-0  w-full top rounded bg-secondary-color text-fourth-color font-extrabold z-30 " + (isOpen ? "hidden" : "")}>Members</div>
-      <button className={"absolute right-0 top-3 bg-fourth-color z-40 p-2 rounded "+(isOpen ? " hidden" : " ")} onClick={()=>setIsOpen(true)}><svg class="h-6 w-6 text-white"  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />  <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />  <line x1="16" y1="5" x2="19" y2="8" /></svg></button>
+      <button className={" group hover:bg-primary-color/75 absolute right-0 top-3 bg-fourth-color z-40 p-2 rounded "+(isOpen ? " hidden" : " ")} onClick={()=>setIsOpen(true)}>
+        <svg className="h-6 w-6 group-hover:text-fourth-color text-white"  viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />  <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" />  <line x1="16" y1="5" x2="19" y2="8" />
+        </svg>
+        </button>
       <ul className="list-disc mt-5 w-full h-52 overflow-x-auto py-2 px-10 bg-white rounded">
         {members.map((member) => (
           <div className="group" onClick={() => removeFromMember(member)}>

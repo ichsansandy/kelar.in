@@ -19,23 +19,25 @@ function ProjectDetails() {
   const projectLogo = null;
 
   return (
-    <div className="w-7xl min-h-screen">
-      <div className="bg-third-color/50 p-5 flex justify-center items-center lg:flex-row flex-col">
-        <div className="flex justify-center h-64">
-          <ProjectCard project={project} />
-          <div className="flex flex-col justify-evenly">
-            <DateBubble date={project.startDate} title={"Start"} />
-            <DateBubble date={project.dueDate} title={"Due"} />
+    <div className="w-7xl min-h-screen flex flex-col justify- lg:flex-row bg-third-color/25">
+      <div className="ml-4">
+        <div className="bg-third-color/ p-5 flex justify-center items-center lg:flex-row flex-col">
+          <div className="flex justify-center h-64">
+            <ProjectCard project={project} />
+            <div className="flex flex-col justify-evenly">
+              <DateBubble date={project.startDate} title={"Start"} />
+              <DateBubble date={project.dueDate} title={"Due"} />
+            </div>
+          </div>
+          <div className="mx-6 min-w-[369px] lg:w-1/4 w-1/2 my-4 lg:my-0">
+            <MemberCard />
           </div>
         </div>
-        <div className="mx-6 lg:w-1/4 w-1/2 my-4 lg:my-0">
-            <MemberCard/>
+        <div className="flex justify-evenly bg-third-color/">
+          <TaskContainer />
         </div>
       </div>
-        <TaskContainer />
-      <div className="flex justify-evenly bg-third-color/50">
-      </div>
-        <div>Comment</div>
+      <div>Comment</div>
     </div>
   );
 }
