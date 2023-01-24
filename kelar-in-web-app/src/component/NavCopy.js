@@ -35,7 +35,7 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
           setObjectURL(URL.createObjectURL(myBlob));
         });
     }
-  }, []);
+  }, [localStorage.getItem("Authorization")]);
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");

@@ -12,10 +12,10 @@ const Selector = ({ selected, setSelected, setLists, lists }) => {
         {selected ? (selected?.length > 20 ? selected?.substring(0, 20) + "..." : selected) : "Select User"}
         <BiChevronDown size={20} className={`${open && "rotate-180"}`} />
       </div>
-      <ul className={`absolute z-50 bg-white mt-2 overflow-y-auto ${open ? "max-h-48" : "max-h-0"} `}>
-        <div className="flex justify-center items-center  sticky top-0 bg-white">
-          <AiOutlineSearch size={18} className="text-gray-700 " />
-          <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value.toLowerCase())} placeholder="Enter Name" className=" focus:ring-0 border-0" />
+      <ul className={`absolute z-50 bg-white mt-2   overflow-y-auto ${open ? "max-h-48 border-blue-400 bg-slate-100" : "max-h-0"} `}>
+        <div className="flex justify-center items-center  sticky bg-white">
+          <AiOutlineSearch size={18} className="text-gray-400  text-center" />
+          <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value.toLowerCase())} placeholder="Enter Name" className="placeholder-gray-400 focus:ring-0 border-0 w-2/4" />
         </div>
         {lists.map((user) => (
           <li

@@ -1,13 +1,13 @@
 const assignProjectListReducer = (
   state = [
-    { id: 1, projectName: "HealMe", projectOwner: "Hilmi" },
-    { id: 2, projectName: "Takoni", projectOwner: "Oka" },
-    { id: 3, projectName: "Mosewa", projectOwner: "Ammar" },
-    { id: 4, projectName: "Mosewa", projectOwner: "Ammar" },
-    { id: 5, projectName: "Mosewa", projectOwner: "Ammar" },
-    { id: 6, projectName: "Mosewa", projectOwner: "Ammar" },
-    { id: 7, projectName: "Mosewa", projectOwner: "Ammar" },
-    { id: 8, projectName: "Mosewa", projectOwner: "Ammar" },
+    { id: 1, name: "HealMe", user: { name: "Hilmi" } },
+    { id: 2, name: "Takoni", user: { name: "Oka" } },
+    { id: 3, name: "Mosewa", user: { name: "Ammar" } },
+    { id: 4, name: "Mosewa", user: { name: "Ammar" } },
+    { id: 5, name: "Mosewa", user: { name: "Ammar" } },
+    { id: 6, name: "Mosewa", user: { name: "Ammar" } },
+    { id: 7, name: "Mosewa", user: { name: "Ammar" } },
+    { id: 8, name: "Mosewa", user: { name: "Ammar" } },
   ],
   action
 ) => {
@@ -17,11 +17,11 @@ const assignProjectListReducer = (
     case "ADD_ASSIGN_PROJECT":
       return [...state, action.payload];
     case "REMOVE_ASSIGN_PROJECT":
-      return state.filter(project => {
-        if(project.id != action.payload.id){
-            return project
+      return state.filter((project) => {
+        if (project.id != action.payload.id) {
+          return project;
         }
-      })
+      });
     default:
       return state;
   }

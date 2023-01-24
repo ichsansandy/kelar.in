@@ -14,6 +14,7 @@ import Footer from "./component/Footer";
 import { Toaster } from "react-hot-toast";
 import NewProject from "./pages/NewProject";
 import PrivateRoute from "./component/PrivateRoute";
+import ProjectDetails from "./pages/ProjectDetails";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -21,8 +22,8 @@ function App() {
   const dispatch = useDispatch();
   const listUser = useSelector((s) => s.listUser);
 
-  function fetchUser() {
-    console.log("fetching user data");
+  function fetchUserLoggedIn() {
+    console.log("fetching user data logged In");
     fetch("http://localhost:8081/api/user-loggedIn", {
       headers: {
         "Content-Type": "application/json",
@@ -32,6 +33,7 @@ function App() {
       .then((r) => r.json())
       .then((d) => {
         setUser(d);
+        dispatch({ type: "SET_USER_LOGGEDIN", payload: d });
       })
       .catch((err) => {
         console.log(err);
@@ -58,7 +60,7 @@ function App() {
   useEffect(() => {
     if (localStorage.getItem("Authorization")) {
       setIsLoggedIn(true);
-      fetchUser();
+      fetchUserLoggedIn();
       fetchListUser();
     }
   }, [localStorage.getItem("Authorization")]);
@@ -79,6 +81,7 @@ function App() {
             </PrivateRoute>
           }></Route>
         <Route path="/projects" element={<Projects />}></Route>
+        <Route path="/projects/:id" element = { <ProjectDetails/> } />
         <Route path="/projects/new-project" element={<NewProject />} />
         <Route path="/messaging" element={<Messaging />} />
       </Routes>

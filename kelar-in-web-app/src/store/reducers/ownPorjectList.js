@@ -1,9 +1,9 @@
 const ownProjectListReducer = (
   state = [
-    { id: 1, projectName: "kelar-in-WebApp", projectOwner: "Ichsan" },
-    { id: 2, projectName: "kelar-in-WebApp", projectOwner: "Ichsan" },
-    { id: 3, projectName: "kelar-in-WebApp", projectOwner: "Ichsan" },
-    { id: 4, projectName: "kelar-in-WebApp", projectOwner: "Ichsan" },
+    { id: 1, name: "kelar-in-WebApp", user: { name: "Ichsan" } },
+    { id: 2, name: "kelar-in-WebApp", user: { name: "Ichsan" } },
+    { id: 3, name: "kelar-in-WebApp", user: { name: "Ichsan" } },
+    { id: 4, name: "kelar-in-WebApp", user: { name: "Ichsan" } },
   ],
   action
 ) => {

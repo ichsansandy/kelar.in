@@ -6,15 +6,15 @@ import Selector from "../component/Selector";
 import { toast } from "react-hot-toast";
 
 function NewProject() {
+  const dispatch = useDispatch();
   const listUser = useSelector((s) => s.listUser);
+  const loggedInUser = useSelector((s) => s.loggedInUser);
   const [listEditable, setListEditable] = useState([]);
   const [newProject, setNewProject] = useState({});
   const [members, setMembers] = useState([]);
   const [selected, setSelected] = useState("");
 
   const [todayDate, setTodayDate] = useState("");
-
-
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -23,7 +23,16 @@ function NewProject() {
   };
 
   useEffect(() => {
+    console.log(loggedInUser);
+    fetchListUser();
     setListEditable(listUser.sort());
+    setListEditable((currState) => {
+      return currState.filter((u) => {
+        if (u !== loggedInUser.name) {
+          return u;
+        }
+      });
+    });
     setTodayDate(new Date().toLocaleDateString("en-ca"));
     console.log(todayDate);
   }, []);
@@ -115,6 +124,22 @@ function NewProject() {
   //       console.log(err);
   //     });
   // }
+  function fetchListUser() {
+    console.log("fetching all user list only name data");
+    fetch(`http://localhost:8081/api/all-user-nameonly`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${localStorage.getItem("Authorization")}`,
+      },
+    })
+      .then((r) => r.json())
+      .then((d) => {
+        dispatch({ type: "SET_USER_LIST", payload: d });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   return (
     <>
@@ -216,3 +241,5 @@ function NewProject() {
 }
 
 export default NewProject;
+
+

@@ -24,7 +24,7 @@ function YourProjectContainer() {
               d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z"
             />
           </svg>
-          <h1 className="text-2xl font-bold">New Project</h1>
+          <h1 className="text-2xl font-bold ">New Project</h1>
         </button>
         <ul className="flex items-center w-3/4 snap-x overflow-x-auto p-4 mx-1 ">
           {projects.map((project) => (

@@ -4,7 +4,6 @@ const loggedInUserReducer = (state = {}, action) => {
       return action.payload;
     case "REMOVE_USER_LOGGEDIN":
       return null;
-
     default:
       return state;
   }
