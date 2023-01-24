@@ -1,4 +1,5 @@
 import React from "react";
+import CommentContainer from "../component/CommentContainer";
 import DateBubble from "../component/DateBubble";
 import MemberCard from "../component/MemberCard";
 import ProjectCard from "../component/ProjectCard";
@@ -19,7 +20,7 @@ function ProjectDetails() {
   const projectLogo = null;
 
   return (
-    <div className="w-7xl min-h-screen flex flex-col justify- lg:flex-row bg-third-color/25">
+    <div className="w-7xl min-h-screen flex flex-col justify- xl:flex-row bg-third-color/25">
       <div className="ml-4">
         <div className="bg-third-color/ p-5 flex justify-center items-center lg:flex-row flex-col">
           <div className="flex justify-center h-64">
@@ -37,7 +38,7 @@ function ProjectDetails() {
           <TaskContainer />
         </div>
       </div>
-      <div>Comment</div>
+      <CommentContainer/>
     </div>
   );
 }
