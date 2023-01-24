@@ -7,7 +7,7 @@ function ProjectCard({ project, isYourProject }) {
   return (
     <div
       className={
-        "group scroll-ml-6 snap-start min-h-full bg-third-color hover:bg-secondary-color mx-4 rounded-3xl shadow-xl  min-w-200 flex flex-col justify-center items-center "
+        "group scroll-ml-6 snap-start min-h-full  bg-third-color hover:bg-secondary-color mx-4 rounded-3xl shadow-xl  min-w-200 flex flex-col justify-center items-center "
         // + (isYourProject ? "min-w-200 " : "min-w-1/4")
       }>
         <ProgressBubble/>
@@ -20,7 +20,7 @@ function ProjectCard({ project, isYourProject }) {
         ) : (
           <div>{projectLogo}</div>
         )}
-        <div className="w-full text-center group-hover:text-fourth-color group-hover:bg-secondary-color text-white bg-fourth-color">
+        <div className="w-11/12 rounded-lg text-center group-hover:text-fourth-color group-hover:bg-secondary-color text-white bg-fourth-color">
           <div className="font-bold">{project.name}</div>
           <div className={""+( project.user.name > 15)} >by {project.user.name.split(" ")[0]}</div>
         </div>
