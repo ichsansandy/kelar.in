@@ -1,5 +1,6 @@
 package co.g2academy.kelarin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -55,6 +56,7 @@ public class Project {
     @JoinColumn(name="user_id",nullable=false)
     private User user;
     
+    @JsonIgnore
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Membership> memberships;
 

@@ -1,6 +1,7 @@
 package co.g2academy.kelarin.controller;
 
 import co.g2academy.kelarin.dto.NewProjectDto;
+import co.g2academy.kelarin.dto.NewTaskDto;
 import co.g2academy.kelarin.model.Comment;
 import co.g2academy.kelarin.model.Membership;
 import co.g2academy.kelarin.model.Project;
@@ -11,6 +12,7 @@ import co.g2academy.kelarin.repository.MembershipRepository;
 import co.g2academy.kelarin.repository.ProjectRepository;
 import co.g2academy.kelarin.repository.TaskRepository;
 import co.g2academy.kelarin.repository.UserRepository;
+import co.g2academy.kelarin.service.CreateNewProjectService;
 import co.g2academy.kelarin.service.MessagePublisherService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,8 +22,10 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +66,9 @@ public class ProjectTrackerController {
     private MessagePublisherService messagePublisherService;
     private ObjectMapper mapper = new JsonMapper();
 
+    @Autowired
+    private CreateNewProjectService projectService;
+
     @PostMapping("/project")
     public ResponseEntity createProject(@RequestBody NewProjectDto inputProject, Principal principal) throws JsonProcessingException {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
@@ -70,20 +77,34 @@ public class ProjectTrackerController {
             return ResponseEntity.badRequest().body("Project name already exist");
         } else {
             Project project = new Project();
-            project.setName(inputProject.getName());            project.setUser(loggedInUser);
+            project.setName(inputProject.getName());
+            project.setUser(loggedInUser);
             project.setStartDate(inputProject.getStartDate());
             project.setDueDate(inputProject.getDueDate());
             project.setStatus("INPROGRESS");
-            projectRepo.save(project);
+            //projectRepo.save(project);
             //generateLogAndSendToNotification("create new ", "project", loggedInUser);
-            for (String member : inputProject.getMembers()) {
-                User addUser = userRepo.findUserByName(member);
-                Membership m = new Membership();
-                m.setProject(project);
-                m.setUser(addUser);
-                membershipRepo.save(m);
+            //check duplicate
+            List<String> usersNameOnly = inputProject.getMembers();
+            Set<String> setUsersNameOnly = new HashSet<>(usersNameOnly);
+            List<User> memberListnew = new ArrayList<>();
+            if (setUsersNameOnly.size() < usersNameOnly.size()) {
+                return ResponseEntity.badRequest().body("user duplicate already inside membership");
+            } else {
+                for (String member : inputProject.getMembers()) {
+                    User addUser = userRepo.findUserByName(member);
+                    if (addUser == null) {
+                        return ResponseEntity.badRequest().body("user not found");
+                    } else {
+
+                    }
+                }
             }
-            return ResponseEntity.ok().body(project);
+            String result = projectService.createNewProject(project, memberListnew);
+            if (result == "OK") {
+                return ResponseEntity.ok().body(project);
+            }
+            return ResponseEntity.badRequest().body("Something Wrong");
         }
     }
 
@@ -142,8 +163,8 @@ public class ProjectTrackerController {
     }
 
     @GetMapping("/project/{id}/membership")
-    public List<User> getMemberProject(@PathVariable Integer idProject, Principal principal) {
-        Project project = projectRepo.findById(idProject).get();
+    public List<User> getMemberProject(@PathVariable Integer id, Principal principal) {
+        Project project = projectRepo.findById(id).get();
         List<Membership> ms = membershipRepo.findMembershipByProject(project);
         List<User> users = new ArrayList<>();
         for (Membership m : ms) {
@@ -173,15 +194,20 @@ public class ProjectTrackerController {
     }
 
     @PostMapping("/project/{id}/task")
-    public ResponseEntity createTask(@PathVariable Integer idProject, @RequestBody Task task, @RequestBody User user, Principal principal) {
+    public ResponseEntity createTask(@PathVariable Integer id, @RequestBody NewTaskDto taskInput,  Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        Project p = projectRepo.findById(idProject).get();
-        if (loggedInUser.equals(p.getUser())) {
+        Project p = projectRepo.findById(id).get();
+        User userAssign = userRepo.findUserByName(taskInput.getUser());
+        Boolean validation = validateUserOwnerOrMembership(p, loggedInUser);
+        if (validation == true) {
+            Task task = new Task();
             task.setProject(p);
-            task.setAssignUser(user);
+            task.setDueDate(taskInput.getDueDate());
+            task.setAssignUser(userAssign);
+            task.setTaskName(taskInput.getTaskName());
             task.setStatus("ASSIGN");
             taskRepo.save(task);
-            return ResponseEntity.ok().body("OK");
+            return ResponseEntity.ok().body(task);
         }
         return ResponseEntity.badRequest().body("You are not the project owner");
     }
@@ -265,11 +291,11 @@ public class ProjectTrackerController {
     public List<Comment> getCommentByTask(@PathVariable Integer idProject, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         Project project = projectRepo.findById(idProject).get();
-        Boolean validation = validateUserOwnerOrMembership(project, loggedInUser);
-        if (validation == true) {
+        //Boolean validation = validateUserOwnerOrMembership(project, loggedInUser);
+        //if (validation == true) {
             return commentRepo.findCommentByProject(project);
-        }
-        return null;
+        //}
+        //return null;
     }
 
     @GetMapping("/project/{id}/task/performance/last-month")
