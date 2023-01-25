@@ -33,6 +33,10 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+  default: {
+    padding: 0,
+    margin: 0,
+  },
 });
 
 export default styles;
