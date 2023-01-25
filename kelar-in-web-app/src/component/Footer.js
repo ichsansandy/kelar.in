@@ -2,11 +2,11 @@ import React from "react";
 
 function Footer() {
   return (
-      <div className="px-4 py-6 h-18 bg-gray-100 dark:bg-gray-700 md:flex md:items-center md:justify-between">
+      <div className=" px-4 py-6 h-18 bg-gray-100 dark:bg-gray-700 md:flex md:items-center md:justify-between">
         <span className="text-sm text-gray-500 dark:text-gray-300 sm:text-center">
-          © 2023 <a href="https://flowbite.com/">@ichsansandy™</a>. All Rights Reserved.
+          © 2023 <a href="https://github.com/ichsansandy/kelar.in">@ichsansandy™</a>. All Rights Reserved.
         </span>
-        <div className="flex mt-4 space-x-6 sm:justify-center md:mt-0">
+        <div className="flex mt-4 space-x-6 justify-center md:mt-0">
           <a href="#" className="text-gray-400 hover:text-gray-900 dark:hover:text-white">
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path

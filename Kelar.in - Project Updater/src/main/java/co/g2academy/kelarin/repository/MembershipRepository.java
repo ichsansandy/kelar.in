@@ -15,4 +15,5 @@ import org.springframework.stereotype.Repository;
 public interface MembershipRepository extends JpaRepository<Membership, Integer> {
     public List<Membership> findMembershipByProject(Project project);
     public List<Membership> findMembershipByUser(User user);
+    public Membership findMembershipByUserAndProject(User user, Project project);
 }

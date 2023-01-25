@@ -22,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -131,5 +132,14 @@ public class UserController {
         byte[] image = loggedInUserFromDB.getProfileImage();
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
     }
+   
+    @GetMapping("/profile/get-picture/{name}")
+    public ResponseEntity getProfilePicture(@PathVariable String name){
+        User loggedIUserFromDb = repository.findUserByName(name);
+        byte[] image = loggedIUserFromDb.getProfileImage();
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+    }
+    
+    
 
 }

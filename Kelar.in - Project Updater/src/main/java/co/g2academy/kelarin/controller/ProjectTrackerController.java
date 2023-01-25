@@ -1,5 +1,6 @@
 package co.g2academy.kelarin.controller;
 
+import co.g2academy.kelarin.dto.MemberAndAvailUserDto;
 import co.g2academy.kelarin.dto.NewProjectDto;
 import co.g2academy.kelarin.dto.NewTaskDto;
 import co.g2academy.kelarin.model.Comment;
@@ -33,6 +34,7 @@ import static org.springframework.data.redis.serializer.RedisSerializationContex
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -125,6 +127,61 @@ public class ProjectTrackerController {
         return ResponseEntity.badRequest().body("You're not the owner");
     }
 
+    @PostMapping("/project/{id}/add-membership")
+    public ResponseEntity addAnotherMember(@RequestBody List<String> listNewName, @PathVariable Integer id, Principal principal) {
+        Project project = projectRepo.findById(id).get();
+        List<Membership> ms = membershipRepo.findMembershipByProject(project);
+        List<User> membersFromDb = new ArrayList<>();
+        List<User> newMemberFromFE = new ArrayList<>();
+        for (Membership m : ms) {
+            membersFromDb.add(m.getUser());
+        }
+        for (String newName : listNewName) {
+            User addUserFromFE = userRepo.findUserByName(newName);
+            newMemberFromFE.add(addUserFromFE);
+        }
+        for (User user : newMemberFromFE) {
+            if (!membersFromDb.contains(user)) {
+                Membership m = new Membership();
+                m.setProject(project);
+                m.setUser(user);
+                membershipRepo.save(m);
+            }
+        }
+        for (User user : membersFromDb) {
+            if (!newMemberFromFE.contains(user)) {
+                Membership m = membershipRepo.findMembershipByUserAndProject(user, project);
+                membershipRepo.delete(m);
+                System.out.println("delete");
+            }
+        }
+        return ResponseEntity.ok().body("Succesfully assign user to project member");
+
+    }
+
+    @DeleteMapping("/project/{id}/delete-membership")
+    public ResponseEntity removeMember(@RequestBody List<String> listNewName, @PathVariable Integer id, Principal principal) {
+        Project project = projectRepo.findById(id).get();
+        List<Membership> ms = membershipRepo.findMembershipByProject(project);
+        List<User> membersFromDb = new ArrayList<>();
+        List<User> newMemberFromFE = new ArrayList<>();
+        for (Membership m : ms) {
+            membersFromDb.add(m.getUser());
+        }
+        for (String newName : listNewName) {
+            User addUserFromFE = userRepo.findUserByName(newName);
+            newMemberFromFE.add(addUserFromFE);
+        }
+        for (User user : membersFromDb) {
+            if (!newMemberFromFE.contains(user)) {
+                Membership m = membershipRepo.findMembershipByUserAndProject(user, project);
+                membershipRepo.delete(m);
+                System.out.println("delete");
+            }
+        }
+        return ResponseEntity.ok().body("Succesfully assign user to project member");
+    }
+
     @PutMapping("/project/{id}")
     public ResponseEntity editPorject(@RequestBody Project project, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
@@ -172,16 +229,26 @@ public class ProjectTrackerController {
         }
         return users;
     }
-    
-    @GetMapping("/project/{id}/membership-onlyname")
-    public List<String> getMemberOnlyNameProject(@PathVariable Integer id, Principal principal) {
+
+    @GetMapping("/project/{id}/membership-availuser")
+    public MemberAndAvailUserDto getMemberOnlyNameProject(@PathVariable Integer id, Principal principal) {
         Project project = projectRepo.findById(id).get();
         List<Membership> ms = membershipRepo.findMembershipByProject(project);
-        List<String> users = new ArrayList<>();
+        MemberAndAvailUserDto memberAndAvailUser = new MemberAndAvailUserDto();
+        List<String> members = new ArrayList<>();
+        List<String> availUsers = new ArrayList<>();
         for (Membership m : ms) {
-            users.add(m.getUser().getName());
+            members.add(m.getUser().getName());
         }
-        return users;
+        List<User> allUser = userRepo.findAll();
+        for (User user : allUser) {
+            availUsers.add(user.getName());
+        }
+        availUsers.removeAll(members);
+        availUsers.remove(project.getUser().getName());
+        memberAndAvailUser.setMembership(members);
+        memberAndAvailUser.setAvailUser(availUsers);
+        return memberAndAvailUser;
     }
 
     @GetMapping("/project/{id}")

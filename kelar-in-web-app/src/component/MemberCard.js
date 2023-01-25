@@ -17,7 +17,7 @@ function MemberCard({ isYourProject }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const fetchMemberFromProjectId = async () => {
-    const r = await fetch(`http://localhost:8081/api/project/${id}/membership-onlyname`, {
+    const r = await fetch(`http://localhost:8081/api/project/${id}/membership-availuser`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `${localStorage.getItem("Authorization")}`,
@@ -60,7 +60,7 @@ function MemberCard({ isYourProject }) {
   };
 
   function fetchMember() {
-    fetch(``, {
+    fetch(`http://localhost:8081/api/project/${id}/add-membership`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -70,13 +70,36 @@ function MemberCard({ isYourProject }) {
     })
       .then((r) => {
         if (r.ok) {
-          return r.json();
+          return r.text();
         } else {
           throw { message: "Error", status: r.status };
         }
       })
       .then((d) => {
-        setMembers(d);
+        toast.success(d);
+      })
+      .catch((err) => {
+        toast.err(err.message);
+      });
+  }
+  function deleteMember() {
+    fetch(`http://localhost:8081/api/project/${id}/add-membership`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${localStorage.getItem("Authorization")}`,
+      },
+      body: JSON.stringify(members),
+    })
+      .then((r) => {
+        if (r.ok) {
+          return r.text();
+        } else {
+          throw { message: "Error", status: r.status };
+        }
+      })
+      .then((d) => {
+        toast.success(d);
       })
       .catch((err) => {
         toast.err(err.message);
@@ -113,25 +136,21 @@ function MemberCard({ isYourProject }) {
   useEffect(() => {
     fetchMemberFromProjectId()
       .then((d) => {
-        setMembers(d);
-        console.log(members)
+        setMembers(d.membership);
+        setListEditable(d.availUser);
+        console.log(members);
       })
       .catch((err) => {
         toast.error(err.message);
       });
-    let list = listUser.filter((x) => !members.includes(x));
-    console.log(list);
-    if (isLoading) {
-      setListEditable(list.sort());
-      setListEditable((currState) => {
-        return currState.filter((u) => {
-          if (u !== loggedInUser.name) {
-            return u;
-          }
-        });
+    setListEditable((currState) => {
+      return currState.filter((u) => {
+        if (u !== loggedInUser.name) {
+          return u;
+        }
       });
-      setIsLoading(false)
-    }
+    });
+    setIsLoading(false);
   }, []);
 
   return (
@@ -151,6 +170,7 @@ function MemberCard({ isYourProject }) {
           type="button"
           onClick={() => {
             setIsOpen(false);
+            fetchMember();
           }}>
           SAVE
         </button>
