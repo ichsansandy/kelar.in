@@ -1,7 +1,7 @@
 import logo from "./logo.svg";
 import "./App.css";
 import { useEffect, useState } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -11,27 +11,37 @@ import Projects from "./pages/Projects";
 import Messaging from "./pages/Messaging";
 import { useDispatch, useSelector } from "react-redux";
 import Footer from "./component/Footer";
-import { Toaster } from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast";
 import NewProject from "./pages/NewProject";
 import PrivateRoute from "./component/PrivateRoute";
 import ProjectDetails from "./pages/ProjectDetails";
+import Loading from "./component/Loading";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({});
   const dispatch = useDispatch();
   const listUser = useSelector((s) => s.listUser);
+  const navigation = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   function fetchUserLoggedIn() {
-    console.log("fetching user data logged In");
     fetch("http://localhost:8081/api/user-loggedIn", {
       headers: {
         "Content-Type": "application/json",
         Authorization: `${localStorage.getItem("Authorization")}`,
       },
     })
-      .then((r) => r.json())
+      .then((r) => {
+        if (r.ok) {
+          return r.json();
+        } else if (r.status === 500) {
+          toast.error("You need to re-login");
+          navigation("/login");
+        }
+      })
       .then((d) => {
+        console.log(d);
         setUser(d);
         dispatch({ type: "SET_USER_LOGGEDIN", payload: d });
       })
@@ -40,30 +50,83 @@ function App() {
       });
   }
 
-  function fetchListUser() {
-    console.log("fetching all user list only name data");
-    fetch(`http://localhost:8081/api/all-user-nameonly`, {
+  const fetchListUser = async () => {
+    const r = await fetch(`http://localhost:8081/api/all-user-nameonly`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `${localStorage.getItem("Authorization")}`,
       },
+    });
+    if (r.ok) {
+      return r.json();
+    } else {
+      throw { message: "error", status: r.status };
+    }
+  };
+
+  function fetchYourProjectList() {
+    fetch(`http://localhost:8081/api/project/created-by-you`, {
+      headers: {
+        "COntent-Type": "application/json",
+        Authorization: `${localStorage.getItem("Authorization")}`,
+      },
     })
-      .then((r) => r.json())
+      .then((r) => {
+        if (r.ok) {
+          return r.json();
+        } else {
+          throw { message: "error", status: r.status };
+        }
+      })
       .then((d) => {
-        dispatch({ type: "SET_USER_LIST", payload: d });
+        dispatch({ type: "SET_OWN_PROJECT_LIST", payload: d });
       })
       .catch((err) => {
-        console.log(err);
+        toast.error(`${err.message} : ${err.status}`);
+      });
+  }
+  function fetchAssignProjectList() {
+    fetch(`http://localhost:8081/api/project/assign-to-you`, {
+      headers: {
+        "COntent-Type": "application/json",
+        Authorization: `${localStorage.getItem("Authorization")}`,
+      },
+    })
+      .then((r) => {
+        if (r.ok) {
+          return r.json();
+        } else {
+          throw { message: "error", status: r.status };
+        }
+      })
+      .then((d) => {
+        dispatch({ type: "SET_ASSIGN_PROJECT_LIST", payload: d });
+      })
+      .catch((err) => {
+        toast.error(`${err.message} : ${err.status}`);
       });
   }
 
-  useEffect(() => {
-    if (localStorage.getItem("Authorization")) {
-      setIsLoggedIn(true);
-      fetchUserLoggedIn();
-      fetchListUser();
-    }
-  }, [localStorage.getItem("Authorization")]);
+  useEffect(
+    () => {
+      if (localStorage.getItem("Authorization")) {
+        setIsLoggedIn(true);
+        fetchUserLoggedIn();
+        fetchListUser()
+          .then((d) => {
+            dispatch({ type: "SET_USER_LIST", payload: d });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        fetchAssignProjectList();
+        fetchYourProjectList();
+      }
+    },
+    [
+      // localStorage.getItem("Authorization")
+    ]
+  );
 
   return (
     <div className="App">
@@ -81,7 +144,7 @@ function App() {
             </PrivateRoute>
           }></Route>
         <Route path="/projects" element={<Projects />}></Route>
-        <Route path="/projects/:id" element = { <ProjectDetails/> } />
+        <Route path="/projects/:id" element={<ProjectDetails />} />
         <Route path="/projects/new-project" element={<NewProject />} />
         <Route path="/messaging" element={<Messaging />} />
       </Routes>

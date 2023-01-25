@@ -8,11 +8,11 @@ function YourProjectContainer() {
   const navigate = useNavigate();
 
   const addNewProject = () => {
-    navigate("/projects/new-project");
+    navigate("/projects/new-project")
   };
 
   return (
-    <div className="bg-secondary-color/50 w-7/12 flex-col justify-self-end items-end m-5 p-5 rounded-lg border-4 border-secondary-color-200 border-y-third-color ">
+    <div className="bg-secondary-color/50 min-w-[500px] w-7/12 flex-col justify-self-end items-end m-5 p-5 rounded-lg border-4 border-secondary-color-200 border-y-third-color ">
       <div className=" w-fit py-2 px-4 text-3xl mr-6 mb-4 border-b-4 border-b-third-color ">Your Project</div>
       <div className="flex ">
         <button className="min-w-200 text-secondary-color h-64 bg-fourth-color  my-4 mx-2 rounded-3xl shadow-lg flex-col justify-center items-center p-7 hover:bg-secondary-color/50 hover:text-fourth-color" onClick={addNewProject}>

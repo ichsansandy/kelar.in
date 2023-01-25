@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import CommentContainer from "../component/CommentContainer";
 import DateBubble from "../component/DateBubble";
 import MemberCard from "../component/MemberCard";
@@ -6,7 +9,10 @@ import ProjectCard from "../component/ProjectCard";
 import TaskContainer from "../component/TaskContainer";
 
 function ProjectDetails() {
-  const project = {
+  const loggedInUser = useSelector((s) => s.loggedInUser);
+  const { id } = useParams();
+
+  const testproject = {
     name: "Alpha Creation",
     startDate: "2023-1-24",
     dueDate: "2023-2-24",
@@ -16,6 +22,64 @@ function ProjectDetails() {
       name: "Ichsan Sandypratama",
     },
   };
+
+  const [project, setProject] = useState({});
+  const [taskList, setTaskList] = useState([]);
+  const [isYourProject, setisYourProject] = useState(false);
+
+  const fetchProjectDetails = async () => {
+    const r = await fetch(`http://localhost:8081/api/project/${id}`, {
+      headers: {
+        Authorization: `${localStorage.getItem("Authorization")}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (r.ok) {
+      return r.json();
+    } else {
+      toast.error(`Something Wrong, ${r.status} : ${r?.text()}`);
+      throw { message: "Something went wrong", status: r.status };
+    }
+  };
+
+  const fetchTaskFromProjectId = async () => {
+    const r = await fetch(`http://localhost:8081/api/project/${id}/task`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${localStorage.getItem("Authorization")}`,
+      },
+    });
+    if (r.ok) {
+      return r.json();
+    } else {
+      throw { message: "Error ", status: r.status };
+    }
+  };
+
+  useEffect(() => {
+    fetchProjectDetails()
+      .then((d) => {
+        setProject(d);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    fetchTaskFromProjectId()
+      .then((d) => {
+        setTaskList(d);
+        console.log(taskList);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (project.user?.name === loggedInUser.name) {
+      setisYourProject(true);
+    }
+  }, [project]);
 
   const projectLogo = null;
 
@@ -31,14 +95,14 @@ function ProjectDetails() {
             </div>
           </div>
           <div className="mx-6 min-w-[369px] lg:w-1/4 w-1/2 my-4 lg:my-0">
-            <MemberCard />
+            <MemberCard isYourProject={isYourProject} />
           </div>
         </div>
         <div className="flex justify-evenly bg-third-color/">
           <TaskContainer />
         </div>
       </div>
-      <CommentContainer/>
+      <CommentContainer />
     </div>
   );
 }

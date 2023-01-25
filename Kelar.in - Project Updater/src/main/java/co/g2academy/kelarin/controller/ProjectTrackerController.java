@@ -172,6 +172,22 @@ public class ProjectTrackerController {
         }
         return users;
     }
+    
+    @GetMapping("/project/{id}/membership-onlyname")
+    public List<String> getMemberOnlyNameProject(@PathVariable Integer id, Principal principal) {
+        Project project = projectRepo.findById(id).get();
+        List<Membership> ms = membershipRepo.findMembershipByProject(project);
+        List<String> users = new ArrayList<>();
+        for (Membership m : ms) {
+            users.add(m.getUser().getName());
+        }
+        return users;
+    }
+
+    @GetMapping("/project/{id}")
+    public Project getProjectDetails(@PathVariable Integer id) {
+        return projectRepo.findById(id).get();
+    }
 
     @GetMapping("/project/created-by-you")
     public List<Project> getAllYourProject(Principal principal) {
@@ -194,7 +210,7 @@ public class ProjectTrackerController {
     }
 
     @PostMapping("/project/{id}/task")
-    public ResponseEntity createTask(@PathVariable Integer id, @RequestBody NewTaskDto taskInput,  Principal principal) {
+    public ResponseEntity createTask(@PathVariable Integer id, @RequestBody NewTaskDto taskInput, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         Project p = projectRepo.findById(id).get();
         User userAssign = userRepo.findUserByName(taskInput.getUser());
@@ -257,19 +273,9 @@ public class ProjectTrackerController {
     }
 
     @GetMapping("/project/{id}/task")
-    public List<Task> getTaskByProject(@PathVariable Integer idProject, Principal principal) {
-        User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        Project project = projectRepo.findById(idProject).get();
-        List<Membership> ms = project.getMemberships();
-        for (Membership m : ms) {
-            if (m.getUser().equals(loggedInUser)) {
-                return taskRepo.findTaskByProject(project);
-            }
-        }
-        if (project.getUser().equals(loggedInUser)) {
-            return taskRepo.findTaskByProject(project);
-        }
-        return null;
+    public List<Task> getTaskByProject(@PathVariable Integer id, Principal principal) {
+        Project project = projectRepo.findById(id).get();
+        return taskRepo.findTaskByProject(project);
     }
 
     @PostMapping("/project/{id}/comment")
@@ -293,7 +299,7 @@ public class ProjectTrackerController {
         Project project = projectRepo.findById(idProject).get();
         //Boolean validation = validateUserOwnerOrMembership(project, loggedInUser);
         //if (validation == true) {
-            return commentRepo.findCommentByProject(project);
+        return commentRepo.findCommentByProject(project);
         //}
         //return null;
     }

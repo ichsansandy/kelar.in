@@ -26,7 +26,6 @@ function Login({ setIsLoggedIn, setUser }) {
       .then((res) => {
         if (res.ok) {
           toast.success("Login Successfully !");
-          fetchUser();
           return res.json();
         }
       })
@@ -36,6 +35,7 @@ function Login({ setIsLoggedIn, setUser }) {
           setIsLoggedIn(true);
           dispatch({ type: "MENU_LOGIN" });
           navigation("/");
+          navigation(0);
         }
       })
       .catch((err) => {
