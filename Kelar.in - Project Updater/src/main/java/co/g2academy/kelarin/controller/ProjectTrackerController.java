@@ -281,7 +281,7 @@ public class ProjectTrackerController {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         Project p = projectRepo.findById(id).get();
         User userAssign = userRepo.findUserByName(taskInput.getUser());
-        Boolean validation = validateUserOwnerOrMembership(p, loggedInUser);
+        Boolean validation = validateUserOrMembership(p, userAssign);
         if (validation == true) {
             Task task = new Task();
             task.setProject(p);
@@ -292,7 +292,7 @@ public class ProjectTrackerController {
             taskRepo.save(task);
             return ResponseEntity.ok().body(task);
         }
-        return ResponseEntity.badRequest().body("You are not the project owner");
+        return ResponseEntity.badRequest().body("You are not the project owner or the user not in member");
     }
 
 //    @PutMapping("/project/{id}/task")
@@ -345,23 +345,36 @@ public class ProjectTrackerController {
         return taskRepo.findTaskByProject(project);
     }
 
+    @GetMapping("/project/{id}/isNotHaveTask/{userNameOnly}")
+    public Boolean getTaskByProjectAndUser(@PathVariable Integer id, @PathVariable String userNameOnly) {
+        Project project = projectRepo.findById(id).get();
+            User user = userRepo.findUserByName(userNameOnly);
+            System.out.println(user.getName());
+            List<Task> tasks = taskRepo.findTaskByProject(project);
+            for (Task task : tasks) {
+                if (task.getAssignUser().equals(user)) {
+                    return false;
+                }
+            }
+        return true;
+
+    }
+
     @PostMapping("/project/{id}/comment")
-    public ResponseEntity createComment(@PathVariable Integer idProject, @RequestBody Comment comment, Principal principal) {
+    public ResponseEntity createComment(@PathVariable Integer idProject, @RequestBody Comment comment, Principal principal
+    ) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         Project project = projectRepo.findById(idProject).get();
-        Boolean validation = validateUserOwnerOrMembership(project, loggedInUser);
-        if (validation == true) {
-            comment.setUser(loggedInUser);
-            comment.setProject(project);
-            comment.setCommentDate(new Date());
-            commentRepo.save(comment);
-            return ResponseEntity.ok().body("OK");
-        }
-        return ResponseEntity.badRequest().body("OK");
+        comment.setUser(loggedInUser);
+        comment.setProject(project);
+        comment.setCommentDate(new Date());
+        commentRepo.save(comment);
+        return ResponseEntity.ok().body("OK");
     }
 
     @GetMapping("/project/{id}/comment")
-    public List<Comment> getCommentByTask(@PathVariable Integer idProject, Principal principal) {
+    public List<Comment> getCommentByTask(@PathVariable Integer idProject, Principal principal
+    ) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         Project project = projectRepo.findById(idProject).get();
         //Boolean validation = validateUserOwnerOrMembership(project, loggedInUser);
@@ -372,7 +385,8 @@ public class ProjectTrackerController {
     }
 
     @GetMapping("/project/{id}/task/performance/last-month")
-    public Integer getPerformanceLastMonth(@PathVariable Integer id, Principal principal) {
+    public Integer getPerformanceLastMonth(@PathVariable Integer id, Principal principal
+    ) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
 
         LocalDate lastMonth = LocalDate.now().minusDays(30);
@@ -386,7 +400,8 @@ public class ProjectTrackerController {
     }
 
     @GetMapping("/project/{id}/task/performance/last-week")
-    public Integer getPerformanceLastWeek(@PathVariable Integer id, Principal principal) {
+    public Integer getPerformanceLastWeek(@PathVariable Integer id, Principal principal
+    ) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
 
         LocalDate sevendaysago = LocalDate.now().minusDays(7);
@@ -402,7 +417,8 @@ public class ProjectTrackerController {
     }
 
     @GetMapping("/project/{id}/task/performance/current-week")
-    public Integer getPerformanceCurrentWeek(@PathVariable Integer id, Principal principal) {
+    public Integer getPerformanceCurrentWeek(@PathVariable Integer id, Principal principal
+    ) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
 
         LocalDate sevendaysago = LocalDate.now().minusDays(7);
@@ -441,15 +457,12 @@ public class ProjectTrackerController {
 //        messagePublisherService.publishTaskLog(json);
     }
 
-    public Boolean validateUserOwnerOrMembership(Project project, User user) {
-        List<Membership> ms = project.getMemberships();
-        for (Membership m : ms) {
-            if (m.getUser().equals(user)) {
+    public Boolean validateUserOrMembership(Project project, User user) {
+        Membership ms = membershipRepo.findMembershipByUserAndProject(user, project);
+        if (ms != null) {
+            if (ms.getUser().equals(user)) {
                 return true;
             }
-        }
-        if (project.getUser().equals(user)) {
-            return true;
         }
         return false;
     }

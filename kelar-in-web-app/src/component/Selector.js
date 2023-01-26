@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
+import { toast } from "react-hot-toast";
 
-const Selector = ({ selected, setSelected, setLists, lists }) => {
+const Selector = ({ selected, setSelected, setLists, lists, handleChange }) => {
   const [inputValue, setInputValue] = useState("");
   const [open, setOpen] = useState(false);
+
+  function chooseSelectedAndClose(input) {
+    setSelected(input);
+    setInputValue("");
+    setOpen(false);
+    toast.success(selected);
+  }
 
   return (
     <div className=" font-medium ">
@@ -24,11 +32,9 @@ const Selector = ({ selected, setSelected, setLists, lists }) => {
             ${user?.toLowerCase() === selected?.toLowerCase() && "bg-sky-600 text-white"}
             ${user?.toLowerCase().includes(inputValue) ? "block" : "hidden"}`}
             onClick={() => {
-              if (user?.toLowerCase() !== selected.toLowerCase()) {
                 setSelected(user);
                 setOpen(false);
                 setInputValue("");
-              }
             }}>
             {user}
           </li>

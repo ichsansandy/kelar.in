@@ -20,7 +20,7 @@ function ProjectCard({ project, isYourProject }) {
         "group scroll-ml-6 snap-start min-h-full  bg-third-color hover:bg-secondary-color mx-4 rounded-3xl shadow-xl  min-w-200 flex flex-col justify-center items-center cursor-pointer "
         // + (isYourProject ? "min-w-200 " : "min-w-1/4")
       }>
-      <ProgressBubble />
+      <ProgressBubble status={project.status} />
       {!projectLogo ? (
         <svg className="h-36 w-36 text-white group-hover:text-fourth-color" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
           {" "}

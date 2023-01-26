@@ -16,6 +16,7 @@ import NewProject from "./pages/NewProject";
 import PrivateRoute from "./component/PrivateRoute";
 import ProjectDetails from "./pages/ProjectDetails";
 import Loading from "./component/Loading";
+import ScrollToTop from "./scrollToTop";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

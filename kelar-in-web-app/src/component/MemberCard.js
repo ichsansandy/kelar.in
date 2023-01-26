@@ -4,10 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Selector from "./Selector";
 
-function MemberCard({ isYourProject }) {
+function MemberCard({ isYourProject, membership, availUser }) {
   const { id } = useParams();
-  const dispatch = useDispatch();
-  const listUser = useSelector((s) => s.listUser);
   const loggedInUser = useSelector((s) => s.loggedInUser);
   const [listEditable, setListEditable] = useState([]);
   const [members, setMembers] = useState([]);
@@ -16,29 +14,54 @@ function MemberCard({ isYourProject }) {
   const [selected, setSelected] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-  const fetchMemberFromProjectId = async () => {
-    const r = await fetch(`http://localhost:8081/api/project/${id}/membership-availuser`, {
+  function fetchMemberFromProjectId() {
+    fetch(`http://localhost:8081/api/project/${id}/membership-availuser`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `${localStorage.getItem("Authorization")}`,
       },
-    });
-    if (r.ok) {
-      return r.json();
-    } else {
-      throw { message: "Error ", status: r.status };
-    }
-  };
+    })
+      .then((r) => {
+        if (r.ok) {
+          return r.json();
+        } else {
+          throw { message: "Error ", status: r.status };
+        }
+      })
+      .then((d) => {
+        setMembers(d.membership);
+        setListEditable(d.availUser);
+        console.log(members);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  }
 
   const removeFromMember = (member) => {
-    setMembers((currMember) => {
-      return currMember.filter((m) => {
-        if (m !== member) {
-          return m;
+    fetch(`http://localhost:8081/api/project/${id}/isNotHaveTask/${member}`, {
+      headers: {
+        Authorization: `${localStorage.getItem("Authorization")}`,
+      },
+    })
+      .then((r) => r.json())
+      .then((d) => {
+        if (!d) {
+          toast.error("This user have task in this project");
+        } else {
+          setMembers((currMember) => {
+            return currMember.filter((m) => {
+              if (m !== member) {
+                return m;
+              }
+            });
+          });
+          setListEditable([...listEditable, member]);
         }
+      })
+      .catch((err) => {
+        toast.error(err.message);
       });
-    });
-    setListEditable([...listEditable, member]);
   };
 
   const addToMember = (input) => {
@@ -62,29 +85,6 @@ function MemberCard({ isYourProject }) {
   function fetchMember() {
     fetch(`http://localhost:8081/api/project/${id}/add-membership`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${localStorage.getItem("Authorization")}`,
-      },
-      body: JSON.stringify(members),
-    })
-      .then((r) => {
-        if (r.ok) {
-          return r.text();
-        } else {
-          throw { message: "Error", status: r.status };
-        }
-      })
-      .then((d) => {
-        toast.success(d);
-      })
-      .catch((err) => {
-        toast.err(err.message);
-      });
-  }
-  function deleteMember() {
-    fetch(`http://localhost:8081/api/project/${id}/add-membership`, {
-      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         Authorization: `${localStorage.getItem("Authorization")}`,
@@ -134,15 +134,7 @@ function MemberCard({ isYourProject }) {
   function getMemberDbAndAvailableUser() {}
 
   useEffect(() => {
-    fetchMemberFromProjectId()
-      .then((d) => {
-        setMembers(d.membership);
-        setListEditable(d.availUser);
-        console.log(members);
-      })
-      .catch((err) => {
-        toast.error(err.message);
-      });
+    fetchMemberFromProjectId();
     setListEditable((currState) => {
       return currState.filter((u) => {
         if (u !== loggedInUser.name) {

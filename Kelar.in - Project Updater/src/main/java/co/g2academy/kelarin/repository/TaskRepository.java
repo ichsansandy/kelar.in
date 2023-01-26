@@ -17,6 +17,6 @@ public interface TaskRepository extends JpaRepository<Task, Integer>{
     
     public List<Task> findTaskByProject(Project project);
     public List<Task> findTaskByAssignUser(User assignUser);
-    
+    public List<Task> findTaskByAssignUserAndProject(User assignUser, Project project);
     public List<Task> findTaskByEndDateBetween( Date fourteenDaysAgo,Date sevenDaysAgo);
 }

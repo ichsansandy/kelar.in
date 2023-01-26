@@ -26,6 +26,8 @@ function ProjectDetails() {
   const [project, setProject] = useState({});
   const [taskList, setTaskList] = useState([]);
   const [isYourProject, setisYourProject] = useState(false);
+  const [membership, setMembership] = useState([]);
+  const [availUser, setAvailUser] = useState([]);
 
   const fetchProjectDetails = async () => {
     const r = await fetch(`http://localhost:8081/api/project/${id}`, {
@@ -43,19 +45,28 @@ function ProjectDetails() {
     }
   };
 
-  const fetchTaskFromProjectId = async () => {
-    const r = await fetch(`http://localhost:8081/api/project/${id}/task`, {
+  function fetchMemberFromProjectId() {
+    fetch(`http://localhost:8081/api/project/${id}/membership-availuser`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `${localStorage.getItem("Authorization")}`,
       },
-    });
-    if (r.ok) {
-      return r.json();
-    } else {
-      throw { message: "Error ", status: r.status };
-    }
-  };
+    })
+      .then((r) => {
+        if (r.ok) {
+          return r.json();
+        } else {
+          throw { message: "Error ", status: r.status };
+        }
+      })
+      .then((d) => {
+        setMembership(d.membership);
+        setAvailUser(d.availUser);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  }
 
   useEffect(() => {
     fetchProjectDetails()
@@ -65,14 +76,7 @@ function ProjectDetails() {
       .catch((err) => {
         console.error(err);
       });
-    fetchTaskFromProjectId()
-      .then((d) => {
-        setTaskList(d);
-        console.log(taskList);
-      })
-      .catch((err) => {
-        toast.error(err.message);
-      });
+    fetchMemberFromProjectId();
   }, []);
 
   useEffect(() => {
@@ -99,7 +103,7 @@ function ProjectDetails() {
           </div>
         </div>
         <div className="flex justify-evenly bg-third-color/">
-          <TaskContainer />
+          <TaskContainer isYourProject={isYourProject} taskList={taskList} />
         </div>
       </div>
       <CommentContainer />
