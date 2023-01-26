@@ -10,7 +10,7 @@ export default function NewTaskModal({ setTasks, tasks }) {
   const [selected, setSelected] = useState(null);
   const [members, setMembers] = useState([]);
   const [newTask, setNewTask] = useState({});
-  const [isChangeSelected, setisChangeSelected] = useState(false);
+  const [isChangeSelected, setisChangeSelected] = useState(true);
   const [isSelected, setisSelected] = useState(false);
 
   const handleChange = (e) => {
@@ -99,12 +99,14 @@ export default function NewTaskModal({ setTasks, tasks }) {
                   <textarea id="taskName" onChange={handleChange} type="text" className="w-[300px] h-[200px] placeholder:text-gray-300 placeholder:font-normal border-transparent p-2 m-1 " placeholder="Task name" />
                   <div className="text-sm text-black font-normal">
                     <div className="flex flex-col items-start">
-                      <div>
+                      <div className="" hidden={isChangeSelected ? false : true}>
                         <label className="font-bold w-1/4">Assign User :</label>
-                        <input id="user" onChange={handleChange} type="text" disabled className="placeholder:text-gray-300 placeholder:font-normal border-transparent p-2 " placeholder="Task name" />
+                        <input id="user" value={selected} onChange={handleChange} type="text" disabled className="placeholder:text-gray-300 placeholder:font-normal border-transparent p-2 " placeholder="Task name" />
                       </div>
-                      <div className="flex flex-row justify-evenly">
-                        <Selector selected={selected} setSelected={setSelected} lists={members} />
+                      <div className="w-full justify-between">
+                        <div className="w-3/4">
+                          <Selector selected={selected} setSelected={setSelected} lists={members} />
+                        </div>
                         <button onClick={(e) => e.preventDefault()} className="bg-third-color">
                           add
                         </button>

@@ -46,7 +46,7 @@ function ProjectDetails() {
   };
 
   function fetchMemberFromProjectId() {
-    fetch(`http://localhost:8081/api/project/${id}/membership-availuser`, {
+    fetch(`http://192.168.100.82:8081/api/project/${id}/membership-availuser`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `${localStorage.getItem("Authorization")}`,

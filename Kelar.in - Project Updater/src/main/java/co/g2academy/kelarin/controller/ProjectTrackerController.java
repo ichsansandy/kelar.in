@@ -361,22 +361,22 @@ public class ProjectTrackerController {
     }
 
     @PostMapping("/project/{id}/comment")
-    public ResponseEntity createComment(@PathVariable Integer idProject, @RequestBody Comment comment, Principal principal
+    public ResponseEntity createComment(@PathVariable Integer id, @RequestBody Comment comment, Principal principal
     ) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        Project project = projectRepo.findById(idProject).get();
+        Project project = projectRepo.findById(id).get();
         comment.setUser(loggedInUser);
         comment.setProject(project);
         comment.setCommentDate(new Date());
         commentRepo.save(comment);
-        return ResponseEntity.ok().body("OK");
+        return ResponseEntity.ok().body(comment);
     }
 
     @GetMapping("/project/{id}/comment")
-    public List<Comment> getCommentByTask(@PathVariable Integer idProject, Principal principal
+    public List<Comment> getCommentByTask(@PathVariable Integer id, Principal principal
     ) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        Project project = projectRepo.findById(idProject).get();
+        Project project = projectRepo.findById(id).get();
         //Boolean validation = validateUserOwnerOrMembership(project, loggedInUser);
         //if (validation == true) {
         return commentRepo.findCommentByProject(project);

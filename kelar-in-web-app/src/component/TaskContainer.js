@@ -17,7 +17,7 @@ function TaskContainer({ taskList , isYourProject}) {
   ]);
 
   const fetchTaskFromProjectId =  () => {
-    const r = fetch(`http://localhost:8081/api/project/${id}/task`, {
+    fetch(`http://localhost:8081/api/project/${id}/task`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `${localStorage.getItem("Authorization")}`,
