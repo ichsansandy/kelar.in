@@ -1,12 +1,4 @@
-const ownProjectListReducer = (
-  state = [
-    { id: 1, name: "kelar-in-WebApp", user: { name: "Ichsan" } },
-    { id: 2, name: "kelar-in-WebApp", user: { name: "Ichsan" } },
-    { id: 3, name: "kelar-in-WebApp", user: { name: "Ichsan" } },
-    { id: 4, name: "kelar-in-WebApp", user: { name: "Ichsan" } },
-  ],
-  action
-) => {
+const ownProjectListReducer = (state = [], action) => {
   switch (action.type) {
     case "SET_OWN_PROJECT_LIST":
       return action.payload;
