@@ -10,9 +10,13 @@ function TaskCard({ task }) {
           <div className={"text-left font-bold " + (task.taskName.length > 30 ? " text-sm" : "text-base")}>{task.taskName.length > 80 ? task.taskName.slice(0, 77) + " ..." : task.taskName}</div>
           <div className="text-left text-sm ">By {task.assignUser.name.split(" ")[0]}</div>
         </div>
-        <div className="w-2/5 place-self-center p-3">
-          <ProgressBubble status={task.status} />
-          <DueDateBadge dueDate={task.dueDate} />
+        <div className="w-2/5 flex flex-col gap-y-5 items-center h-full  ">
+          <div>
+            <ProgressBubble status={task.status} />
+          </div>
+          <div>
+            <DueDateBadge dueDate={task.dueDate} />
+          </div>
         </div>
       </div>
     </div>

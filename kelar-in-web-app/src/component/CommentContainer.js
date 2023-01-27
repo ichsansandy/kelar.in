@@ -16,7 +16,6 @@ function CommentContainer() {
     // { id: 1, commentBody: "Hi this project is awesome", commentDate: "2023/01/24", user: { name: "Ichsan Sandypratama" } },
   ]);
 
-
   function fetchComment() {
     fetch(`http://localhost:8081/api/project/${id}/comment`, {
       headers: {
@@ -25,14 +24,12 @@ function CommentContainer() {
     })
       .then((r) => {
         if (r.ok) {
-          console.log("fetch OK");
           return r.json();
         } else {
           throw { message: "Error", status: r.status };
         }
       })
       .then((d) => {
-        console.log(d);
         setCommentList(d);
       })
       .catch((err) => {
@@ -61,7 +58,7 @@ function CommentContainer() {
       })
       .then((d) => {
         setCommentList([...commentList, d]);
-        setInput("")
+        setInput("");
         toast.success("Posted Comment");
       })
       .catch((err) => {
@@ -74,16 +71,19 @@ function CommentContainer() {
   }, []);
 
   return (
-    <div className="flex flex-col mb-3 mx-auto w-full md:w-[700px] xl:w-full px-5 mt-5">
+    <div className="flex flex-col mb-3 mx-auto w-full sm:max-h-[1000px] md:w-[700px] xl:w-full px-5 mt-5">
       <div className={"  p-2 w-full rounded-xl bg-secondary-color text-fourth-color font-extrabold text-xl "}>Comment</div>
-      <div className="bg-white rounded h-[700px] xl:h-[90%] overflow-y-auto ">
+      <div className="bg-white rounded h-[890px] overflow-y-auto ">
         <CommentInputBox input={input} setInput={setInput} postComment={postComment} />
         <div className="p-10">
-          {commentList.slice(0).reverse().map((comment) => (
-            <>
-              <CommentBubble comment={comment} />
-            </>
-          ))}
+          {commentList
+            .slice(0)
+            .reverse()
+            .map((comment) => (
+              <div key={comment.id}>
+                <CommentBubble comment={comment} />
+              </div>
+            ))}
         </div>
       </div>
     </div>

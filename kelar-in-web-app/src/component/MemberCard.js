@@ -31,7 +31,6 @@ function MemberCard({ isYourProject, membership, availUser }) {
       .then((d) => {
         setMembers(d.membership);
         setListEditable(d.availUser);
-        console.log(members);
       })
       .catch((err) => {
         toast.error(err.message);
@@ -106,8 +105,6 @@ function MemberCard({ isYourProject, membership, availUser }) {
       });
   }
 
-
-
   useEffect(() => {
     fetchMemberFromProjectId();
     setListEditable((currState) => {
@@ -151,7 +148,7 @@ function MemberCard({ isYourProject, membership, availUser }) {
       </button>
       <ul className="list-disc mt-5 w-full h-52 overflow-x-auto py-2 pt-6 px-10 bg-white rounded">
         {members?.map((member) => (
-          <div className="group" onClick={isYourProject && isOpen ? () => removeFromMember(member) : null}>
+          <div key={member} className="group" onClick={isYourProject && isOpen ? () => removeFromMember(member) : null}>
             <li className=" p-0 text-left ">
               {member}
               <span className={"text-third-color invisible " + (isYourProject && isOpen ? " group-hover:visible" : "")}> click to remove</span>

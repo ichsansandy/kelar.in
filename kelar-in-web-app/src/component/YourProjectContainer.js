@@ -15,7 +15,7 @@ function YourProjectContainer() {
     <div className="bg-secondary-color/50 min-w-[500px] w-7/12 flex-col justify-self-end items-end m-5 p-5 rounded-lg border-4 border-secondary-color-200 border-y-third-color ">
       <div className=" w-fit py-2 px-4 text-3xl mr-6 mb-4 border-b-4 border-b-third-color ">Your Project</div>
       <div className="flex ">
-        <button className="min-w-200 text-secondary-color h-64 bg-fourth-color  my-4 mx-2 rounded-3xl shadow-lg flex-col justify-center items-center p-7 hover:bg-secondary-color/50 hover:text-fourth-color" onClick={addNewProject}>
+        <button className="min-w-200 text-secondary-color h-80 bg-fourth-color  my-4 mx-2 rounded-3xl shadow-lg flex-col justify-center items-center p-7 hover:bg-secondary-color/50 hover:text-fourth-color" onClick={addNewProject}>
           <svg className="h-40 w-40  text-center hover:text-fourth-color" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               strokeLinecap="round"
@@ -26,7 +26,7 @@ function YourProjectContainer() {
           </svg>
           <h1 className="text-2xl font-bold ">New Project</h1>
         </button>
-        <ul className="flex items-center w-3/4 snap-x overflow-x-auto p-4 mx-1 ">
+        <ul className="flex items-center w-3/4 snap-x overflow-x-auto p-4 pt-7 mx-1 ">
           {projects.map((project) => (
             <div className="h-full" key={project.id}>
               <ProjectCard project={project} isYourProject={true} />

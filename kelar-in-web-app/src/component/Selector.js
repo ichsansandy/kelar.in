@@ -7,12 +7,6 @@ const Selector = ({ selected, setSelected, setLists, lists, handleChange }) => {
   const [inputValue, setInputValue] = useState("");
   const [open, setOpen] = useState(false);
 
-  function chooseSelectedAndClose(input) {
-    setSelected(input);
-    setInputValue("");
-    setOpen(false);
-    toast.success(selected);
-  }
 
   return (
     <div className=" font-medium ">

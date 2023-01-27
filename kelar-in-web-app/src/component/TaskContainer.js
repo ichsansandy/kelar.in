@@ -55,9 +55,9 @@ function TaskContainer({  isYourProject, projectDueDate }) {
       </div>
       <div className=" lg:w-[50rem] grid lg:grid-rows-5 lg:grid-flow-col overflow-x-auto overflow-y-auto max-h-[600px] ">
         {tasks.map((task) => (
-          <>
-            <TaskCard task={task} />
-          </>
+          <div key={task.id}>
+            <TaskCard  task={task} />
+          </div>
         ))}
       </div>
     </div>

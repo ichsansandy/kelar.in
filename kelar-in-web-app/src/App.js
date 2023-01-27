@@ -42,7 +42,6 @@ function App() {
         }
       })
       .then((d) => {
-        console.log(d);
         setUser(d);
         dispatch({ type: "SET_USER_LOGGEDIN", payload: d });
       })

@@ -46,8 +46,8 @@ export default function NewTaskModal({ setTasks, tasks, projectDueDate }) {
       })
       .then((d) => {
         // setTasks([...tasks, d]);
-        dispatch({type:"ADD_TASK_LIST", payload: d})
-
+        dispatch({ type: "ADD_TASK_LIST", payload: d });
+        setNewTask({});
         toast.success("New Task Assign");
       })
       .catch((err) => {
@@ -77,8 +77,10 @@ export default function NewTaskModal({ setTasks, tasks, projectDueDate }) {
       });
   }
   useEffect(() => {
-    fetchMember();
-  }, []);
+    if (showModal) {
+      fetchMember();
+    }
+  }, [showModal]);
 
   return (
     <>
@@ -106,7 +108,7 @@ export default function NewTaskModal({ setTasks, tasks, projectDueDate }) {
                 </div>
                 {/*body*/}
                 <form className="relative p-6 flex-auto ">
-                  <textarea id="taskName" onChange={handleChange} type="text" className="w-[300px] h-[200px] placeholder:text-gray-300 placeholder:font-normal border-transparent p-2 m-1 " placeholder="Task name" />
+                  <textarea required aria-required id="taskName" onChange={handleChange} type="text" className="w-[300px] h-[200px] placeholder:text-gray-300 placeholder:font-normal border-transparent p-2 m-1 " placeholder="Task name" />
                   <div className="text-sm text-black font-normal">
                     <div className="flex flex-col items-start">
                       {/* Selected Assign User if you want to change */}
@@ -145,7 +147,15 @@ export default function NewTaskModal({ setTasks, tasks, projectDueDate }) {
                       {/* Due date task */}
                       <div>
                         <label className="font-bold w-1/4">Due Date :</label>
-                        <input id="dueDate" max={new Date(projectDueDate).toLocaleDateString("en-ca")} min={new Date().toLocaleDateString("en-ca")} onChange={handleChange} type="date" className="placeholder:text-gray-300 placeholder:font-normal border-transparent p-2  ml-5" placeholder="Task name" />
+                        <input
+                          id="dueDate"
+                          max={new Date(projectDueDate).toLocaleDateString("en-ca")}
+                          min={new Date().toLocaleDateString("en-ca")}
+                          onChange={handleChange}
+                          type="date"
+                          className="placeholder:text-gray-300 placeholder:font-normal border-transparent p-2  ml-5"
+                          placeholder="Task name"
+                        />
                       </div>
                     </div>
                   </div>
