@@ -25,7 +25,7 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
     } else {
       dispatch({ type: "MENU_LOGIN" });
       //fetch profile picture
-      fetch("http://192.168.100.82:8081/api/profile/get-picture", {
+      fetch("http://localhost:8081/api/profile/get-picture", {
         headers: {
           Authorization: `${localStorage.getItem("Authorization")}`,
         },

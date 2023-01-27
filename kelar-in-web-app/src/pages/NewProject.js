@@ -4,16 +4,19 @@ import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
 import Selector from "../component/Selector";
 import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import ConfirmationModal from "../component/ConfirmationModal";
 
 function NewProject() {
+  const navigation = useNavigate();
+  const members = useSelector((s) => s.newMemberProject);
   const dispatch = useDispatch();
   const listUser = useSelector((s) => s.listUser);
   const loggedInUser = useSelector((s) => s.loggedInUser);
   const [listEditable, setListEditable] = useState([]);
   const [newProject, setNewProject] = useState({});
-  const [members, setMembers] = useState([]);
+  // const [members, setMembers] = useState([]);
   const [selected, setSelected] = useState("");
-
   const [todayDate, setTodayDate] = useState("");
 
   const handleChange = (e) => {
@@ -23,8 +26,8 @@ function NewProject() {
   };
 
   useEffect(() => {
-    console.log(loggedInUser);
     fetchListUser();
+    dispatch({ type: "SET_MEMBER", payload: [] });
     setListEditable(listUser.sort());
     setListEditable((currState) => {
       return currState.filter((u) => {
@@ -34,7 +37,6 @@ function NewProject() {
       });
     });
     setTodayDate(new Date().toLocaleDateString("en-ca"));
-    console.log(todayDate);
   }, []);
 
   const handleSubmit = (e) => {
@@ -43,19 +45,22 @@ function NewProject() {
   };
 
   const removeFromMember = (member) => {
-    setMembers((currMember) => {
-      return currMember.filter((m) => {
-        if (m !== member) {
-          return m;
-        }
-      });
-    });
+    dispatch({ type: "REMOVE_MEMBER", payload: member });
+    // setMembers((currMember) => {
+    //   return currMember.filter((m) => {
+    //     if (m !== member) {
+    //       return m;
+    //     }
+    //   });
+    // });
     setListEditable([...listEditable, member]);
   };
 
   const addToMember = (input) => {
     if (input !== "") {
-      setMembers([...members, input]);
+      // setMembers([...members, input]);
+      dispatch({ type: "ADD_MEMBER", payload: input });
+      setNewProject({ ...newProject, members: members });
       toast.success("succesfully added to member");
       //remove from list editable to prevent duplicate
       setListEditable((state) => {
@@ -73,6 +78,7 @@ function NewProject() {
 
   function postNewProject() {
     setNewProject({ ...newProject, members: members });
+    console.log(newProject);
     fetch("http://localhost:8081/api/project", {
       method: "POST",
       headers: {
@@ -85,45 +91,22 @@ function NewProject() {
         if (r.ok) {
           return r.json();
         } else {
-          return r.status;
+          throw { message: "ERROR ", status: r.status, body: `${r.text()}` };
         }
       })
-      .then((d) => {
-        if (d === 400) {
-          toast.error("Something " + d);
-        } else {
+      .then(
+        (d) => {
           console.log(d);
           toast.success("Succesfully create project");
+          dispatch({ type: "SET_MEMBER", payload: [] });
+          navigation(`/projects/${d.id}`);
         }
         // postNewMemberProject(d?.id);
-      })
+      )
       .catch((err) => {
-        console.log(err);
+        toast.error("err " + err.body);
       });
   }
-  // function postNewMemberProject(id) {
-  //   console.log(newProject);
-  //   fetch(`http://localhost:8081/api/project/${id}/membership`, {
-  //     method: "POST",
-  //     headers: {
-  //       Authorization: `${localStorage.getItem("Authorization")}`,
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(newProject),
-  //   })
-  //     .then((r) => {
-  //       if (r.ok) {
-  //         return r.text();
-  //       }
-  //     })
-  //     .then((d) => {
-  //       console.log(d);
-  //       toast.success("Succesfully add members to project");
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }
   function fetchListUser() {
     console.log("fetching all user list only name data");
     fetch(`http://localhost:8081/api/all-user-nameonly`, {
@@ -241,5 +224,3 @@ function NewProject() {
 }
 
 export default NewProject;
-
-

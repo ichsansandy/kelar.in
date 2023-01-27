@@ -27,7 +27,7 @@ public class CreateNewProjectService {
     private ProjectRepository projectRepository;
 
     @Transactional(readOnly = false)
-    public String createNewProject(Project project, List<User> memberList) {
+    public void createNewProject(Project project, List<User> memberList) {
         projectRepository.save(project);
         for (User user : memberList) {
             Membership m = new Membership();
@@ -35,6 +35,5 @@ public class CreateNewProjectService {
             m.setUser(user);
             membershipRepo.save(m);
         }
-        return "OK";
     }
 }

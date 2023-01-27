@@ -12,6 +12,9 @@
   .card-hover-container {
     @apply hover:text-fourth-color hover:bg-secondary-color;
   }
+  .animate-hover {
+    @apply ease-linear transition-all duration-200;
+  }
 }
 
 body {

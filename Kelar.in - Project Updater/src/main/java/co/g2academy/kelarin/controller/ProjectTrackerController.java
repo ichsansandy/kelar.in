@@ -94,37 +94,20 @@ public class ProjectTrackerController {
                 return ResponseEntity.badRequest().body("user duplicate already inside membership");
             } else {
                 for (String member : inputProject.getMembers()) {
-                    User addUser = userRepo.findUserByName(member);
-                    if (addUser == null) {
-                        return ResponseEntity.badRequest().body("user not found");
-                    } else {
-
+                    System.out.println(member);
+                    if(member != null){
+                        User addUser = userRepo.findUserByName(member);
+                        if (addUser != null) {
+                            memberListnew.add(addUser);
+                        }else{
+                            return ResponseEntity.badRequest().body("user not found");
+                        }
                     }
                 }
             }
-            String result = projectService.createNewProject(project, memberListnew);
-            if (result == "OK") {
-                return ResponseEntity.ok().body(project);
-            }
-            return ResponseEntity.badRequest().body("Something Wrong");
+            projectService.createNewProject(project, memberListnew);
+            return ResponseEntity.ok().body(project);
         }
-    }
-
-    @PostMapping("/project/{id}/membership")
-    public ResponseEntity addNewMember(@RequestBody NewProjectDto inputProject, @PathVariable Integer id, Principal principal) {
-        User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        Project project = projectRepo.findById(id).get();
-        if (project.getUser().equals(loggedInUser)) {
-            for (String member : inputProject.getMembers()) {
-                User addUser = userRepo.findUserByName(member);
-                Membership m = new Membership();
-                m.setProject(project);
-                m.setUser(addUser);
-                membershipRepo.save(m);
-            }
-            return ResponseEntity.ok().body("Succesfully assign user to project member");
-        }
-        return ResponseEntity.badRequest().body("You're not the owner");
     }
 
     @PostMapping("/project/{id}/add-membership")
@@ -348,14 +331,14 @@ public class ProjectTrackerController {
     @GetMapping("/project/{id}/isNotHaveTask/{userNameOnly}")
     public Boolean getTaskByProjectAndUser(@PathVariable Integer id, @PathVariable String userNameOnly) {
         Project project = projectRepo.findById(id).get();
-            User user = userRepo.findUserByName(userNameOnly);
-            System.out.println(user.getName());
-            List<Task> tasks = taskRepo.findTaskByProject(project);
-            for (Task task : tasks) {
-                if (task.getAssignUser().equals(user)) {
-                    return false;
-                }
+        User user = userRepo.findUserByName(userNameOnly);
+        System.out.println(user.getName());
+        List<Task> tasks = taskRepo.findTaskByProject(project);
+        for (Task task : tasks) {
+            if (task.getAssignUser().equals(user)) {
+                return false;
             }
+        }
         return true;
 
     }

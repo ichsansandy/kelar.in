@@ -5,7 +5,7 @@ function CommentBubble({ comment }) {
   const [objectURL, setObjectURL] = useState(null);
 
   function getPicture() {
-    fetch(`http://192.168.100.82:8081/api/profile/get-picture/${comment.user.name}`, {
+    fetch(`http://localhost:8081/api/profile/get-picture/${comment.user.name}`, {
       headers: {
         Authorization: `${localStorage.getItem("Authorization")}`,
       },
@@ -16,15 +16,7 @@ function CommentBubble({ comment }) {
       });
   }
 
-  function validation() {
-    var inputTime = comment.commentDate;
-    var currTime = moment();
-
-    var result;
-
-    if (currTime - inputTime) {
-    }
-  }
+  
 
   useEffect(() => {
     getPicture();

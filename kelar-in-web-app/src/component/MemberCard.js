@@ -106,32 +106,7 @@ function MemberCard({ isYourProject, membership, availUser }) {
       });
   }
 
-  // function fetchListUser() {
-  //   console.log("fetching all user list only name data");
-  //   fetch(`http://localhost:8081/api/all-user-nameonly`, {
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `${localStorage.getItem("Authorization")}`,
-  //     },
-  //   })
-  //     .then((r) => {
-  //       if (r.ok) {
-  //         r.json();
-  //       } else {
-  //         throw { message: "Error" };
-  //       }
-  //     })
-  //     .then((d) => {
-  //       if (!d) {
-  //         dispatch({ type: "SET_USER_LIST", payload: d });
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       toast.error(err.message);
-  //     });
-  // }
 
-  function getMemberDbAndAvailableUser() {}
 
   useEffect(() => {
     fetchMemberFromProjectId();
@@ -168,7 +143,7 @@ function MemberCard({ isYourProject, membership, availUser }) {
         </button>
       </div>
       <div className={"absolute p-2 inset-x-0  w-full top rounded bg-secondary-color text-fourth-color font-extrabold z-30 " + (isOpen ? "hidden" : "")}>Members</div>
-      <button className={" group hover:bg-primary-color/75 absolute right-0 top-3 bg-fourth-color z-40 p-2 rounded " + (isOpen ? " hidden" : " ") + (isYourProject ? " " : " hidden")} onClick={() => setIsOpen(true)}>
+      <button className={"animate-hover group hover:bg-primary-color/75 absolute right-0 top-3 bg-fourth-color z-40 p-2 rounded " + (isOpen ? " hidden" : " ") + (isYourProject ? " " : " hidden")} onClick={() => setIsOpen(true)}>
         <svg className="h-6 w-6 group-hover:text-fourth-color text-white" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
           {" "}
           <path stroke="none" d="M0 0h24v24H0z" /> <path d="M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /> <path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /> <line x1="16" y1="5" x2="19" y2="8" />
