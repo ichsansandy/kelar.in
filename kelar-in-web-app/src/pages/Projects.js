@@ -1,5 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
+import Test from "../component/TrialHover";
 
 function Projects() {
   const bg = "kelar-in-web-app\\public\\asset\\background-repeat-removebg-preview.png";
@@ -7,6 +8,7 @@ function Projects() {
   return (
     <div className="">
       Project
+      <Test/>
     </div>
   );
 }

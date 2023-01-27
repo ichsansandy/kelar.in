@@ -91,8 +91,8 @@ function ProjectDetails() {
     <div className="w-7xl min-h-screen flex flex-col justify- xl:flex-row bg-third-color/25">
       <div className="ml-4">
         <div className="bg-third-color/ p-5 flex justify-center items-center lg:flex-row flex-col">
-          <div className="flex justify-center h-64">
-            <ProjectCard project={project} />
+          <div className="flex justify-center h-64 mt-3">
+            <ProjectCard project={project} isYourProject={isYourProject} />
             <div className="flex flex-col justify-evenly">
               <DateBubble date={project.startDate} title={"Start"} />
               <DateBubble date={project.dueDate} title={"Due"} />

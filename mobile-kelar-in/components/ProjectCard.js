@@ -6,7 +6,7 @@ import StatusBubble from "./StatusBubble";
 import styles from "../assets/style";
 import { useNavigation } from "@react-navigation/native";
 
-const ProjectCard = ({ projectName, user, status }) => {
+const ProjectCard = ({ projectName, user, status  }) => {
     const navigation = useNavigation()
 
   return (

@@ -95,11 +95,11 @@ public class ProjectTrackerController {
             } else {
                 for (String member : inputProject.getMembers()) {
                     System.out.println(member);
-                    if(member != null){
+                    if (member != null) {
                         User addUser = userRepo.findUserByName(member);
                         if (addUser != null) {
                             memberListnew.add(addUser);
-                        }else{
+                        } else {
                             return ResponseEntity.badRequest().body("user not found");
                         }
                     }
@@ -295,28 +295,26 @@ public class ProjectTrackerController {
 //        }
 //        return ResponseEntity.badRequest().body("You are not allowed to do this");
 //    }
-    @PutMapping("/project/{id}/task-status")
-    public ResponseEntity editTaskStatus(@PathVariable Integer idProject, @RequestBody Task task, Principal principal) {
+    @PutMapping("/project/{idProject}/task-status/{idTask}/{PAYLOAD}")
+    public ResponseEntity editTaskStatus(@PathVariable Integer idProject, @PathVariable Integer idTask, @PathVariable String PAYLOAD, Principal principal) {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         Project project = projectRepo.findById(idProject).get();
-        if (task.getAssignUser().equals(loggedInUser) || loggedInUser.equals(project.getUser())) {
-            Optional<Task> opt = taskRepo.findById(task.getId());
-            if (!opt.isEmpty()) {
-                Task tFromDb = opt.get();
-                if (tFromDb.getAssignUser().getUsername().equals(principal.getName())) {
-                    if (task.getStatus().equals("ASSIGN")) {
-                        tFromDb.setStatus("INPROGRESS");
-                        task.setStartDate(new Date());
-                        taskRepo.save(tFromDb);
-                        return ResponseEntity.ok().body("OK");
-                    }
-                    if (task.getStatus().equals("COMPLETED")) {
-                        tFromDb.setStatus(task.getStatus());
-                        tFromDb.setEndDate(new Date());
-                        taskRepo.save(tFromDb);
-                        return ResponseEntity.ok().body("OK");
-                    }
-                }
+        Task tFromDb = taskRepo.findById(idTask).get();
+        if (tFromDb.getAssignUser().equals(loggedInUser) || project.getUser().equals(loggedInUser)) {
+            if (tFromDb.getStatus().equals("ASSIGN") && PAYLOAD.equalsIgnoreCase("START")) {
+                tFromDb.setStatus("INPROGRESS");
+                tFromDb.setStartDate(new Date());
+                taskRepo.save(tFromDb);
+                return ResponseEntity.ok().body("OK");
+            }else if(tFromDb.getStatus().equals("INPROGRESS") && PAYLOAD.equalsIgnoreCase("ONHOLD")){
+                tFromDb.setStatus("ONHOLD");
+                taskRepo.save(tFromDb);
+                return ResponseEntity.ok().body("OK");
+            }else if (tFromDb.getStatus().equals("INPROGRESS") && PAYLOAD.equalsIgnoreCase("COMPLETED")) {
+                tFromDb.setStatus("COMPLETED");
+                tFromDb.setEndDate(new Date());
+                taskRepo.save(tFromDb);
+                return ResponseEntity.ok().body("OK");
             }
         }
         return ResponseEntity.badRequest().body("You are not allowed to do this");

@@ -1,24 +1,131 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { DownOutlined, SmileOutlined } from "@ant-design/icons";
+import { Dropdown, Space, Button } from "antd";
+import { toast } from "react-hot-toast";
 
-function ProgressBubble({ status }) {
+function ProgressBubble({ status, taskAssignUser, isYourProject, taskId }) {
   const [bgColor, setBgColor] = useState(null);
-  const selector = useSelector((s) => s.statusColor);
-  const dispatch = useDispatch();
+  const userLoggedIn = useSelector((s) => s.loggedInUser);
+  const [isYourTask, setIsYourTask] = useState(false);
+  const { id } = useParams();
+  const [items, setItems] = useState([]);
+  const navigation = useNavigate();
+
+  function sentComplete(input) {
+    fetch(`http://localhost:8081/api/project/${id}/task-status/${taskId}/${input}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${localStorage.getItem("Authorization")}`,
+      },
+      method: "PUT",
+    })
+      .then((r) => {
+        if (r.ok) {
+          return r.text();
+        } else {
+          throw { message: "ERROR", status: r.status };
+        }
+      })
+      .then((d) => {
+        toast.success(`Task Progress Updated`);
+        navigation(0);
+      })
+      .catch((err) => {
+        toast.error(`${err.message}` + " " + `${err.status}`);
+      });
+  }
 
   useEffect(() => {
-    dispatch({ type: `${status}` });
+    if (taskAssignUser === userLoggedIn.name) {
+      setIsYourTask(true);
+    }
     switch (status) {
-      case "INPROGRESS":
-        return setBgColor("bg-yellow-300 text-white");
       case "ASSIGN":
-        return setBgColor("bg-blue-300 text-white");
-      case "REJECTED":
-        return setBgColor("bg-rose-500 text-white");
+        setBgColor("bg-blue-300 text-white");
+        setItems([
+          {
+            key: "3",
+            label: (
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  sentComplete(`START`);
+                }}
+                className=" hover:font-bold text-blue-500">
+                START
+              </div>
+            ),
+          },
+        ]);
+        break;
+      case "INPROGRESS":
+        setBgColor("bg-yellow-300 text-white");
+        setItems([
+          {
+            key: "3",
+            label: (
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  sentComplete(`COMPLETED`);
+                }}
+                className=" hover:font-bold text-green-500">
+                COMPLETED
+              </div>
+            ),
+          },
+          {
+            key: "1",
+            label: (
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  sentComplete(`ONHOLD`);
+                }}
+                className=" hover:font-bold ">
+                ONHOLD
+              </div>
+            ),
+            danger: true,
+          },
+        ]);
+        break;
       case "ONHOLD":
-        return setBgColor("bg-slate-600 text-white");
+        setBgColor("bg-slate-600 text-white");
+        setItems([
+          {
+            key: "1",
+            label: (
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  sentComplete(`INPROGRESS`);
+                }}
+                className=" hover:font-bold text-yellow-500">
+                INPROGRESS
+              </div>
+            ),
+          },
+          {
+            key: "3",
+            label: (
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  sentComplete(`COMPLETED`);
+                }}
+                className=" hover:font-bold text-green-500">
+                COMPLETED
+              </div>
+            ),
+          },
+        ]);
+        break;
       case "COMPLETED":
-        return setBgColor("bg-green-500 text-white");
+        setBgColor("bg-green-500 text-white cursor-not-allowed");
+        break;
       default:
         break;
     }
@@ -26,7 +133,34 @@ function ProgressBubble({ status }) {
 
   return (
     <>
-      <div className={"px-3 rounded-2xl w-28 " + `${bgColor}`}>{status}</div>
+      {/* <div className={"px-3 rounded-2xl w-28 " + `${bgColor}`}>{status}</div> */}
+      {
+      // isYourProject && !isYourTask ? (
+      //   <Dropdown
+      //     menu={{
+      //       items,
+      //     }}
+      //     placement="bottom"
+      //     arrow={{
+      //       pointAtCenter: true,
+      //     }}>
+      //     <Button className={"px-3 rounded-2xl w-fit " + `${bgColor}`}>{status}</Button>
+      //   </Dropdown>
+      // ) : 
+      isYourTask && !isYourProject ? (
+        <Dropdown
+          menu={{
+            items,
+          }}
+          placement="bottom"
+          arrow={{
+            pointAtCenter: true,
+          }}>
+          <Button className={"px-3 rounded-2xl w-fit " + `${bgColor}`}>{status}</Button>
+        </Dropdown>
+      ) : (
+        <Button className={"px-3 rounded-2xl w-fit cursor-not-allowed " + `${bgColor}`}>{status}</Button>
+      )}
     </>
   );
 }

@@ -27,3 +27,7 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
+
+.ant-btn:hover {
+  color: initial;
+}

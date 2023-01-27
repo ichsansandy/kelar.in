@@ -27,7 +27,7 @@ function ProjectCard({ project, isYourProject }) {
         <div className="absolute -top-5">
           <DueDateBadge dueDate={project.dueDate}/>
         </div>
-        <ProgressBubble status={project.status} />
+        <ProgressBubble status={project.status} isYourProject={isYourProject} />
         {!projectLogo ? (
           <svg className="h-36 w-36 text-white group-hover:text-fourth-color" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
             {" "}
