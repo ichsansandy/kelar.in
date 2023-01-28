@@ -1,5 +1,6 @@
 package co.g2academy.kelarin.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,16 +30,13 @@ public class Message {
     @JoinColumn(name = "sender_id", nullable = false)
     private User sender;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "receiver_id", nullable = false)
-    private User receiver;
-
     @Column(nullable = false)
     @Lob
     private String message;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "message_room_id", nullable = false)
+    @JsonIgnore
     private MessageRoom messageRoom;
 
     @Column(nullable = false)
@@ -59,14 +57,6 @@ public class Message {
 
     public void setSender(User sender) {
         this.sender = sender;
-    }
-
-    public User getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
     }
 
     public String getMessage() {

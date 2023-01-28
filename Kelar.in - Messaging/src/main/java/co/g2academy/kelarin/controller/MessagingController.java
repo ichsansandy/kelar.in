@@ -35,33 +35,43 @@ public class MessagingController {
     @Autowired
     private MessageRoomRepository messageRoomRepo;
 
-    @PostMapping("/message-room")
-    public ResponseEntity createRoom(@RequestBody User user2, Principal principal) {
-        User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        // get All room list by user1 and user 2
+    @PostMapping("/{loggedIn}/message-room/{selectUser}")
+    public ResponseEntity createRoom(@PathVariable String selectUser, @PathVariable String loggedIn) {
+        User loggedInUser = userRepo.findUserByName(loggedIn);
+        // get All room list by user1 and user2
         List<MessageRoom> rooms = messageRoomRepo.findAll();
         // check if the user already created room both in user 1 and 2
+        if (rooms.isEmpty()) {
+            User secondUser = userRepo.findUserByName(selectUser);
+            MessageRoom newRoom = new MessageRoom();
+            newRoom.setUser1(loggedInUser);
+            newRoom.setUser2(secondUser);
+            messageRoomRepo.save(newRoom);
+            return ResponseEntity.ok().body(newRoom);
+        }
         for (MessageRoom room : rooms) {
             if ((room.getUser1().getName().equals(loggedInUser.getName())
                     || room.getUser2().getName().equals(loggedInUser.getName()))
-                    && (room.getUser1().getName().equals(user2.getName())
-                    || room.getUser2().getName().equals(user2.getName()))) {
+                    && (room.getUser1().getName().equalsIgnoreCase(selectUser)
+                    || room.getUser2().getName().equalsIgnoreCase(selectUser))) {
                 // getRoom by id
+                return ResponseEntity.badRequest().body("room already created");
             } else {
                 // if null create the room
+                User secondUser = userRepo.findUserByName(selectUser);
                 MessageRoom newRoom = new MessageRoom();
                 newRoom.setUser1(loggedInUser);
-                newRoom.setUser2(user2);
+                newRoom.setUser2(secondUser);
                 messageRoomRepo.save(newRoom);
-                return ResponseEntity.ok().body("OK");
+                return ResponseEntity.ok().body(newRoom);
             }
         }
         return ResponseEntity.badRequest().body("Something wrong with room validation");
     }
 
-    @GetMapping("/message-room")
-    public List<MessageRoom> getAllRoom(Principal principal) {
-        User loggedInUser = userRepo.findUserByUsername(principal.getName());
+    @GetMapping("/{loggedIn}/message-room")
+    public List<MessageRoom> getAllRoom(@PathVariable String loggedIn) {
+        User loggedInUser = userRepo.findUserByName(loggedIn);
         List<MessageRoom> room1 = messageRoomRepo.findMessageRoomByUser1(loggedInUser);
         List<MessageRoom> room2 = messageRoomRepo.findMessageRoomByUser2(loggedInUser);
         List<MessageRoom> rooms = new ArrayList<>();
@@ -70,25 +80,27 @@ public class MessagingController {
         return rooms;
     }
 
-    @GetMapping("/message-room/{user1-id}/{user2-id}")
-    public List<Message> getMessageByMessageRoom(@RequestBody MessageRoom messageRoom, Principal principal) {
-        List<Message> messages = messageRepo.findMessageByMessageRoom(messageRoom);
+    @GetMapping("/message-room/{idRoom}")
+    public List<Message> getMessageByMessageRoom(@PathVariable Integer idRoom) {
+        List<Message> messages = messageRepo.findMessageByMessageRoom(messageRoomRepo.findById(idRoom).get());
         return messages;
     }
 
-    @PostMapping("/message-room/message")
-    public ResponseEntity createMessage(@RequestBody Message message
-            , Principal principal){
-        User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        message.setSender(loggedInUser);
-        if(message.getMessageRoom().getUser1().equals(loggedInUser)){
-            message.setReceiver(message.getMessageRoom().getUser2());
-        }else if(message.getMessageRoom().getUser2().equals(loggedInUser)){
-            message.setReceiver(message.getMessageRoom().getUser1());
+    @PostMapping("/{loggedIn}/message-room/{idRoom}/message")
+    public ResponseEntity createMessage(@PathVariable Integer idRoom, @PathVariable String loggedIn, @RequestBody Message inputMessage) {
+        User loggedInUser = userRepo.findUserByName(loggedIn);
+        MessageRoom room = messageRoomRepo.findById(idRoom).get();
+        if ((room.getUser1().getName().equals(loggedInUser.getName())
+                || room.getUser2().getName().equals(loggedInUser.getName()))) {
+            Message message = new Message();
+            message.setMessageRoom(room);
+            message.setSender(loggedInUser);
+            message.setMessage(inputMessage.getMessage());
+            message.setCreateDate(new Date());
+            messageRepo.save(message);
+            return ResponseEntity.ok().body(message);
         }
-        message.setCreateDate(new Date());
-        messageRepo.save(message);
-        return ResponseEntity.ok().body("OK");
+        return ResponseEntity.badRequest().body("You are not allowed to do this");
     }
-    
+
 }

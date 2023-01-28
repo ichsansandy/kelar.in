@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-function MessageRoomDetails() {
+function MessageRoomDetails({messageList}) {
+  const [messL, setMessL] = useState([]);
+  
   return (
     <div className=''>
         <div className='h-[55px] bg-secondary-color/50'>Top</div>
