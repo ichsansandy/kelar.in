@@ -17,6 +17,7 @@ import PrivateRoute from "./component/PrivateRoute";
 import ProjectDetails from "./pages/ProjectDetails";
 import Loading from "./component/Loading";
 import ScrollToTop from "./scrollToTop";
+import MessageRoomDetails from "./component/MessageRoomDetails";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -143,10 +144,45 @@ function App() {
               <Home loggedInUser={user} />
             </PrivateRoute>
           }></Route>
-        <Route path="/projects" element={<Projects />}></Route>
-        <Route path="/projects/:id" element={<ProjectDetails />} />
-        <Route path="/projects/new-project" element={<NewProject />} />
-        <Route path="/messaging" element={<Messaging />} />
+        <Route
+          path="/projects"
+          element={
+            <PrivateRoute>
+              <Projects />
+            </PrivateRoute>
+          }></Route>
+        <Route
+          path="/projects/:id"
+          element={
+            <PrivateRoute>
+              <ProjectDetails />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/projects/new-project"
+          element={
+            <PrivateRoute>
+              <NewProject />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/messaging"
+          element={
+            <PrivateRoute>
+              <Messaging />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/messaging/:id"
+          element={
+            <PrivateRoute>
+              <MessageRoomDetails />
+            </PrivateRoute>
+          }
+        />
       </Routes>
       <Footer />
     </div>

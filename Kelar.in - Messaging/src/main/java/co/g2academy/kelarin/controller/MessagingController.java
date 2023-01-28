@@ -6,13 +6,13 @@ import co.g2academy.kelarin.model.User;
 import co.g2academy.kelarin.repository.MessageRepository;
 import co.g2academy.kelarin.repository.MessageRoomRepository;
 import co.g2academy.kelarin.repository.UserRepository;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import static org.springframework.data.redis.serializer.RedisSerializationContext.java;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class MessagingController {
 
     @Autowired
@@ -34,15 +35,17 @@ public class MessagingController {
     private MessageRepository messageRepo;
     @Autowired
     private MessageRoomRepository messageRoomRepo;
+    @Autowired
+    private SimpMessagingTemplate template;
 
     @PostMapping("/{loggedIn}/message-room/{selectUser}")
-    public ResponseEntity createRoom(@PathVariable String selectUser, @PathVariable String loggedIn) {
-        User loggedInUser = userRepo.findUserByName(loggedIn);
+    public ResponseEntity createRoom(@PathVariable Integer selectUser, @PathVariable Integer loggedIn) {
+        User loggedInUser = userRepo.findById(loggedIn).get();
         // get All room list by user1 and user2
         List<MessageRoom> rooms = messageRoomRepo.findAll();
         // check if the user already created room both in user 1 and 2
+            User secondUser = userRepo.findById(selectUser).get();
         if (rooms.isEmpty()) {
-            User secondUser = userRepo.findUserByName(selectUser);
             MessageRoom newRoom = new MessageRoom();
             newRoom.setUser1(loggedInUser);
             newRoom.setUser2(secondUser);
@@ -52,13 +55,12 @@ public class MessagingController {
         for (MessageRoom room : rooms) {
             if ((room.getUser1().getName().equals(loggedInUser.getName())
                     || room.getUser2().getName().equals(loggedInUser.getName()))
-                    && (room.getUser1().getName().equalsIgnoreCase(selectUser)
-                    || room.getUser2().getName().equalsIgnoreCase(selectUser))) {
+                    && (room.getUser1().getName().equalsIgnoreCase(secondUser.getName())
+                    || room.getUser2().getName().equalsIgnoreCase(secondUser.getName()))) {
                 // getRoom by id
                 return ResponseEntity.badRequest().body("room already created");
             } else {
                 // if null create the room
-                User secondUser = userRepo.findUserByName(selectUser);
                 MessageRoom newRoom = new MessageRoom();
                 newRoom.setUser1(loggedInUser);
                 newRoom.setUser2(secondUser);
