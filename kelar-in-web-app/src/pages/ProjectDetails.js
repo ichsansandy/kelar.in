@@ -45,28 +45,28 @@ function ProjectDetails() {
     }
   };
 
-  function fetchMemberFromProjectId() {
-    fetch(`http://192.168.100.82:8081/api/project/${id}/membership-availuser`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${localStorage.getItem("Authorization")}`,
-      },
-    })
-      .then((r) => {
-        if (r.ok) {
-          return r.json();
-        } else {
-          throw { message: "Error ", status: r.status };
-        }
-      })
-      .then((d) => {
-        setMembership(d.membership);
-        setAvailUser(d.availUser);
-      })
-      .catch((err) => {
-        toast.error(err.message);
-      });
-  }
+  // function fetchMemberFromProjectId() {
+  //   fetch(`http://192.168.100.82:8081/api/project/${id}/membership-availuser`, {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: `${localStorage.getItem("Authorization")}`,
+  //     },
+  //   })
+  //     .then((r) => {
+  //       if (r.ok) {
+  //         return r.json();
+  //       } else {
+  //         throw { message: "Error ", status: r.status };
+  //       }
+  //     })
+  //     .then((d) => {
+  //       setMembership(d.membership);
+  //       setAvailUser(d.availUser);
+  //     })
+  //     .catch((err) => {
+  //       toast.error(err.message);
+  //     });
+  // }
 
   useEffect(() => {
     fetchProjectDetails()
@@ -76,7 +76,7 @@ function ProjectDetails() {
       .catch((err) => {
         console.error(err);
       });
-    fetchMemberFromProjectId();
+    // fetchMemberFromProjectId();
   }, []);
 
   useEffect(() => {

@@ -35,16 +35,14 @@ public class MessagingController {
     private MessageRepository messageRepo;
     @Autowired
     private MessageRoomRepository messageRoomRepo;
-    @Autowired
-    private SimpMessagingTemplate template;
 
     @PostMapping("/{loggedIn}/message-room/{selectUser}")
-    public ResponseEntity createRoom(@PathVariable Integer selectUser, @PathVariable Integer loggedIn) {
-        User loggedInUser = userRepo.findById(loggedIn).get();
+    public ResponseEntity createRoom(@PathVariable String selectUser, @PathVariable String loggedIn) {
+        User loggedInUser = userRepo.findUserByName(loggedIn);
         // get All room list by user1 and user2
         List<MessageRoom> rooms = messageRoomRepo.findAll();
         // check if the user already created room both in user 1 and 2
-            User secondUser = userRepo.findById(selectUser).get();
+            User secondUser = userRepo.findUserByName(selectUser);
         if (rooms.isEmpty()) {
             MessageRoom newRoom = new MessageRoom();
             newRoom.setUser1(loggedInUser);

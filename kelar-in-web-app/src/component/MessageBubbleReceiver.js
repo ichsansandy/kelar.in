@@ -8,7 +8,7 @@ function MessageBubbleReceiver({ message }) {
   const [objectURL, setObjectURL] = useState(null);
 
   function getPicture() {
-    fetch(`http://localhost:8081/api/profile/get-picture/${message.sender.name}`, {
+    fetch(`http://localhost:8081/api/profile/get-picture/${message.user}`, {
       headers: {
         Authorization: `${localStorage.getItem("Authorization")}`,
       },
@@ -19,7 +19,7 @@ function MessageBubbleReceiver({ message }) {
       });
   }
   useEffect(() => {
-    if (message.sender.name === loggedInUser.name) {
+    if (message.user === loggedInUser.name) {
       setisUserLoggedIn(true);
     }
     getPicture();
@@ -42,9 +42,9 @@ function MessageBubbleReceiver({ message }) {
             )}
           </div>
         </div>
-        <div className="chat-header">{message.sender.name}</div>
+        <div className="chat-header">{message.user}</div>
         <div className="chat-bubble">{message.message}</div>
-        <time className="chat-footer  text-xs opacity-50">{moment(message.createDate).fromNow()}</time>
+        {/* <time className="chat-footer  text-xs opacity-50">{moment(message.timeSent).fromNow()}</time> */}
         {/* <div className="chat-footer opacity-50">Delivered</div> */}
       </div>
     </>
