@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import MessageBubbleReceiver from "./MessageBubbleReceiver";
 import { Button } from "antd";
 import { useSelector } from "react-redux";
-import { collection, doc, onSnapshot, deleteDoc, addDoc } from "firebase/firestore";
+import { collection, doc, onSnapshot, deleteDoc, addDoc, query, orderBy } from "firebase/firestore";
 import { db } from "../firebase-config";
 import moment from "moment";
 
@@ -15,30 +15,29 @@ function MessageRoomDetails({}) {
   const [messageList, setMessageList] = useState([]);
   const roomListCollection = collection(db, "RealTimeChat", id, "ChatList");
 
-  const fetchMessageList = () => {
-    fetch(`http://localhost:8082/api/message-room/${id}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((r) => {
-        if (r.ok) {
-          return r.json();
-        } else {
-          throw { message: `Error ${r.status}` };
-        }
-      })
-      .then((d) => {
-        setMessageList(d);
-      })
-      .catch((err) => {
-        toast.error(err.message);
-      });
-  };
+  // const fetchMessageList = () => {
+  //   fetch(`http://localhost:8082/api/message-room/${id}`, {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   })
+  //     .then((r) => {
+  //       if (r.ok) {
+  //         return r.json();
+  //       } else {
+  //         throw { message: `Error ${r.status}` };
+  //       }
+  //     })
+  //     .then((d) => {
+  //       setMessageList(d);
+  //     })
+  //     .catch((err) => {
+  //       toast.error(err.message);
+  //     });
+  // };
 
   const submit = async (e) => {
     e.preventDefault();
-    setInput("");
     // console.log(loggedInUser.name);
     // fetch(`http://localhost:8082/api/${loggedInUser.name}/message-room/${id}/message`, {
     //   method: "POST",
@@ -62,11 +61,20 @@ function MessageRoomDetails({}) {
     //   .catch((err) => {
     //     toast.error(err.message);
     //   });
+    //
+    // fetch to fire base auto id
     const docRef = await addDoc(roomListCollection, {
       user: loggedInUser.name,
       timeSent: new Date(),
       message: input,
     });
+    setInput("");
+  };
+
+  const sortByTimestamp = () => {
+    let sortedEvents = [...messageList];
+    sortedEvents.sort((a, b) => moment(a.timeSent.toMillis()).valueOf() - moment(b.timeSent.toMillis()).valueOf());
+    setMessageList(sortedEvents);
   };
 
   const scrollToBottom = (id) => {
@@ -76,11 +84,14 @@ function MessageRoomDetails({}) {
 
   useEffect(() => {
     scrollToBottom("box");
+    // sortByTimestamp();
   }, [messageList]);
 
+  const sortedCollection = query(roomListCollection, orderBy("timeSent", "asc"));
+  
   useEffect(() => {
     // fetchMessageList();
-    const unsubscribe = onSnapshot(roomListCollection, (snapshot) => {
+    const unsubscribe = onSnapshot(sortedCollection, (snapshot) => {
       const data = [];
       snapshot.docs.map((doc) => {
         console.log(doc.data());
