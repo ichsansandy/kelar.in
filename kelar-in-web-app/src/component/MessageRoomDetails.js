@@ -62,6 +62,7 @@ function MessageRoomDetails({}) {
     //     toast.error(err.message);
     //   });
     //
+
     // fetch to fire base auto id
     const docRef = await addDoc(roomListCollection, {
       user: loggedInUser.name,
@@ -71,20 +72,13 @@ function MessageRoomDetails({}) {
     setInput("");
   };
 
-  const sortByTimestamp = () => {
-    let sortedEvents = [...messageList];
-    sortedEvents.sort((a, b) => moment(a.timeSent.toMillis()).valueOf() - moment(b.timeSent.toMillis()).valueOf());
-    setMessageList(sortedEvents);
-  };
-
-  const scrollToBottom = (id) => {
+   const scrollToBottom = (id) => {
     const element = document.getElementById(id);
     element.scrollTop = element.scrollHeight;
   };
 
   useEffect(() => {
     scrollToBottom("box");
-    // sortByTimestamp();
   }, [messageList]);
 
   const sortedCollection = query(roomListCollection, orderBy("timeSent", "asc"));
@@ -104,8 +98,8 @@ function MessageRoomDetails({}) {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="h-[55px] bg-secondary-color/50">Top</div>
-      <div className="h-[62vh] -z-10 px-3 bg-secondary-color/70 overflow-y-auto  " id="box">
+      <div className="h-[7.5vh] bg-secondary-color/50">Top</div>
+      <div className="h-[70vh] -z-10 px-3 bg-secondary-color/70 overflow-y-auto  " id="box">
         {messageList !== null &&
           messageList.map((message) => (
             <div key={message.id} className="">

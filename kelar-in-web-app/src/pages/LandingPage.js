@@ -1,11 +1,10 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
-import Footer from "../component/Footer";
+import { NavLink } from "react-router-dom";
 
 function LandingPage() {
   return (
-    <div className="bg-cover min-h-[84vh] " style={{ backgroundImage: "url('/asset/arlington-research-kN_kViDchA0-unsplash.jpg')" }}>
-      <div className="grid px-4 py-8  max-w-screen-xl mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 bg-secondary-color/75 ">
+    <div className="bg-cover min-h-[85vh] " style={{ backgroundImage: "url('/asset/arlington-research-kN_kViDchA0-unsplash.jpg')" }}>
+      <div className="grid px-4 py-8 h-[85vh]  max-w-screen-xl mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 bg-secondary-color/75 ">
         <div className="mr-auto place-self-center lg:col-span-7">
           <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">Get a bird's eye view of your projects and take control of the workflow </h1>
           {/* <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">Say Goodbye to Chaos and Hello to Order </h1> */}

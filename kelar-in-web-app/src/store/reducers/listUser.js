@@ -1,7 +1,5 @@
 const listUserReducer = (
-  state = [
-   
-  ],
+  state = [],
   action
 ) => {
   switch (action.type) {

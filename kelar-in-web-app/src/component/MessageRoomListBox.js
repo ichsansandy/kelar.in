@@ -2,9 +2,13 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../firebase-config";
+import { async } from "@firebase/util";
 
+const roomListCollection = collection(db, "RealTimeChat");
 
-function MessageRoomListBox({ room, fetchMessageList }) {
+function MessageRoomListBox({ room, isCreateNewRoom, user }) {
   const userLoggedIn = useSelector((s) => s.loggedInUser);
   const navigation = useNavigate();
   const [objectURL, setObjectURL] = useState(null);
@@ -29,47 +33,86 @@ function MessageRoomListBox({ room, fetchMessageList }) {
         setObjectURL(URL.createObjectURL(myBlob));
       })
       .catch((err) => {
-        toast.error(err.message);
+        // toast.error(err.message);
       });
   }
 
-  
+  const createNewRoom = async () => {
+    const docRef = await addDoc(roomListCollection, {
+      user1: userLoggedIn.name,
+      user2: user,
+    });
+    navigation(`/messaging/${docRef.id}`);
+  };
 
   useEffect(() => {
-    if (room?.user1 === userLoggedIn.name ) {
+    if (room?.user1 === userLoggedIn.name) {
       setuserRoom(room?.user2);
       getPicture(room?.user2);
     } else {
       setuserRoom(room?.user1);
       getPicture(room?.user1);
     }
+    
+    if(isCreateNewRoom) {
+      getPicture(user);
+    }
   }, []);
 
   return (
-    <div
-      key={room.id}
-      onClick={(e) => {
-        e.preventDefault();
-        navigation(`/messaging/${room.id}`);
-      }}
-      className="flex flex-row items-center h-[100px] bg-secondary-color/50 hover:bg-secondary-color/75 hover:cursor-pointer ">
-      <div className="w-1/4  ">
-        <div className="rounded-full bg-white w-16 h-16 mx-auto">
-          {isPicture === true ? (
-            <img className="z-30 h-16 w-16 rounded-full" src={objectURL} alt="" />
-          ) : (
-            <svg className="z-30 bg-third-color rounded-full h-16 w-16 text-white" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-              {" "}
-              <path stroke="none" d="M0 0h24v24H0z" /> <circle cx="12" cy="7" r="4" /> <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
-            </svg>
-          )}
+    <>
+      {!isCreateNewRoom ? (
+        <div
+          key={room.id}
+          onClick={(e) => {
+            e.preventDefault();
+            navigation(`/messaging/${room.id}`);
+          }}
+          className="flex flex-row items-center h-[100px] bg-secondary-color/50 hover:bg-secondary-color/75 hover:cursor-pointer ">
+          <div className="w-1/4  ">
+            <div className="rounded-full bg-white w-16 h-16 mx-auto">
+              {isPicture === true ? (
+                <img className="z-30 h-16 w-16 rounded-full" src={objectURL} alt="" />
+              ) : (
+                <svg className="z-30 bg-third-color rounded-full h-16 w-16 text-white" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                  {" "}
+                  <path stroke="none" d="M0 0h24v24H0z" /> <circle cx="12" cy="7" r="4" /> <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                </svg>
+              )}
+            </div>
+          </div>
+          <div className="w-3/4 h-full flex flex-col p-2 gap-y-4 ">
+            <div className="text-left my-auto text-2xl font-medium  ">{userRoom}</div>
+            {/* <div className="text-right truncate">LastMessage how long we can have</div> */}
+          </div>
         </div>
-      </div>
-      <div className="w-3/4 h-full flex flex-col p-2 gap-y-4 ">
-        <div className="text-left ">{userRoom}</div>
-        {/* <div className="text-right truncate">LastMessage how long we can have</div> */}
-      </div>
-    </div>
+      ) : (
+        <div
+          key={user}
+          onClick={(e) => {
+            e.preventDefault();
+            createNewRoom();
+          }}
+          className="flex flex-row items-center h-[100px] bg-secondary-color/50 hover:bg-secondary-color/75 hover:cursor-pointer ">
+          <div className="w-1/4  ">
+            <div className="rounded-full bg-white w-16 h-16 mx-auto">
+              {isPicture === true ? (
+                <img className="z-30 h-16 w-16 rounded-full" src={objectURL} alt="" />
+              ) : (
+                <svg className="z-30 bg-third-color rounded-full h-16 w-16 text-white" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                  {" "}
+                  <path stroke="none" d="M0 0h24v24H0z" /> <circle cx="12" cy="7" r="4" /> <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                </svg>
+              )}
+            </div>
+          </div>
+          <div className="w-3/4 h-full flex flex-col p-2 gap-y-4 ">
+            <div className="text-left my-auto text-2xl font-medium  ">{user}</div>
+            {/* <div className="text-right truncate">LastMessage how long we can have</div> */}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
