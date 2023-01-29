@@ -3,6 +3,7 @@ package co.g2academy.kelarin.controller;
 import co.g2academy.kelarin.dto.UserDto;
 import co.g2academy.kelarin.model.User;
 import co.g2academy.kelarin.repository.UserRepository;
+import co.g2academy.kelarin.service.FireNotificationService;
 import co.g2academy.kelarin.service.MessagePublisherService;
 import co.g2academy.kelarin.validator.UserPassRegex1;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +51,11 @@ public class UserController {
     private ObjectMapper mapper = new JsonMapper();
     private PasswordEncoder encoder = new BCryptPasswordEncoder();
 
+    @Autowired
+    private FireNotificationService firestore;
+
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody User user) throws JsonProcessingException {
+    public ResponseEntity register(@RequestBody User user) throws JsonProcessingException, InterruptedException, ExecutionException {
 //        System.out.println(user.getName());
 //        System.out.println(user.getUsername());
 //        System.out.println(user.getPassword());
@@ -67,6 +72,7 @@ public class UserController {
             String json = mapper.writeValueAsString(dto);
             //publish user to chaneel userCreation for kelarin_messaging kelarin_push_notification
             messagePublisherService.publishRegister(json);
+            firestore.createDocumentInFirestore(user.getName());
         } else {
             return ResponseEntity.badRequest().body("user exist, email or password invalid");
         }
@@ -132,7 +138,7 @@ public class UserController {
         byte[] image = loggedInUserFromDB.getProfileImage();
         if (image != null) {
             return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
-        }else{
+        } else {
             return ResponseEntity.badRequest().body("this user dont have image");
         }
     }
@@ -143,9 +149,15 @@ public class UserController {
         byte[] image = loggedIUserFromDb.getProfileImage();
         if (image != null) {
             return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
-        }else{
+        } else {
             return ResponseEntity.badRequest().body("this user dont have image");
         }
+    }
+
+    @PostMapping("/testfirestore")
+    public ResponseEntity testfirestore(@RequestBody User user) throws JsonProcessingException, InterruptedException, ExecutionException {
+        firestore.createDocumentInFirestore(user.getName());
+        return ResponseEntity.ok().body("OK");
     }
 
 }
