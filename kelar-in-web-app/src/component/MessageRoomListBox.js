@@ -55,7 +55,10 @@ function MessageRoomListBox({ room, isCreateNewRoom, user }) {
     }
     
     if(isCreateNewRoom) {
-      getPicture(user);
+      const timer = setTimeout(() => {
+        getPicture(user);
+      }, 1000);
+      return () => clearTimeout(timer);
     }
   }, []);
 

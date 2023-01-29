@@ -98,8 +98,8 @@ function MessageRoomDetails({}) {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="h-[7.5vh] bg-secondary-color/50">Top</div>
-      <div className="h-[70vh] -z-10 px-3 bg-secondary-color/70 overflow-y-auto  " id="box">
+      {/* <div className="h-[7.5vh] bg-secondary-color/50">Top</div> */}
+      <div className="h-[78vh] -z-10 px-3 bg-secondary-color/70 overflow-y-auto  " id="box">
         {messageList !== null &&
           messageList.map((message) => (
             <div key={message.id} className="">

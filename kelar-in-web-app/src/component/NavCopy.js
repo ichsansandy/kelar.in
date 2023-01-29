@@ -21,35 +21,38 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
     navigate("/landingpage");
   }
 
+  function getPicture() {
+    fetch("http://localhost:8081/api/profile/get-picture", {
+      headers: {
+        Authorization: `${localStorage.getItem("Authorization")}`,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.blob();
+        } else {
+          setIsPicture(false);
+          return setObjectURL(null);
+        }
+      })
+      .then((myBlob) => {
+        if (myBlob !== null) {
+          setIsPicture(true);
+          setObjectURL(URL.createObjectURL(myBlob));
+        }
+      })
+      .catch((err) => {
+        // toast.error(err.message);
+      });
+  }
+
   useEffect(() => {
     if (!localStorage.getItem("Authorization")) {
       dispatch({ type: "MENU_NOT_LOGIN" });
     } else {
       dispatch({ type: "MENU_LOGIN" });
       //fetch profile picture
-      fetch("http://localhost:8081/api/profile/get-picture", {
-        headers: {
-          Authorization: `${localStorage.getItem("Authorization")}`,
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.blob();
-          } else {
-            setIsPicture(false);
-            return setObjectURL(null);
-          }
-        })
-        .then((myBlob) => {
-          if (myBlob !== null) {
-            setObjectURL(URL.createObjectURL(myBlob));
-          } else {
-            setObjectURL(null);
-          }
-        })
-        .catch((err) => {
-          toast.error(err.message);
-        });
+      getPicture();
     }
   }, [localStorage.getItem("Authorization")]);
 
@@ -110,7 +113,7 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
                     <Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       {/* <span className="sr-only">Open user menu</span> */}
 
-                      {objectURL === (null || undefined || NaN) ? (
+                      {!isPicture ? (
                         <svg className="h-10 w-10 rounded-full bg-third-color text-white" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
                           {" "}
                           <path stroke="none" d="M0 0h24v24H0z" /> <circle cx="12" cy="7" r="4" /> <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />

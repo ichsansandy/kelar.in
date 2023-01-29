@@ -72,19 +72,19 @@ public class UserController {
         }
         return ResponseEntity.ok().body("OK");
     }
-    
+
     @GetMapping("/user-loggedIn")
-    public User getUserLoggeIn(Principal principal){
+    public User getUserLoggeIn(Principal principal) {
         return repository.findUserByUsername(principal.getName());
     }
-    
+
     @GetMapping("/all-user")
-    public List<User> getAllUser(){
+    public List<User> getAllUser() {
         return repository.findAll();
     }
-    
+
     @GetMapping("/all-user-nameonly")
-    public ResponseEntity getAllUserNameOnly(){
+    public ResponseEntity getAllUserNameOnly() {
         List<User> allUsers = repository.findAll();
         List<String> allUsersNameOnly = new ArrayList<>();
         for (User allUser : allUsers) {
@@ -107,7 +107,7 @@ public class UserController {
     }
 
     @PutMapping("/profile/edit-picture")
-    public ResponseEntity editProfilePicture(Principal principal,@RequestParam("image") MultipartFile file) throws JsonProcessingException {
+    public ResponseEntity editProfilePicture(Principal principal, @RequestParam("image") MultipartFile file) throws JsonProcessingException {
         User loggedInUserFromDb = repository.findUserByUsername(principal.getName());
         if (file != null) {
             try {
@@ -125,21 +125,27 @@ public class UserController {
         }
         return ResponseEntity.badRequest().body("file not found");
     }
-    
+
     @GetMapping("/profile/get-picture")
-    public ResponseEntity getProfilePicture(Principal principal){
+    public ResponseEntity getProfilePicture(Principal principal) {
         User loggedInUserFromDB = repository.findUserByUsername(principal.getName());
         byte[] image = loggedInUserFromDB.getProfileImage();
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+        if (image != null) {
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+        }else{
+            return ResponseEntity.badRequest().body("this user dont have image");
+        }
     }
-   
+
     @GetMapping("/profile/get-picture/{name}")
-    public ResponseEntity getProfilePicture(@PathVariable String name){
+    public ResponseEntity getProfilePicture(@PathVariable String name) {
         User loggedIUserFromDb = repository.findUserByName(name);
         byte[] image = loggedIUserFromDb.getProfileImage();
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+        if (image != null) {
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+        }else{
+            return ResponseEntity.badRequest().body("this user dont have image");
+        }
     }
-    
-    
 
 }

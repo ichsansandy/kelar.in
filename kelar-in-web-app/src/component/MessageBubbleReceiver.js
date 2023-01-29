@@ -6,25 +6,28 @@ function MessageBubbleReceiver({ message }) {
   const loggedInUser = useSelector((s) => s.loggedInUser);
   const [isUserLoggedIn, setisUserLoggedIn] = useState(null);
   const [objectURL, setObjectURL] = useState(null);
-  
+
   function getPicture() {
     fetch(`http://localhost:8081/api/profile/get-picture/${message.user}`, {
       headers: {
         Authorization: `${localStorage.getItem("Authorization")}`,
       },
     })
-    .then((response) => response.blob())
-    .then((myBlob) => {
-      setObjectURL(URL.createObjectURL(myBlob));
-    });
+      .then((response) => {if(response.ok){response.blob()}})
+      .then((myBlob) => {
+        setObjectURL(URL.createObjectURL(myBlob));
+      });
   }
   useEffect(() => {
     if (message.user === loggedInUser.name) {
       setisUserLoggedIn(true);
     }
-    getPicture();
+    const timer = setTimeout(() => {
+      getPicture();
+    }, 1000);
+    return () => clearTimeout(timer);
   }, []);
-  
+
   return (
     <>
       <div className={!isUserLoggedIn ? "chat chat-start" : "chat chat-end"}>

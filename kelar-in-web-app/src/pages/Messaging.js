@@ -51,7 +51,7 @@ function Messaging() {
   return (
     <div className="bg-primary-color/50">
       <div className="flex flex-row justify-evenly h-[80vh] max-w-7xl mx-auto ">
-        <div className="bg-third-color w-2/6 overflow-y-auto ">
+        <div className="bg-third-color w- overflow-y-auto ">
           <div>Chat Room</div>
           {messageRoom !== false && messageRoom.map((room) => <MessageRoomListBox room={room} isCreateNewRoom={false} />)}
           {!isCreateNewRoom ? (
