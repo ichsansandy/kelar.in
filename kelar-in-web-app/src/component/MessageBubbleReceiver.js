@@ -7,25 +7,33 @@ function MessageBubbleReceiver({ message }) {
   const [isUserLoggedIn, setisUserLoggedIn] = useState(null);
   const [objectURL, setObjectURL] = useState(null);
 
-  function getPicture() {
-    fetch(`http://localhost:8081/api/profile/get-picture/${message.user}`, {
+  function getPicture(input) {
+    fetch(`http://localhost:8081/api/profile/get-picture/${input}`, {
       headers: {
         Authorization: `${localStorage.getItem("Authorization")}`,
       },
     })
-      .then((response) => {if(response.ok){response.blob()}})
+      .then((response) => {
+        if (response.ok) {
+          return response.blob();
+        } else {
+          return setObjectURL(null);
+        }
+      })
       .then((myBlob) => {
         setObjectURL(URL.createObjectURL(myBlob));
+      })
+      .catch((err) => {
+        // toast.error(err.message);
       });
   }
   useEffect(() => {
     if (message.user === loggedInUser.name) {
       setisUserLoggedIn(true);
     }
-    const timer = setTimeout(() => {
-      getPicture();
+    setTimeout(() => {
+      getPicture(message.user);
     }, 1000);
-    return () => clearTimeout(timer);
   }, []);
 
   return (

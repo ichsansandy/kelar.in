@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import MessageBubbleReceiver from "./MessageBubbleReceiver";
 import { Button } from "antd";
 import { useSelector } from "react-redux";
-import { collection, doc, onSnapshot, deleteDoc, addDoc, query, orderBy } from "firebase/firestore";
+import { collection, doc, onSnapshot, deleteDoc, addDoc, query, orderBy, getDoc } from "firebase/firestore";
 import { db } from "../firebase-config";
 import moment from "moment";
 
@@ -13,7 +13,11 @@ function MessageRoomDetails({}) {
   const loggedInUser = useSelector((s) => s.loggedInUser);
   const { id } = useParams();
   const [messageList, setMessageList] = useState([]);
-  const roomListCollection = collection(db, "RealTimeChat", id, "ChatList");
+  const messageListCollectionRef = collection(db, "RealTimeChat", id, "ChatList");
+
+  const [receiverName, setReceiverName] = useState("");
+  
+  // const notifCollRef = collection(db, "PushNotification", receiverName, "NotificationList");
 
   // const fetchMessageList = () => {
   //   fetch(`http://localhost:8082/api/message-room/${id}`, {
@@ -38,6 +42,14 @@ function MessageRoomDetails({}) {
 
   const submit = async (e) => {
     e.preventDefault();
+    
+    // fetch to fire base auto id
+    const docRef = await addDoc(messageListCollectionRef, {
+      user: loggedInUser.name,
+      timeSent: new Date(),
+      message: input,
+    });
+    setInput("");
     // console.log(loggedInUser.name);
     // fetch(`http://localhost:8082/api/${loggedInUser.name}/message-room/${id}/message`, {
     //   method: "POST",
@@ -62,17 +74,9 @@ function MessageRoomDetails({}) {
     //     toast.error(err.message);
     //   });
     //
-
-    // fetch to fire base auto id
-    const docRef = await addDoc(roomListCollection, {
-      user: loggedInUser.name,
-      timeSent: new Date(),
-      message: input,
-    });
-    setInput("");
   };
 
-   const scrollToBottom = (id) => {
+  const scrollToBottom = (id) => {
     const element = document.getElementById(id);
     element.scrollTop = element.scrollHeight;
   };
@@ -81,10 +85,25 @@ function MessageRoomDetails({}) {
     scrollToBottom("box");
   }, [messageList]);
 
-  const sortedCollection = query(roomListCollection, orderBy("timeSent", "asc"));
-  
+  const sortedCollection = query(messageListCollectionRef, orderBy("timeSent", "asc"));
+
   useEffect(() => {
     // fetchMessageList();
+    //fetch roomReceiver for push notification
+    // roomDocRef.get().then((doc) => {
+    //   if (doc.data().user1 === loggedInUser.name) {
+    //     setReceiverName(doc.data().user2);
+    //   } else {
+    //     setReceiverName(doc.data().user1);
+    //   }
+    // });
+
+    setTimeout(() => {
+      const roomDocRef = doc(db, "RealTimeChat", id);
+      
+    }, 1000);
+
+    //fetch message list from firestore
     const unsubscribe = onSnapshot(sortedCollection, (snapshot) => {
       const data = [];
       snapshot.docs.map((doc) => {
@@ -110,7 +129,7 @@ function MessageRoomDetails({}) {
       <form className="flex bg-white h-full border-red-300 border-4 m-0">
         <textarea className="border-0 m-auto w-[90%]" onChange={(e) => setInput(e.target.value)} value={input} />
         <Button type="submit" className="m-auto" onClick={submit}>
-          send
+          Send
         </Button>
       </form>
     </div>

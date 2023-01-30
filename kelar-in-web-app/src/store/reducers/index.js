@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import assignProjectListReducer from "./assignProjectList";
+import countIsReadReducer from "./countIsReadReducer";
 import listUserReducer from "./listUser";
 import loggedInUserReducer from "./loggedInUser";
 import menuReducer from "./menuReducer";
@@ -17,6 +18,7 @@ const reducers = combineReducers({
   statusColor: statusColorReducer,
   tasksList: taskListReducer,
   newMemberProject: newProjectMemberReducer,
+  countIsRead: countIsReadReducer,
 });
 
 export default reducers;

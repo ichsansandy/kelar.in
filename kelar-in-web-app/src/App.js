@@ -123,6 +123,13 @@ function App() {
         fetchAssignProjectList();
         fetchYourProjectList();
       }
+      function handleRefresh() {
+      }
+      window.addEventListener("beforeunload", handleRefresh);
+
+      return () => {
+        window.removeEventListener("beforeunload", handleRefresh);
+      };
     },
     [
       // localStorage.getItem("Authorization")

@@ -71,7 +71,7 @@ function CommentContainer() {
   }, []);
 
   return (
-    <div className="flex flex-col mb-3 mx-auto w-full sm:max-h-[1000px] md:w-[700px] xl:w-full px-5 mt-5">
+    <div className="flex flex-col mb-3 mx-auto w-full sm:max-h-[1000px] md:w-[700px] xl:w-full px-5 mt-5 z-10">
       <div className={"  p-2 w-full rounded-xl bg-secondary-color text-fourth-color font-extrabold text-xl "}>Comment</div>
       <div className="bg-white rounded h-[890px] overflow-y-auto ">
         <CommentInputBox input={input} setInput={setInput} postComment={postComment} />
