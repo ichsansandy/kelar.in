@@ -4,14 +4,29 @@ import { Text, Card, Button, Icon, Input } from "@rneui/themed";
 import styles from "../assets/style";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import localhostIp from "../localhostIp";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
-  const login = () => {
-    navigation.navigate("HomeNavigation")
+  const login = async () => {
+    console.log(username);
+    console.log(password);
+    try {
+      let { data } = await axios.post(localhostIp + "8081/api/login", {
+        username: username,
+        password: password,
+      });
+      let { token } = data;
+      await AsyncStorage.setItem("Authorization", `Bearer ${token}`);
+      navigation.navigate("HomeNavigation");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -24,8 +39,8 @@ const Login = () => {
             <Text style={styles.textFourth}>.in</Text>
           </Card.Title>
           <Card.Image source={require("../assets/test-background.jpg")} resizeMode="contain" />
-          <Input placeholder="Email" leftIcon={<Icon name="account-circle" size={20} />} />
-          <Input placeholder="Password" leftIcon={<Icon name="lock" size={20} />} />
+          <Input placeholder="Email" onChangeText={(e) => setUsername(e)} leftIcon={<Icon name="account-circle" size={20} />} />
+          <Input placeholder="Password" onChangeText={(e) => setPassword(e)} leftIcon={<Icon name="lock" size={20} />} />
           <Button
             icon={<Icon name="" color="#ffffff" iconStyle={{ marginRight: 10 }} />}
             buttonStyle={{
