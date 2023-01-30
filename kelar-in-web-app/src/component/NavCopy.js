@@ -54,24 +54,25 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
   useEffect(() => {
     //set reference for collection notif
     if (loggedInUser !== null) {
-      setTimeout(() => {
-        const notifCollRef = collection(db, "PushNotification", loggedInUser.name, "NotificationList");
-        const unsubscribe = onSnapshot(query(notifCollRef, orderBy("createDate", "desc")), (snapshot) => {
-          const data = [];
-          snapshot.docs.map((doc) => {
-            console.log(doc.data());
-            data.push({ id: doc.id, ...doc.data() });
-          });
-          setListNotification(data);
-          let temporary = listNotification.filter((notif) => {
-            if (notif.isRead === false) return notif;
-          });
-          dispatch({ type: "SET_COUNT_IS_READ", payload: temporary.length });
-        });
-        return () => unsubscribe();
+      setTimeout(async () => {
+        // const notifCollRef =  collection(db, "PushNotification", loggedInUser.name, "NotificationList");
+        // const unsubscribe = onSnapshot(query(notifCollRef, orderBy("createDate", "desc")), (snapshot) => {
+        //   const data = [];
+        //   snapshot.docs.map((doc) => {
+        //     console.log(doc.data());
+        //     data.push({ id: doc.id, ...doc.data() });
+        //   });
+        //   setListNotification(data);
+        //   let temporary = listNotification.filter((notif) => {
+        //     if (notif.isRead === false) return notif;
+        //   });
+        //   console.log(temporary.length);
+        //   dispatch({ type: "SET_COUNT_IS_READ", payload: temporary.length });
+        // });
+        // return () => unsubscribe();
       }, 1000);
     }
-  }, [loggedInUser, listNotification]);
+  }, []);
 
   useEffect(() => {
     if (!localStorage.getItem("Authorization")) {
