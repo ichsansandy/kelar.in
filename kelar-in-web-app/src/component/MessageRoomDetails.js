@@ -16,8 +16,6 @@ function MessageRoomDetails({}) {
   const messageListCollectionRef = collection(db, "RealTimeChat", id, "ChatList");
 
   const [receiverName, setReceiverName] = useState("");
-  
-  // const notifCollRef = collection(db, "PushNotification", receiverName, "NotificationList");
 
   // const fetchMessageList = () => {
   //   fetch(`http://localhost:8082/api/message-room/${id}`, {
@@ -42,14 +40,16 @@ function MessageRoomDetails({}) {
 
   const submit = async (e) => {
     e.preventDefault();
-    
-    // fetch to fire base auto id
-    const docRef = await addDoc(messageListCollectionRef, {
+
+    // fetch to firebase messageColl
+    await addDoc(messageListCollectionRef, {
       user: loggedInUser.name,
       timeSent: new Date(),
       message: input,
     });
     setInput("");
+
+    await addDoc();
     // console.log(loggedInUser.name);
     // fetch(`http://localhost:8082/api/${loggedInUser.name}/message-room/${id}/message`, {
     //   method: "POST",
@@ -90,17 +90,17 @@ function MessageRoomDetails({}) {
   useEffect(() => {
     // fetchMessageList();
     //fetch roomReceiver for push notification
-    // roomDocRef.get().then((doc) => {
-    //   if (doc.data().user1 === loggedInUser.name) {
-    //     setReceiverName(doc.data().user2);
-    //   } else {
-    //     setReceiverName(doc.data().user1);
-    //   }
-    // });
 
-    setTimeout(() => {
+    setTimeout(async () => {
       const roomDocRef = doc(db, "RealTimeChat", id);
-      
+      await roomDocRef.get().then((doc) => {
+        if (doc.data().user1 === loggedInUser.name) {
+          setReceiverName(doc.data().user2);
+        } else {
+          setReceiverName(doc.data().user1);
+        }
+      });
+      const notifCollRef = collection(db, "PushNotification", receiverName, "NotificationList");
     }, 1000);
 
     //fetch message list from firestore

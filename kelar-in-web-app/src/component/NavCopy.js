@@ -71,7 +71,7 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
         return () => unsubscribe();
       }, 1000);
     }
-  }, [loggedInUser]);
+  }, [loggedInUser, listNotification]);
 
   useEffect(() => {
     if (!localStorage.getItem("Authorization")) {
@@ -198,9 +198,9 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
                       </Menu.Item> */}
                       <Menu.Item>
                         {({ active }) => (
-                          <a onClick={logout} className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
+                          <div onClick={logout} className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
                             Sign out
-                          </a>
+                          </div>
                         )}
                       </Menu.Item>
                     </Menu.Items>
@@ -217,14 +217,16 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
                   key={item.name}
                   as="NavLink"
                   to={item.href}
-                  className={classNames(item.current ? "bg-fourth-color text-secondary-color px-3 py-2 rounded-md text-xl font-bold" : "text-black hover:bg-primary-color hover:text-white px-3 py-2 rounded-md text-xl font-bold", "block px-3 py-2 rounded-md text-base font-medium")}
-                  >
+                  className={classNames(
+                    item.current ? "bg-fourth-color text-secondary-color px-3 py-2 rounded-md text-xl font-bold" : "text-black hover:bg-primary-color hover:text-white px-3 py-2 rounded-md text-xl font-bold",
+                    "block px-3 py-2 rounded-md text-base font-medium"
+                  )}>
                   <NavLink
-                        key={item.id}
-                        to={item.href}
-                        className={({ isActive }) => (isActive ? "bg-fourth-color text-secondary-color px-3 py-2 rounded-md text-xl font-bold" : "text-black hover:bg-third-color hover:text-white px-3 py-2 rounded-md text-xl font-bold")}>
-                        {item.name}
-                      </NavLink>  
+                    key={item.id}
+                    to={item.href}
+                    className={({ isActive }) => (isActive ? "bg-fourth-color text-secondary-color px-3 py-2 rounded-md text-xl font-bold" : "text-black hover:bg-third-color hover:text-white px-3 py-2 rounded-md text-xl font-bold")}>
+                    {item.name}
+                  </NavLink>
                 </Disclosure.Button>
               ))}
             </div>
