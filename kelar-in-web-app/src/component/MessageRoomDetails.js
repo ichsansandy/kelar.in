@@ -16,6 +16,7 @@ function MessageRoomDetails({}) {
   const messageListCollectionRef = collection(db, "RealTimeChat", id, "ChatList");
 
   const [receiverName, setReceiverName] = useState("");
+  // const [senderName, setSenderName] = useState("");
 
   // const fetchMessageList = () => {
   //   fetch(`http://localhost:8082/api/message-room/${id}`, {
@@ -49,7 +50,16 @@ function MessageRoomDetails({}) {
     });
     setInput("");
 
-    await addDoc();
+    if (receiverName !== null) {
+      const notifCollReceiverRef = collection(db, "PushNotification", receiverName, "NotificationList");
+      await addDoc(notifCollReceiverRef, {
+        type: "messaging",
+        typeId: id,
+        message: `${loggedInUser.name} sent you a new message`,
+        isRead: false,
+        createDate: new Date(),
+      });
+    }
     // console.log(loggedInUser.name);
     // fetch(`http://localhost:8082/api/${loggedInUser.name}/message-room/${id}/message`, {
     //   method: "POST",
@@ -93,14 +103,16 @@ function MessageRoomDetails({}) {
 
     setTimeout(async () => {
       const roomDocRef = doc(db, "RealTimeChat", id);
-      await roomDocRef.get().then((doc) => {
-        if (doc.data().user1 === loggedInUser.name) {
-          setReceiverName(doc.data().user2);
+      const docSnap = await getDoc(roomDocRef);
+      if (docSnap.exists) {
+        if (docSnap.data().user1 === loggedInUser.name) {
+          setReceiverName(docSnap.data().user2);
+          // setSenderName(docSnap.data().user1);
         } else {
-          setReceiverName(doc.data().user1);
+          setReceiverName(docSnap.data().user1);
+          // setSenderName(docSnap.data().user2);
         }
-      });
-      const notifCollRef = collection(db, "PushNotification", receiverName, "NotificationList");
+      }
     }, 1000);
 
     //fetch message list from firestore

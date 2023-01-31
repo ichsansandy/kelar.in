@@ -4,7 +4,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Badge } from "antd";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, updateDoc, writeBatch, WriteBatch } from "firebase/firestore";
 import { db } from "../firebase-config";
 
 function NavCopy({ isLoggedIn, setIsLoggedIn }) {
@@ -16,6 +16,7 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [listNotification, setListNotification] = useState([]);
+  const [notifCollRef, setNotifCollRef] = useState(null);
 
   function logout() {
     localStorage.clear();
@@ -48,6 +49,29 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
         // toast.error(err.message);
       });
   }
+
+  const clearNotif = async () => {
+    if (isLoggedIn === true && loggedInUser !== null) {
+      const batch = writeBatch(db);
+      const notifCollRef = collection(db, "PushNotification", loggedInUser.name, "NotificationList");
+      const querySnapshot = await getDocs(notifCollRef);
+
+      querySnapshot.forEach((doc) => {
+        batch.update(doc.ref, { isRead: true });
+        console.log("change ");
+      });
+      await batch.commit();
+    }
+  };
+
+  const changeNotifToIsReadTrue = async (input) => {
+    if (isLoggedIn === true && loggedInUser !== null) {
+      const notifCollDoc = doc(db, "PushNotification", loggedInUser.name, "NotificationList", input);
+      await updateDoc(notifCollDoc, {
+        isRead: true,
+      });
+    }
+  };
 
   useEffect(() => {
     let temporary = listNotification.filter((notif) => {
@@ -153,10 +177,20 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95">
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-96 h-48 overflow-y-auto origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <div className="px-1 py-1 flex">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button onClick={() => clearNotif()} className={`${active ? "bg-third-color text-white" : "text-gray-900"} group flex w-full items-center rounded-md px-2 py-2 text-sm`}>
+                              {active ? <DeleteActiveIcon className="mr-2 h-5 w-5 text-white" aria-hidden="true" /> : <DeleteInactiveIcon className="mr-2 h-5 w-5 text-violet-400" aria-hidden="true" />}
+                              Mark as Read All Notification
+                            </button>
+                          )}
+                        </Menu.Item>
+                      </div>
                       {listNotification.map((notif) => (
                         <Menu.Item>
                           {({ active }) => (
-                            <NavLink to={`/${notif.type}/${notif.typeId}`} className={classNames(active ? "bg-gray-100 " : "", "flex jus px-4 py-2 text-sm text-gray-700 ")}>
+                            <NavLink onClick={() => changeNotifToIsReadTrue(notif.id)} to={`/${notif.type}/${notif.typeId}`} className={classNames(active ? "bg-gray-100 " : "", "flex jus px-4 py-2 text-sm text-gray-700 ")}>
                               <Badge status={notif.isRead ? "default" : "success"} className="w-1/12 text-third-color text-center" />
                               <div className="w-11/12 ml-2 text-left ">{notif.message}</div>
                             </NavLink>
@@ -240,3 +274,23 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
 }
 
 export default NavCopy;
+
+function DeleteInactiveIcon(props) {
+  return (
+    <svg {...props} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="5" y="6" width="10" height="10" fill="#EDE9FE" stroke="#A78BFA" strokeWidth="2" />
+      <path d="M3 6H17" stroke="#A78BFA" strokeWidth="2" />
+      <path d="M8 6V4H12V6" stroke="#A78BFA" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function DeleteActiveIcon(props) {
+  return (
+    <svg {...props} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="5" y="6" width="10" height="10" fill="#8B5CF6" stroke="#C4B5FD" strokeWidth="2" />
+      <path d="M3 6H17" stroke="#C4B5FD" strokeWidth="2" />
+      <path d="M8 6V4H12V6" stroke="#C4B5FD" strokeWidth="2" />
+    </svg>
+  );
+}
