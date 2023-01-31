@@ -17,8 +17,6 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
   const navigate = useNavigate();
   const [listNotification, setListNotification] = useState([]);
 
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   function logout() {
     localStorage.clear();
     setIsLoggedIn(false);
@@ -52,27 +50,30 @@ function NavCopy({ isLoggedIn, setIsLoggedIn }) {
   }
 
   useEffect(() => {
+    let temporary = listNotification.filter((notif) => {
+      if (notif.isRead === false) return notif;
+    });
+    console.log(temporary.length);
+    dispatch({ type: "SET_COUNT_IS_READ", payload: temporary.length });
+  }, [listNotification]);
+
+  useEffect(() => {
     //set reference for collection notif
-    if (loggedInUser !== null) {
-      setTimeout(async () => {
-        // const notifCollRef =  collection(db, "PushNotification", loggedInUser.name, "NotificationList");
-        // const unsubscribe = onSnapshot(query(notifCollRef, orderBy("createDate", "desc")), (snapshot) => {
-        //   const data = [];
-        //   snapshot.docs.map((doc) => {
-        //     console.log(doc.data());
-        //     data.push({ id: doc.id, ...doc.data() });
-        //   });
-        //   setListNotification(data);
-        //   let temporary = listNotification.filter((notif) => {
-        //     if (notif.isRead === false) return notif;
-        //   });
-        //   console.log(temporary.length);
-        //   dispatch({ type: "SET_COUNT_IS_READ", payload: temporary.length });
-        // });
-        // return () => unsubscribe();
+    if (isLoggedIn === true && loggedInUser !== null) {
+      setTimeout(() => {
+        const notifCollRef = collection(db, "PushNotification", loggedInUser.name, "NotificationList");
+        const unsubscribe = onSnapshot(query(notifCollRef, orderBy("createDate", "desc")), (snapshot) => {
+          const data = [];
+          snapshot.docs.map((doc) => {
+            // console.log(doc.data());
+            data.push({ id: doc.id, ...doc.data() });
+          });
+          setListNotification(data);
+        });
+        return () => unsubscribe();
       }, 1000);
     }
-  }, []);
+  }, [isLoggedIn, loggedInUser]);
 
   useEffect(() => {
     if (!localStorage.getItem("Authorization")) {
