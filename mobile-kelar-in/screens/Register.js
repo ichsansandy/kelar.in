@@ -4,13 +4,19 @@ import { Text, Card, Button, Icon, Input } from "@rneui/themed";
 import styles from "../assets/style";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import localhostIp from "../localhostIp";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Register = () => {
   const navigation = useNavigation();
-
+  
   const [name, setName] = useState("");
   const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
+
+  
 
   const register = () => {
     console.log("masuk login");
@@ -60,7 +66,7 @@ const Register = () => {
           <Card.Image source={require("../assets/test-background.jpg")} resizeMode="contain" />
           <Input onChangeText={setName} placeholder="Full Name" leftIcon={<Icon name="account-circle" size={20} />} />
           <Input onChangeText={setUsernameInput} placeholder="Email" leftIcon={<Icon name="account-circle" size={20} />} />
-          <Input onChangeText={setPasswordInput} placeholder="Password" leftIcon={<Icon name="lock" size={20} />} />
+          <Input onChangeText={setPasswordInput} placeholder="Password" secureTextEntry={true} leftIcon={<Icon name="lock" size={20} />} />
           <Button
             icon={<Icon name="" color="#ffffff" iconStyle={{ marginRight: 10 }} />}
             buttonStyle={{

@@ -68,7 +68,7 @@ function App() {
   function fetchYourProjectList() {
     fetch(`http://localhost:8081/api/project/created-by-you`, {
       headers: {
-        "COntent-Type": "application/json",
+        "Content-Type": "application/json",
         Authorization: `${localStorage.getItem("Authorization")}`,
       },
     })
@@ -89,7 +89,7 @@ function App() {
   function fetchAssignProjectList() {
     fetch(`http://localhost:8081/api/project/assign-to-you`, {
       headers: {
-        "COntent-Type": "application/json",
+        "Content-Type": "application/json",
         Authorization: `${localStorage.getItem("Authorization")}`,
       },
     })
@@ -123,8 +123,7 @@ function App() {
         fetchAssignProjectList();
         fetchYourProjectList();
       }
-      function handleRefresh() {
-      }
+      
       window.addEventListener("beforeunload", handleRefresh);
 
       return () => {

@@ -40,7 +40,7 @@ const Login = () => {
           </Card.Title>
           <Card.Image source={require("../assets/test-background.jpg")} resizeMode="contain" />
           <Input placeholder="Email" onChangeText={(e) => setUsername(e)} leftIcon={<Icon name="account-circle" size={20} />} />
-          <Input placeholder="Password" onChangeText={(e) => setPassword(e)} leftIcon={<Icon name="lock" size={20} />} />
+          <Input placeholder="Password" secureTextEntry={true} onChangeText={(e) => setPassword(e)} leftIcon={<Icon name="lock" size={20} />} />
           <Button
             icon={<Icon name="" color="#ffffff" iconStyle={{ marginRight: 10 }} />}
             buttonStyle={{
