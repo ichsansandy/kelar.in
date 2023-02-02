@@ -11,7 +11,8 @@ const option = {
     headerTintColor: "white",
   },
   projectDetailTitle: {
-    headerTitle: "Project Detail",
+    tabBarLabel: "Home",
+    tabBarShowLabel: "true",
     tabBarActiveTintColor: "white",
     tabBarInactiveTintColor: "white",
     tabBarActiveBackgroundColor: colorVar.thirdColor,

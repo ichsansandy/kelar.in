@@ -13,7 +13,7 @@ const HomeNavigation = () => {
 
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Home" component={ProjectNavigation} options={option.barOption} />
+      <Tab.Screen name="ProjectNavigation" component={ProjectNavigation} options={[option.projectDetailTitle, { tabBarLabel: "Home", tabBarShowLabel: true }]} />
       <Tab.Screen name="Messaging" component={MessagingScreen} options={option.barOption} />
       <Tab.Screen name="Profile" component={Profile} options={option.barOption} />
     </Tab.Navigator>

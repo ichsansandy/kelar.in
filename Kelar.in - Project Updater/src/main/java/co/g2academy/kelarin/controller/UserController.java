@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -138,6 +139,16 @@ public class UserController {
         byte[] image = loggedInUserFromDB.getProfileImage();
         if (image != null) {
             return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+        } else {
+            return ResponseEntity.badRequest().body("this user dont have image");
+        }
+    }
+    @GetMapping("/profile/get-picture-mobile/{name}")
+    public ResponseEntity getProfilePictureMobile(@PathVariable String name) {
+        User loggedInUserFromDB = repository.findUserByName(name);
+        byte[] image = loggedInUserFromDB.getProfileImage();
+        if (image != null) {
+            return ResponseEntity.ok().body(Base64.getEncoder().encodeToString(image));
         } else {
             return ResponseEntity.badRequest().body("this user dont have image");
         }

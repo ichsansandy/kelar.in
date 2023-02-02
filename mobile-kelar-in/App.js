@@ -21,7 +21,7 @@ export default function App() {
   const Stack = createStackNavigator();
   const Tab = createBottomTabNavigator();
   const [isLoggedIn, setisLoggedIn] = useState(false);
-  
+
   const getUserLoggedIn = async () => {
     fetch(localhostIp + "8081/api/user-loggedIn", {
       headers: {
@@ -40,8 +40,8 @@ export default function App() {
         console.log("masuk promise ke 2");
         if (d !== null) {
           setisLoggedIn(true);
-        }else{
-          setisLoggedIn(false)
+        } else {
+          setisLoggedIn(false);
         }
       })
       .catch((err) => {
@@ -67,6 +67,7 @@ export default function App() {
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="LandingPage" component={LandingPage} />
+            <Tab.Screen name="ProjectNavigation" component={ProjectNavigation} options={{ headerShown: false }} />
           </Stack.Navigator>
         )}
       </NavigationContainer>

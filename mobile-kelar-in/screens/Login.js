@@ -23,7 +23,7 @@ const Login = () => {
       });
       let { token } = data;
       await AsyncStorage.setItem("Authorization", `Bearer ${token}`);
-      navigation.navigate("HomeNavigation");
+      // navigation.navigate("HomeNavigation");
     } catch (err) {
       console.log(err);
     }

@@ -11,7 +11,7 @@ const ProjectNavigation = () => {
   const Stack = createStackNavigator();
 
   return (
-    <Stack.Navigator >
+    <Stack.Navigator  >
       <Stack.Screen name="Home" component={Home} options={option.barOption} />
       <Stack.Screen name="ProjectDetails" component={ProjectDetails} options={option.projectDetailTitle} />
     </Stack.Navigator>

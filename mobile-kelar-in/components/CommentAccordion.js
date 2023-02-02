@@ -1,13 +1,43 @@
 import { View, Text } from "react-native";
 import React, { useState, useEffect } from "react";
-import { Avatar, ListItem } from "@rneui/themed";
+import { Avatar, Button, Input, ListItem } from "@rneui/themed";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import localhostIp from "../localhostIp";
 import moment from "moment";
+import CommentCard from "./CommentCard";
 
 const CommentAccordion = ({ projectId }) => {
   const [expandedMember, setExpandedMember] = useState(false);
   const [commentList, setCommentList] = useState([]);
+  const [input, setInput] = useState("");
+
+  const postComment = async () => {
+    console.log("post comment");
+    fetch(`${localhostIp}8081/api/project/${projectId}/comment`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: await AsyncStorage.getItem("Authorization"),
+      },
+      body: JSON.stringify({
+        commentBody: input,
+      }),
+    })
+      .then((r) => {
+        if (r.ok) {
+          console.log("berhasil post");
+          return r.json();
+        }
+      })
+      .then((d) => {
+        console.log("comment di tambahkan ke list");
+        setCommentList([...commentList, d]);
+        setInput("");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const getAllComment = async () => {
     fetch(`${localhostIp}8081/api/project/${projectId}/comment`, {
@@ -47,27 +77,18 @@ const CommentAccordion = ({ projectId }) => {
       onPress={() => {
         setExpandedMember(!expandedMember);
       }}>
+      <ListItem style={{ width: "100%", alignItems: "flex-start", justifyContent: "flex-start" }} containerStyle={{ width: "100%" }}>
+        <ListItem.Input value={input} onChangeText={(text) => setInput(text)} style={{ borderColor: "grey", borderWidth: 1, textAlign: "left", padding: 5 }} placeholder="type your comment here" />
+        <Button
+          onPress={(e) => {
+            e.preventDefault();
+            postComment();
+          }}
+          title="Send"
+        />
+      </ListItem>
       {commentList.map((comment) => (
-        <>
-          <ListItem style={{ width: "100%" }} containerStyle={{ width: "100%" }}>
-            <View style={{ flexDirection: "column", marginBottom: "auto" }}>
-              <Avatar
-                avatarStyle={{}}
-                rounded
-                source={{
-                  uri: "https://randomuser.me/api/portraits/men/32.jpg",
-                }}
-              />
-            </View>
-            <ListItem.Content>
-              <View style={{ flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
-                <ListItem.Title>{comment.user.name}</ListItem.Title>
-                <ListItem.Title style={{ marginRight: 20 }}>{moment(comment.commentDate).fromNow()}</ListItem.Title>
-              </View>
-              <ListItem.Subtitle>{comment.commentBody}</ListItem.Subtitle>
-            </ListItem.Content>
-          </ListItem>
-        </>
+        <CommentCard key={comment.id} comment={comment} />
       ))}
     </ListItem.Accordion>
   );
