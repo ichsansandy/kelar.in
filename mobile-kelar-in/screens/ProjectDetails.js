@@ -50,8 +50,8 @@ const ProjectDetails = ({ route }) => {
       {!isLoading && (
         <View style={[{ alignItems: "center" }]}>
           <ProjectCard projectName={project.name} user={project.user.name} status={project.status} />
-          <MemberAccordion />
-          <TaskAccordion />
+          <MemberAccordion projectId={projectId} />
+          <TaskAccordion projectId={projectId} />
           <CommentAccordion projectId={projectId} />
         </View>
       )}

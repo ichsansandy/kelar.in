@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import localhostIp from "../localhostIp";
 import moment from "moment";
 import CommentCard from "./CommentCard";
+import colorVar from "../assets/colorVar";
 
 const CommentAccordion = ({ projectId }) => {
   const [expandedMember, setExpandedMember] = useState(false);
@@ -68,9 +69,10 @@ const CommentAccordion = ({ projectId }) => {
   return (
     <ListItem.Accordion
       style={{ width: "100%" }}
+      containerStyle={expandedMember ? { backgroundColor: colorVar.thirdColor } : { backgroundColor: "white" }}
       content={
         <ListItem.Content style={{ alignItems: "center" }}>
-          <ListItem.Title>Comments</ListItem.Title>
+          <ListItem.Title style={expandedMember ? { fontSize: 19, color: "white" } : { fontSize: 19 }}>Comments</ListItem.Title>
         </ListItem.Content>
       }
       isExpanded={expandedMember}
@@ -83,6 +85,10 @@ const CommentAccordion = ({ projectId }) => {
           onPress={(e) => {
             e.preventDefault();
             postComment();
+          }}
+          buttonStyle={{
+            backgroundColor: colorVar.thirdColor,
+            borderRadius: 10,
           }}
           title="Send"
         />

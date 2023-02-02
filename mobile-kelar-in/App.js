@@ -16,6 +16,8 @@ import option from "./assets/option";
 import MessagingScreen from "./screens/MessagingScreen";
 import Profile from "./screens/Profile";
 import ProjectNavigation from "./navigation/ProjectNavigation";
+import colorVar from "./assets/colorVar";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -58,16 +60,16 @@ export default function App() {
       <NavigationContainer>
         {isLoggedIn ? (
           <Tab.Navigator>
-            <Tab.Screen name="ProjectNavigation" component={ProjectNavigation} options={{ headerShown: false }} />
-            <Tab.Screen name="Messaging" component={MessagingScreen} options={option.barOption} />
-            <Tab.Screen name="Profile" component={Profile} options={option.barOption} />
+            <Tab.Screen name="ProjectNavigation" component={ProjectNavigation} options={option.homeBarDetail} />
+            <Tab.Screen name="Messaging" component={MessagingScreen} options={option.messageBarOption} />
+            <Tab.Screen name="Profile" component={Profile} options={option.profileBarOption} />
           </Tab.Navigator>
         ) : (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="LandingPage" component={LandingPage} />
-            <Tab.Screen name="ProjectNavigation" component={ProjectNavigation} options={{ headerShown: false }} />
+            <Tab.Screen name="HomeNavigation" component={HomeNavigation} />
           </Stack.Navigator>
         )}
       </NavigationContainer>
