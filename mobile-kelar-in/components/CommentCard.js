@@ -15,15 +15,15 @@ const CommentCard = ({ comment }) => {
     const fetchImage = async () => {
       try {
         const response = await axios.get(`${localhostIp}8081/api/profile/get-picture-mobile/${comment.user.name}`, {
-            headers:{
-                "Content-Type":"application/json",
-                Authorization : await AsyncStorage.getItem("Authorization")
-            }
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: await AsyncStorage.getItem("Authorization"),
+          },
         });
         const base64Image = response.data;
         setImageData(`data:image/jpeg;base64,${base64Image}`);
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     };
 
@@ -33,13 +33,25 @@ const CommentCard = ({ comment }) => {
   return (
     <ListItem bottomDivider style={{ width: "100%" }} containerStyle={{ width: "100%" }}>
       <View style={{ flexDirection: "column", marginBottom: "auto" }}>
-        <Avatar
-          avatarStyle={{}}
-          rounded
-          source={{
-            uri: imageData,
-          }}
-        />
+        {imageData !== null ? (
+          <Avatar
+            avatarStyle={{}}
+            rounded
+            source={{
+              uri: imageData,
+            }}
+          />
+        ) : (
+          <Avatar
+            rounded
+            icon={{
+              name: "person-outline",
+              type: "material",
+              size: 26,
+            }}
+            containerStyle={{ backgroundColor: "#c2c2c2" }}
+          />
+        )}
       </View>
       <ListItem.Content>
         <View style={{ flexDirection: "row", justifyContent: "space-between", width: "100%" }}>

@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.11",
+    "@react-native-firebase/app": "^16.7.0",
+    "@react-native-firebase/firestore": "^16.7.0",
     "@react-navigation/bottom-tabs": "^6.5.3",
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/stack": "^6.3.11",
@@ -18,6 +20,7 @@
     "axios": "^1.2.6",
     "expo": "~47.0.12",
     "expo-status-bar": "~1.4.2",
+    "firebase": "^9.16.0",
     "moment": "^2.29.4",
     "react": "18.1.0",
     "react-native": "0.70.5",

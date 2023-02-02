@@ -4,8 +4,8 @@ function CommentInputBox({setInput, input, postComment}) {
 
 
   return (
-    <form>
-      <div className="relative p-4 focus:ring-blue-400 ">
+    <form className="-z-60">
+      <div className="relative p-4 focus:ring-blue-400 -z-0">
         <textarea className=" w-full p-2 block focus-within:border-blue-400 border-third-color border-2 min-h-[200px] text-left" placeholder="Type your comment here" 
         onChange={(e) => setInput(e.target.value)} 
         value={input}

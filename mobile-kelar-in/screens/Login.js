@@ -24,7 +24,7 @@ const Login = () => {
       let { token } = data;
       await AsyncStorage.setItem("Authorization", `Bearer ${token}`);
       console.log("navigation");
-      navigation.navigate("ProjectNavigation");
+      navigation.navigate("HomeNavigation");
     } catch (err) {
       console.log(err);
     }

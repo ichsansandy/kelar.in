@@ -1,7 +1,7 @@
 import colorVar from "./colorVar";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { AntDesign } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 const option = {
   barOption: {
     tabBarActiveTintColor: "white",
@@ -38,9 +38,12 @@ const option = {
     headerTintColor: "white",
   },
   messageBarOption: {
-    tabBarIcon: () =><AntDesign name="message1" size={24} color="white" />,
+    tabBarIcon: () => <AntDesign name="message1" size={24} color="white" />,
+    headerShown: false,
+    tabBarLabel: "Message",
+    tabBarShowLabel: true,
     tabBarActiveTintColor: "white",
-    tabBarInactiveTintColor:"white",
+    tabBarInactiveTintColor: "white",
     tabBarActiveBackgroundColor: colorVar.thirdColor,
     tabBarInactiveBackgroundColor: colorVar.secondaryColor,
     headerTitleAlign: "center",
@@ -48,9 +51,9 @@ const option = {
     headerTintColor: "white",
   },
   profileBarOption: {
-    tabBarIcon: () =><MaterialCommunityIcons name="head-cog" size={24} color="white" />,
+    tabBarIcon: () => <MaterialCommunityIcons name="head-cog" size={24} color="white" />,
     tabBarActiveTintColor: "white",
-    tabBarInactiveTintColor:"white",
+    tabBarInactiveTintColor: "white",
     tabBarActiveBackgroundColor: colorVar.thirdColor,
     tabBarInactiveBackgroundColor: colorVar.secondaryColor,
     headerTitleAlign: "center",

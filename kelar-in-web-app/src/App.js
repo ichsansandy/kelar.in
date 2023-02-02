@@ -124,11 +124,11 @@ function App() {
         fetchYourProjectList();
       }
       
-      window.addEventListener("beforeunload", handleRefresh);
+      // window.addEventListener("beforeunload", handleRefresh);
 
-      return () => {
-        window.removeEventListener("beforeunload", handleRefresh);
-      };
+      // return () => {
+      //   window.removeEventListener("beforeunload", handleRefresh);
+      // };
     },
     [
       // localStorage.getItem("Authorization")
