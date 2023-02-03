@@ -14,7 +14,7 @@ const MessagingNavigation = () => {
 
   return (
     <Stack.Navigator>
-      <Stack.Screen name="MessageRoom" component={MessageRoom} options={option.barOption} />
+      <Stack.Screen name="MessageRoom" component={MessageRoom} options={option.chatListOption} />
       <Stack.Screen name="MessageRoomDetails" component={MessageRoomDetails} options={option.messageRoomDetails} />
     </Stack.Navigator>
   );

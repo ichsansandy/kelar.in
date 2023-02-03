@@ -264,6 +264,10 @@ public class ProjectTrackerController {
         }
         return null;
     }
+    @GetMapping("/projects")
+    public List<Project> getAllProject() {
+            return projectRepo.findAll();
+    }
 
     @GetMapping("/project/assign-to-you")
     public List<Project> getAllOtherProject(Principal principal) {

@@ -6,8 +6,12 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import localhostIp from "../localhostIp";
 import { useNavigation } from "@react-navigation/native";
+import { db } from "../firebase-config";
+import { addDoc, collection } from "firebase/firestore";
 
-const MessageRoomBubble = ({ room, user, id }) => {
+const roomListCollection = collection(db, "RealTimeChat");
+
+const MessageRoomBubble = ({ room, user, id, isCreateNewRoom }) => {
   const loggedInUser = useSelector((s) => s.loggedInUser);
   const [userRoom, setuserRoom] = useState("");
   const [imageData, setImageData] = useState(null);
@@ -47,6 +51,14 @@ const MessageRoomBubble = ({ room, user, id }) => {
     }
   }, [userRoom]);
 
+  const createNewRoom = async () => {
+    const docRef = await addDoc(roomListCollection, {
+      user1: loggedInUser.name,
+      user2: user,
+    });
+    navigation.navigate("MessageRoomDetails", { id: docRef.id, name: userRoom });
+  };
+
   return (
     <>
       {!isLoading ? (
@@ -54,7 +66,11 @@ const MessageRoomBubble = ({ room, user, id }) => {
           bottomDivider
           onPress={(e) => {
             e.preventDefault();
-            navigation.navigate("MessageRoomDetails", { id: room.id, name: userRoom });
+            if (isCreateNewRoom) {
+              createNewRoom();
+            } else {
+              navigation.navigate("MessageRoomDetails", { id: room.id, name: userRoom });
+            }
           }}>
           {imageData !== null ? (
             <Avatar

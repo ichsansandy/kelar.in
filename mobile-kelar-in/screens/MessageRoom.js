@@ -2,12 +2,12 @@ import { View, Text, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Avatar, Dialog, FAB, ListItem } from "@rneui/themed";
-import { db } from "../firebase-config";
-import { collection, onSnapshot } from "firebase/firestore";
 import MessageRoomBubble from "../components/MessageRoomBubble";
 import colorVar from "../assets/colorVar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import localhostIp from "../localhostIp";
+import { db } from "../firebase-config";
+import { collection, onSnapshot } from "firebase/firestore";
 
 const roomListCollection = collection(db, "RealTimeChat");
 
@@ -80,7 +80,7 @@ const MessageRoom = () => {
     <>
       <View>
         {listChatRoom.map((room) => (
-          <MessageRoomBubble room={room} id={room.id} key={room.id} />
+          <MessageRoomBubble room={room} id={room.id} key={room.id} isCreateNewRoom={false} />
         ))}
       </View>
       <FAB onPress={toggleDialog} placement="right" icon={{ name: "add", color: "white" }} color={colorVar.thirdColor} />
@@ -88,7 +88,7 @@ const MessageRoom = () => {
         <Dialog.Title title="Create New Room " />
         <ScrollView style={{ height: 400 }}>
           {availUser.map((user) => (
-            <MessageRoomBubble user={user} id={null} key={user} room={null} />
+            <MessageRoomBubble user={user} id={null} key={user} room={null} isCreateNewRoom={true} />
           ))}
         </ScrollView>
       </Dialog>
