@@ -1,20 +1,61 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Avatar, ListItem } from "@rneui/themed";
+import { Avatar, Dialog, FAB, ListItem } from "@rneui/themed";
 import { db } from "../firebase-config";
 import { collection, onSnapshot } from "firebase/firestore";
 import MessageRoomBubble from "../components/MessageRoomBubble";
+import colorVar from "../assets/colorVar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import localhostIp from "../localhostIp";
 
 const roomListCollection = collection(db, "RealTimeChat");
 
 const MessageRoom = () => {
   const loggedInUser = useSelector((s) => s.loggedInUser);
   const [listChatRoom, setListChatRoom] = useState([]);
+  const [listUser, setListUser] = useState([]);
+  const [availUser, setAvailUser] = useState([]);
+  const [visible, setVisible] = useState(false);
 
-  const getAllListUser = async () => {};
+  const toggleDialog = () => {
+    setVisible(!visible);
+    validateAvailUser();
+  };
+
+  const getAllListUser = async () => {
+    fetch(`${localhostIp}8081/api/all-user-nameonly`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: await AsyncStorage.getItem("Authorization"),
+      },
+    })
+      .then((r) => {
+        if (r.ok) {
+          return r.json();
+        }
+      })
+      .then((d) => {
+        setListUser(d);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  function validateAvailUser() {
+    let temporary = [];
+    listChatRoom.forEach((room) => {
+      temporary.push(room.user1);
+      temporary.push(room.user2);
+    });
+    let another = listUser;
+    let result = another.filter((x) => !temporary.includes(x));
+    setAvailUser(result);
+  }
 
   useEffect(() => {
+    getAllListUser();
     // fetchMessageRoomList();
     const unsubscribe = onSnapshot(roomListCollection, (snapshot) => {
       const data = [];
@@ -36,12 +77,22 @@ const MessageRoom = () => {
   }, []);
 
   return (
-    <View>
-      <Text>MessageRoom</Text>
-      {listChatRoom.map((room) => (
-        <MessageRoomBubble room={room} key={room.id} />
-      ))}
-    </View>
+    <>
+      <View>
+        {listChatRoom.map((room) => (
+          <MessageRoomBubble room={room} key={room.id} />
+        ))}
+      </View>
+      <FAB onPress={toggleDialog} placement="right" icon={{ name: "add", color: "white" }} color={colorVar.thirdColor} />
+      <Dialog style={{ backgroundColor: "white" }} isVisible={visible} onBackdropPress={toggleDialog}>
+        <Dialog.Title title="Create New Room " />
+        <ScrollView style={{ height: 400 }}>
+          {availUser.map((user) => (
+            <MessageRoomBubble user={user} key={user} room={null} />
+          ))}
+        </ScrollView>
+      </Dialog>
+    </>
   );
 };
 
