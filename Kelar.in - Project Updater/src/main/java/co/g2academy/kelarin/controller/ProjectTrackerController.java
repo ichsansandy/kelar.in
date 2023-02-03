@@ -181,25 +181,6 @@ public class ProjectTrackerController {
 //        }
 //        return ResponseEntity.ok().body("Succesfully assign user to project member");
 //    }
-
-    @PutMapping("/project/{id}")
-    public ResponseEntity editPorject(@RequestBody Project project, Principal principal) {
-        User loggedInUser = userRepo.findUserByUsername(principal.getName());
-        project.setUser(loggedInUser);
-        Optional<Project> opt = projectRepo.findById(project.getId());
-        if (!opt.isEmpty()) {
-            Project pFromDb = opt.get();
-            if (pFromDb.getUser().getUsername().equals(principal.getName())) {
-                pFromDb.setName(project.getName());
-                pFromDb.setDueDate(project.getDueDate());
-                pFromDb.setStatus(project.getStatus());
-                projectRepo.save(pFromDb);
-                return ResponseEntity.ok().body("Project edited Succesfully");
-            }
-        }
-        return ResponseEntity.badRequest().body("Project not found");
-    }
-
     @PutMapping("/project/{id}/edit-picture")
     public ResponseEntity editProjectImage(@RequestParam("image") MultipartFile file, Principal principal, Integer id) {
         User LoggedInUserFromDb = userRepo.findUserByUsername(principal.getName());
@@ -264,9 +245,10 @@ public class ProjectTrackerController {
         }
         return null;
     }
+
     @GetMapping("/projects")
     public List<Project> getAllProject() {
-            return projectRepo.findAll();
+        return projectRepo.findAll();
     }
 
     @GetMapping("/project/assign-to-you")
@@ -300,7 +282,7 @@ public class ProjectTrackerController {
             members.remove(loggedInUser);
             for (User member : members) {
                 //make notification and send
-                NotificationFirestoreModel notif = createNotifRelatedToProject(task, "ASSIGN_TASK",  "");
+                NotificationFirestoreModel notif = createNotifRelatedToProject(task, "ASSIGN_TASK", "");
                 firestore.sendNotifToUserFirestore(notif, member.getName());
             }
             return ResponseEntity.ok().body(task);
@@ -325,6 +307,48 @@ public class ProjectTrackerController {
 //        }
 //        return ResponseEntity.badRequest().body("You are not allowed to do this");
 //    }
+    @GetMapping("/project/{id}/isyourProject")
+    public Boolean isYouProject(@PathVariable Integer id, Principal principal) {
+        User loggedInUser = userRepo.findUserByUsername(principal.getName());
+        Project project = projectRepo.findById(id).get();
+        if (loggedInUser.equals(project.getUser())) {
+            return true;
+        }
+        return false;
+
+    }
+
+    @GetMapping("/project/{id}/isalltaskcompleted")
+    public Boolean isAllTaskDone(@PathVariable Integer id, Principal principal) {
+        Project project = projectRepo.findById(id).get();
+        List<Task> tasks = taskRepo.findTaskByProject(project);
+        for (Task task : tasks) {
+            if (!task.getStatus().equalsIgnoreCase("COMPLETED")) {
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+    @PutMapping("/project/{id}/completed")
+    public ResponseEntity completeProject(@PathVariable Integer id, Principal principal
+    ) {
+        User loggedInUser = userRepo.findUserByUsername(principal.getName());
+        Project project = projectRepo.findById(id).get();
+        Optional<Project> opt = projectRepo.findById(project.getId());
+        if (!opt.isEmpty()) {
+            Project pFromDb = opt.get();
+            if (pFromDb.getUser().equals(loggedInUser)) {
+                pFromDb.setEndDate(new Date());
+                pFromDb.setStatus("COMPLETED");
+                projectRepo.save(pFromDb);
+                return ResponseEntity.ok().body("Project edited Succesfully");
+            }
+        }
+        return ResponseEntity.badRequest().body("Project not found");
+    }
+
     @PutMapping("/project/{idProject}/task-status/{idTask}/{PAYLOAD}")
     public ResponseEntity editTaskStatus(@PathVariable Integer idProject, @PathVariable Integer idTask, @PathVariable String PAYLOAD, Principal principal) throws InterruptedException, ExecutionException {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
@@ -371,13 +395,15 @@ public class ProjectTrackerController {
     }
 
     @GetMapping("/project/{id}/task")
-    public List<Task> getTaskByProject(@PathVariable Integer id, Principal principal) {
+    public List<Task> getTaskByProject(@PathVariable Integer id, Principal principal
+    ) {
         Project project = projectRepo.findById(id).get();
         return taskRepo.findTaskByProject(project);
     }
 
     @GetMapping("/project/{id}/isNotHaveTask/{userNameOnly}")
-    public Boolean getTaskByProjectAndUser(@PathVariable Integer id, @PathVariable String userNameOnly) {
+    public Boolean getTaskByProjectAndUser(@PathVariable Integer id, @PathVariable String userNameOnly
+    ) {
         Project project = projectRepo.findById(id).get();
         User user = userRepo.findUserByName(userNameOnly);
         System.out.println(user.getName());

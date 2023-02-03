@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DueDateBadge from "./DueDateBadge";
 import ProgressBubble from "./ProgressBubble";
 
-function ProjectCard({ project, isYourProject }) {
+function ProjectCard({ project, isYourProject, isAllTaskComplete }) {
+  const id = project.id;
   const navigation = useNavigate();
   const projectLogo = null;
+
+  useEffect(() => {
+    // fetchIsAllTaskCompleted();
+    // fetchIsYourProject();
+  }, []);
 
   function navigateToProjectDetails() {
     navigation(`/projects/${project?.id}`);
@@ -13,8 +19,7 @@ function ProjectCard({ project, isYourProject }) {
 
   return (
     <>
-      <div className="">
-      </div>
+      <div className=""></div>
       <div
         key={project?.id}
         onClick={() => {
@@ -25,9 +30,9 @@ function ProjectCard({ project, isYourProject }) {
           // + (isYourProject ? "min-w-200 " : "min-w-1/4")
         }>
         <div className="absolute -top-5">
-          <DueDateBadge dueDate={project.dueDate}/>
+          <DueDateBadge dueDate={project.dueDate} />
         </div>
-        <ProgressBubble status={project.status} isYourProject={isYourProject} />
+        <ProgressBubble status={project.status} isYourProject={isYourProject} isAllTaskComplete={isAllTaskComplete} />
         {!projectLogo ? (
           <svg className="h-36 w-36 text-white group-hover:text-fourth-color" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
             {" "}

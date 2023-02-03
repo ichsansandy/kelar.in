@@ -32,6 +32,7 @@ public class User {
     private String name;
     @Lob
     @Column(nullable=true, length = 1000)
+    @JsonIgnore
     private byte[] profileImage;
     
     @JsonIgnore

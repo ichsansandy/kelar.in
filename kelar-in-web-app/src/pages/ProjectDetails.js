@@ -26,10 +26,28 @@ function ProjectDetails() {
   const [project, setProject] = useState({});
   const [taskList, setTaskList] = useState([]);
   const [isYourProject, setisYourProject] = useState(false);
-  const [membership, setMembership] = useState([]);
-  const [availUser, setAvailUser] = useState([]);
+  const [isAllTaskComplete, setIsAllTaskComplete] = useState(false);
 
+  function fetchIsAllTaskCompleted() {
+    fetch(`http://localhost:8081/api/project/${id}/isalltaskcompleted`, {
+      headers: {
+        Authorization: `${localStorage.getItem("Authorization")}`,
+      },
+    })
+      .then((r) => {
+        if (r.ok) {
+          return r.json();
+        }
+      })
+      .then((d) => {
+        setIsAllTaskComplete(d);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
   const fetchProjectDetails = async () => {
+    // fetchIsAllTaskCompleted()
     const r = await fetch(`http://localhost:8081/api/project/${id}`, {
       headers: {
         Authorization: `${localStorage.getItem("Authorization")}`,
@@ -69,6 +87,7 @@ function ProjectDetails() {
   // }
 
   useEffect(() => {
+    fetchIsAllTaskCompleted();
     fetchProjectDetails()
       .then((d) => {
         setProject(d);
@@ -82,6 +101,7 @@ function ProjectDetails() {
   useEffect(() => {
     if (project.user?.name === loggedInUser.name) {
       setisYourProject(true);
+      console.log(isYourProject);
     }
   }, [project]);
 
@@ -92,7 +112,7 @@ function ProjectDetails() {
       <div className="ml-4">
         <div className="bg-third-color/ p-5 flex justify-center items-center lg:flex-row flex-col">
           <div className="flex justify-center h-64 mt-3">
-            <ProjectCard project={project} isYourProject={isYourProject} />
+            <ProjectCard project={project} isYourProject={isYourProject} isAllTaskComplete={isAllTaskComplete} />
             <div className="flex flex-col justify-evenly">
               <DateBubble date={project.startDate} title={"Start"} />
               <DateBubble date={project.dueDate} title={"Due"} />
@@ -103,7 +123,7 @@ function ProjectDetails() {
           </div>
         </div>
         <div className="flex justify-evenly bg-third-color/">
-          <TaskContainer isYourProject={isYourProject} taskList={taskList} projectDueDate = {project.dueDate} />
+          <TaskContainer isYourProject={isYourProject} taskList={taskList} projectDueDate={project.dueDate} />
         </div>
       </div>
       <CommentContainer />
