@@ -11,13 +11,10 @@ import { useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import localhostIp from "./localhostIp";
-import Home from "./screens/Home";
 import option from "./assets/option";
-import MessagingScreen from "./screens/MessagingScreen";
 import Profile from "./screens/Profile";
 import ProjectNavigation from "./navigation/ProjectNavigation";
 import colorVar from "./assets/colorVar";
-import { FontAwesome5 } from "@expo/vector-icons";
 import MessagingNavigation from "./navigation/MessagingNavigation";
 
 export default function App() {

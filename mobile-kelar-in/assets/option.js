@@ -60,6 +60,16 @@ const option = {
     headerStyle: { backgroundColor: colorVar.thirdColor },
     headerTintColor: "white",
   },
+  messageRoomDetails:({route})=> ({
+    tabBarActiveTintColor: "white",
+    tabBarInactiveTintColor: colorVar.fourthColor,
+    tabBarActiveBackgroundColor: colorVar.thirdColor,
+    tabBarInactiveBackgroundColor: colorVar.secondaryColor,
+    headerTitleAlign: "center",
+    headerStyle: { backgroundColor: colorVar.thirdColor },
+    headerTintColor: "white",
+    headerTitle: route.params.name,
+  }),
 };
 
 export default option;

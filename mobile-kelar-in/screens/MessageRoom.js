@@ -80,7 +80,7 @@ const MessageRoom = () => {
     <>
       <View>
         {listChatRoom.map((room) => (
-          <MessageRoomBubble room={room} key={room.id} />
+          <MessageRoomBubble room={room} id={room.id} key={room.id} />
         ))}
       </View>
       <FAB onPress={toggleDialog} placement="right" icon={{ name: "add", color: "white" }} color={colorVar.thirdColor} />
@@ -88,7 +88,7 @@ const MessageRoom = () => {
         <Dialog.Title title="Create New Room " />
         <ScrollView style={{ height: 400 }}>
           {availUser.map((user) => (
-            <MessageRoomBubble user={user} key={user} room={null} />
+            <MessageRoomBubble user={user} id={null} key={user} room={null} />
           ))}
         </ScrollView>
       </Dialog>

@@ -5,13 +5,14 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import localhostIp from "../localhostIp";
-import { FAB } from "@rneui/base";
+import { useNavigation } from "@react-navigation/native";
 
-const MessageRoomBubble = ({ room, user }) => {
+const MessageRoomBubble = ({ room, user, id }) => {
   const loggedInUser = useSelector((s) => s.loggedInUser);
   const [userRoom, setuserRoom] = useState("");
   const [imageData, setImageData] = useState(null);
   const [isLoading, setisLoading] = useState(true);
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (room !== null) {
@@ -49,7 +50,12 @@ const MessageRoomBubble = ({ room, user }) => {
   return (
     <>
       {!isLoading ? (
-        <ListItem bottomDivider>
+        <ListItem
+          bottomDivider
+          onPress={(e) => {
+            e.preventDefault();
+            navigation.navigate("MessageRoomDetails", { id: room.id, name: userRoom });
+          }}>
           {imageData !== null ? (
             <Avatar
               avatarStyle={{}}

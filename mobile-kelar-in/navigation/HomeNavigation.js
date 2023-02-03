@@ -8,6 +8,7 @@ import MessagingScreen from "../screens/MessagingScreen";
 import Profile from "../screens/Profile";
 import ProjectNavigation from "./ProjectNavigation";
 import colorVar from "../assets/colorVar";
+import MessagingNavigation from "./MessagingNavigation";
 
 const HomeNavigation = () => {
   const Tab = createBottomTabNavigator();
@@ -15,7 +16,7 @@ const HomeNavigation = () => {
   return (
     <Tab.Navigator>
       <Tab.Screen name="ProjectNavigation" component={ProjectNavigation} options={option.homeBarDetail} />
-      <Tab.Screen name="Messaging" component={MessagingScreen} options={option.messageBarOption} />
+      <Tab.Screen name="MessageNavigation" component={MessagingNavigation} options={option.messageBarOption} />
       <Tab.Screen name="Profile" component={Profile} options={option.profileBarOption} />
     </Tab.Navigator>
   );
