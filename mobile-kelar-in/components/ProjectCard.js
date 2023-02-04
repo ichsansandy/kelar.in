@@ -5,6 +5,7 @@ import colorVar from "../assets/colorVar";
 import StatusBubble from "./StatusBubble";
 import styles from "../assets/style";
 import { useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const ProjectCard = ({ projectName, user, status, projectId }) => {
   const navigation = useNavigation();
@@ -14,25 +15,27 @@ const ProjectCard = ({ projectName, user, status, projectId }) => {
       style={{
         backgroundColor: colorVar.secondaryColor,
         padding: 1,
-        flexDirection: "row",
+
       }}
       buttonStyle={{
         backgroundColor: colorVar.secondaryColor,
-        padding: 1,
-        width: 210,
-        height: 100,
-        margin: 6,
+        // padding: 1,
+        // width: 210,
+        height: 200,
+        flexDirection: "column",
+        // margin: 6,
       }}
       onPress={() => {
         navigation.navigate("ProjectDetails", projectId);
       }}>
-      <Card containerStyle={[{ height: "100%", width: 100, backgroundColor: colorVar.secondaryColor }, styles.default]}>
-        <Card.Image style={{ height: "100%", width: 100 }} />
-      </Card>
-      <Card containerStyle={[{ justifyContent: "center", alignContent: "center", height: "100%", width: 100, backgroundColor: colorVar.secondaryColor }, styles.default]}>
-        <Text style={[{ fontSize: 13, marginVertical: 0, textAlign: "center" }]}>{projectName}</Text>
-        <Text style={[{ fontSize: 13, marginVertical: 0, textAlign: "center" }]}>{`by ${user.split(" ")[0]}`}</Text>
+      <Card containerStyle={[{ height: "75%", width: 120, backgroundColor: "white",justifyContent:"center",alignItems:"center" }, styles.default]}>
+        {/* <Card.Image style={{ height: "100%", width: 100 }} /> */}
+        <MaterialCommunityIcons name="view-dashboard-outline" size={90} color={colorVar.thirdColor} />
         <StatusBubble status={status} />
+      </Card>
+      <Card containerStyle={[{ justifyContent: "space-between", alignContent: "center", height: "25%", width: 120, backgroundColor: colorVar.thirdColor }, styles.default]}>
+        <Text style={[{ fontSize: 12, color: "white", marginVertical: 0, textAlign: "left", padding:2, paddingLeft:4 }]}>{projectName.length > 18 ? projectName.slice(0,17) : projectName}</Text>
+        <Text style={[{ fontSize: 11,color: "white", marginVertical: 0, textAlign: "left",padding:2, paddingLeft:4 }]}>{`by ${user.split(" ")[0]}`}</Text>
       </Card>
     </Button>
   );

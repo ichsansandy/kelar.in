@@ -127,6 +127,7 @@ const Home = () => {
                 <FlatList data={assignProject} key={(item) => item.id} horizontal={true} renderItem={({ item }) => <ProjectCard projectId={item.id} projectName={item.name} user={item.user.name} status={item.status} />} />
               </View>
             </Card>
+           
           </>
         )}
       </ScrollView>
