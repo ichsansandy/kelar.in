@@ -387,6 +387,24 @@ public class ProjectTrackerController {
                     firestore.sendNotifToUserFirestore(notif, member.getName());
                 }
                 return ResponseEntity.ok().body("OK");
+            } else if (tFromDb.getStatus().equals("ONHOLD") && PAYLOAD.equalsIgnoreCase("INPROGRESS")) {
+                tFromDb.setStatus("INPROGRESS");
+                taskRepo.save(tFromDb);
+                for (User member : members) {
+                    //make notification and send
+                    NotificationFirestoreModel notif = createNotifRelatedToProject(tFromDb, "UPDATE_TASK", PAYLOAD);
+                    firestore.sendNotifToUserFirestore(notif, member.getName());
+                }
+                return ResponseEntity.ok().body("OK");
+            } else if (tFromDb.getStatus().equals("ONHOLD") && PAYLOAD.equalsIgnoreCase("COMPLETED")) {
+                tFromDb.setStatus("COMPLETED");
+                taskRepo.save(tFromDb);
+                for (User member : members) {
+                    //make notification and send
+                    NotificationFirestoreModel notif = createNotifRelatedToProject(tFromDb, "UPDATE_TASK", PAYLOAD);
+                    firestore.sendNotifToUserFirestore(notif, member.getName());
+                }
+                return ResponseEntity.ok().body("OK");
             } else if (tFromDb.getStatus().equals("INPROGRESS") && PAYLOAD.equalsIgnoreCase("COMPLETED")) {
                 tFromDb.setStatus("COMPLETED");
                 tFromDb.setEndDate(new Date());

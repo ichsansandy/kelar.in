@@ -5,8 +5,11 @@ import styles from "../assets/style";
 
 const StatusBubble = ({ status }) => {
   const [color, setColor] = useState("");
+  const [currStatus, setCurrStatus] = useState("");
+
   useEffect(() => {
-    switch (status) {
+    setCurrStatus(status);
+    switch (currStatus) {
       case "INPROGRESS":
         setColor("#ffe135");
         break;
@@ -23,7 +26,7 @@ const StatusBubble = ({ status }) => {
       default:
         break;
     }
-  }, []);
+  }, [status,currStatus]);
 
   return (
     <Card containerStyle={[{ backgroundColor: color }, styles.default]}>

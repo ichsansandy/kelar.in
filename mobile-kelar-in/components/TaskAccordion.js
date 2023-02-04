@@ -37,10 +37,10 @@ const TaskAccordion = ({ projectId }) => {
     <>
       <ListItem.Accordion
         style={{ width: "100%" }}
-        containerStyle={expandedMember ? { backgroundColor: colorVar.thirdColor } : { backgroundColor: "white", borderColor:colorVar.thirdColor, borderWidth:3, borderTopWidth:0.5, borderBottomWidth:0.5  }}
+        containerStyle={expandedMember ? { backgroundColor: colorVar.thirdColor } : { backgroundColor: "white", borderColor: colorVar.thirdColor, borderWidth: 3, borderTopWidth: 0.5, borderBottomWidth: 0.5 }}
         content={
           <ListItem.Content style={{ alignItems: "center" }}>
-            <ListItem.Title style={expandedMember ? { fontSize: 19, color: "white" } : { fontSize: 19, color:colorVar.thirdColor, fontWeight:"bold" }}>Tasks</ListItem.Title>
+            <ListItem.Title style={expandedMember ? { fontSize: 19, color: "white" } : { fontSize: 19, color: colorVar.thirdColor, fontWeight: "bold" }}>Tasks</ListItem.Title>
           </ListItem.Content>
         }
         isExpanded={expandedMember}
@@ -61,7 +61,7 @@ const TaskAccordion = ({ projectId }) => {
           </Card>
         </ListItem> */}
         {listTask.map((task) => (
-          <TaskBubble task={task} key={task.id} />
+          <TaskBubble task={task} key={task.id} setlistTask={setlistTask} projectId={projectId} />
         ))}
       </ListItem.Accordion>
     </>
