@@ -49,6 +49,7 @@ const TaskBubble = ({ task, setlistTask, projectId }) => {
             onPress={() => {
               console.log("COMPLETED Clicked!");
               sentComplete(`COMPLETED`);
+              setVisible(false);
             }}
           />,
           <Dialog.Button
@@ -57,7 +58,7 @@ const TaskBubble = ({ task, setlistTask, projectId }) => {
             onPress={() => {
               console.log("ONHOLD Clicked!");
               sentComplete(`ONHOLD`);
-              toggleDialog();
+              setVisible(false);
             }}
           />,
         ]);
@@ -70,14 +71,16 @@ const TaskBubble = ({ task, setlistTask, projectId }) => {
             onPress={() => {
               console.log("INPROGRESS Clicked!");
               sentComplete(`INPROGRESS`);
+              setVisible(false);
             }}
           />,
           <Dialog.Button
             title="COMPLETED"
             key={5}
             onPress={() => {
-              console.log("ONHOLD Clicked!");
+              console.log("COMPLETED Clicked!");
               sentComplete(`COMPLETED`);
+              setVisible(false);
             }}
           />,
         ]);
