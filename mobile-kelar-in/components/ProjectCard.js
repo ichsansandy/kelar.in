@@ -13,12 +13,12 @@ const ProjectCard = ({ projectName, user, status, projectId }) => {
   return (
     <Button
       style={{
-        backgroundColor: colorVar.secondaryColor,
+        backgroundColor: "white",
         padding: 1,
 
       }}
       buttonStyle={{
-        backgroundColor: colorVar.secondaryColor,
+        backgroundColor:"white",
         // padding: 1,
         // width: 210,
         height: 200,

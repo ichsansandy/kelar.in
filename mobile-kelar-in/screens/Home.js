@@ -116,7 +116,7 @@ const Home = () => {
             <Card containerStyle={{ marginVertical: 0, paddingBottom: 0 }}>
               <Card.Title style={{ textAlign: "right" }}>Your Project</Card.Title>
               <Card.Divider width={5} style={{ width: "38%", alignSelf: "flex-end" }} color={colorVar.thirdColor} />
-              <View style={[{ flexDirection: "row", justifyContent: "space-between", margin: 0, paddingHorizontal: 0, paddingVertical: 5 }]}>
+              <View style={[{ flexDirection: "row", justifyContent: "space-between", margin: 0, paddingHorizontal: 0, paddingVertical: 5,backgroundColor:"white" }]}>
                 <FlatList data={yourProject} key={(item) => item.id} horizontal={true} renderItem={({ item }) => <ProjectCard projectId={item.id} projectName={item.name} user={item.user.name} status={item.status} />} />
               </View>
             </Card>

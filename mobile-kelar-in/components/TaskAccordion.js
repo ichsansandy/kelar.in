@@ -37,10 +37,10 @@ const TaskAccordion = ({ projectId }) => {
     <>
       <ListItem.Accordion
         style={{ width: "100%" }}
-        containerStyle={expandedMember ? { backgroundColor: colorVar.thirdColor } : { backgroundColor: "white" }}
+        containerStyle={expandedMember ? { backgroundColor: colorVar.thirdColor } : { backgroundColor: "white", borderColor:colorVar.thirdColor, borderWidth:3, borderTopWidth:0.5, borderBottomWidth:0.5  }}
         content={
           <ListItem.Content style={{ alignItems: "center" }}>
-            <ListItem.Title style={expandedMember ? { fontSize: 19, color: "white" } : { fontSize: 19 }}>Tasks</ListItem.Title>
+            <ListItem.Title style={expandedMember ? { fontSize: 19, color: "white" } : { fontSize: 19, color:colorVar.thirdColor, fontWeight:"bold" }}>Tasks</ListItem.Title>
           </ListItem.Content>
         }
         isExpanded={expandedMember}

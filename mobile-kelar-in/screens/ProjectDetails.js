@@ -46,9 +46,9 @@ const ProjectDetails = ({ route }) => {
   }, []);
 
   return (
-    <ScrollView>
+    <ScrollView style={{backgroundColor:"white"}}>
       {!isLoading && (
-        <View style={[{ alignItems: "center" }]}>
+        <View style={[{ alignItems: "center", backgroundColor:"white" }]}>
           <ProjectCard projectName={project.name} user={project.user.name} status={project.status} />
           <MemberAccordion projectId={projectId} />
           <TaskAccordion projectId={projectId} />

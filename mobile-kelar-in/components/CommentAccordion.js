@@ -69,10 +69,10 @@ const CommentAccordion = ({ projectId }) => {
   return (
     <ListItem.Accordion
       style={{ width: "100%" }}
-      containerStyle={expandedMember ? { backgroundColor: colorVar.thirdColor } : { backgroundColor: "white" }}
+      containerStyle={expandedMember ? { backgroundColor: colorVar.thirdColor } : { backgroundColor: "white", borderColor: colorVar.thirdColor, borderWidth: 3, borderBottomStartRadius: 10, borderBottomEndRadius: 10 }}
       content={
         <ListItem.Content style={{ alignItems: "center" }}>
-          <ListItem.Title style={expandedMember ? { fontSize: 19, color: "white" } : { fontSize: 19 }}>Comments</ListItem.Title>
+          <ListItem.Title style={expandedMember ? { fontSize: 19, color: "white" } : { fontSize: 19, fontWeight: "bold", color: colorVar.thirdColor }}>Comments</ListItem.Title>
         </ListItem.Content>
       }
       isExpanded={expandedMember}

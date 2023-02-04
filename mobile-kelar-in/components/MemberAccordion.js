@@ -40,10 +40,10 @@ const MemberAccordion = ({ projectId }) => {
     <>
       <ListItem.Accordion
         style={{ width: "100%" }}
-        containerStyle={expandedMember ? { backgroundColor: colorVar.thirdColor } : { backgroundColor: "white" }}
+        containerStyle={expandedMember ? { backgroundColor: colorVar.thirdColor } : { backgroundColor: "white", borderColor:colorVar.thirdColor, borderWidth:3,borderTopStartRadius:10,borderTopEndRadius:10 }}
         content={
           <ListItem.Content style={{ alignItems: "center" }}>
-            <ListItem.Title style={expandedMember ? { fontSize: 19, color: "white" } : { fontSize: 19 }}>Members</ListItem.Title>
+            <ListItem.Title style={expandedMember ? { fontSize: 19, color: "white",fontWeight:"bold" } : { fontSize: 19, color:colorVar.thirdColor, fontWeight:"bold" }}>Members</ListItem.Title>
           </ListItem.Content>
         }
         isExpanded={expandedMember}
