@@ -36,6 +36,8 @@ const option = {
     headerTitleAlign: "center",
     headerStyle: { backgroundColor: colorVar.thirdColor },
     headerTintColor: "white",
+    headerLeft: false,
+    headerBackVisible:false,
   },
   messageBarOption: {
     tabBarIcon: () => <AntDesign name="message1" size={24} color="white" />,

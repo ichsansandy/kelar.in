@@ -10,14 +10,14 @@ import ProjectNavigation from "./ProjectNavigation";
 import colorVar from "../assets/colorVar";
 import MessagingNavigation from "./MessagingNavigation";
 
-const HomeNavigation = () => {
+const HomeNavigation = ({ setisLoggedIn }) => {
   const Tab = createBottomTabNavigator();
 
   return (
     <Tab.Navigator>
       <Tab.Screen name="ProjectNavigation" component={ProjectNavigation} options={option.homeBarDetail} />
       <Tab.Screen name="MessageNavigation" component={MessagingNavigation} options={option.messageBarOption} />
-      <Tab.Screen name="Profile" component={Profile} options={option.profileBarOption} />
+      <Tab.Screen name="Profile" children={() => <Profile setisLoggedIn={setisLoggedIn} />} options={option.profileBarOption} />
     </Tab.Navigator>
   );
 };

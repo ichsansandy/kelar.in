@@ -24,7 +24,9 @@ const Login = () => {
       let { token } = data;
       await AsyncStorage.setItem("Authorization", `Bearer ${token}`);
       console.log("navigation");
-      navigation.navigate("HomeNavigation");
+      navigation.navigate("HomeNavigation")
+      setPassword("");
+      setUsername("");
     } catch (err) {
       console.log(err);
     }
@@ -40,8 +42,8 @@ const Login = () => {
             <Text style={styles.textFourth}>.in</Text>
           </Card.Title>
           <Card.Image source={require("../assets/test-background.jpg")} resizeMode="contain" />
-          <Input placeholder="Email" onChangeText={(e) => setUsername(e)} leftIcon={<Icon name="account-circle" size={20} />} />
-          <Input placeholder="Password" secureTextEntry={true} onChangeText={(e) => setPassword(e)} leftIcon={<Icon name="lock" size={20} />} />
+          <Input value={username} placeholder="Email" onChangeText={(e) => setUsername(e)} leftIcon={<Icon name="account-circle" size={20} />} />
+          <Input value={password} placeholder="Password" secureTextEntry={true} onChangeText={(e) => setPassword(e)} leftIcon={<Icon name="lock" size={20} />} />
           <Button
             icon={<Icon name="" color="#ffffff" iconStyle={{ marginRight: 10 }} />}
             buttonStyle={{

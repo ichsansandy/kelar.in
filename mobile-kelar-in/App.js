@@ -22,6 +22,10 @@ export default function App() {
   const Tab = createBottomTabNavigator();
   const [isLoggedIn, setisLoggedIn] = useState(false);
 
+  const token = async () => {
+    await AsyncStorage.getItem("Authorization");
+  };
+
   const getUserLoggedIn = async () => {
     fetch(localhostIp + "8081/api/user-loggedIn", {
       headers: {
@@ -32,8 +36,8 @@ export default function App() {
       .then((r) => {
         if (r.ok) {
           return r.json();
-        } else if (r.status === 500) {
-          throw setisLoggedIn(false);
+        } else {
+          return null;
         }
       })
       .then((d) => {
@@ -45,7 +49,7 @@ export default function App() {
         }
       })
       .catch((err) => {
-        setisLoggedIn(false);
+        console.log(err);
       });
   };
 
@@ -60,14 +64,14 @@ export default function App() {
           <Tab.Navigator>
             <Tab.Screen name="ProjectNavigation" component={ProjectNavigation} options={option.homeBarDetail} />
             <Tab.Screen name="MessageNavigation" component={MessagingNavigation} options={option.messageBarOption} />
-            <Tab.Screen name="Profile" component={Profile} options={option.profileBarOption} />
+            <Tab.Screen name="Profile" children={() => <Profile setisLoggedIn={setisLoggedIn} />} options={option.profileBarOption} />
           </Tab.Navigator>
         ) : (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="LandingPage" component={LandingPage} />
-            <Stack.Screen name="HomeNavigation" component={HomeNavigation} />
+            <Stack.Screen name="HomeNavigation" children={() => <HomeNavigation setisLoggedIn={setisLoggedIn} />} />
           </Stack.Navigator>
         )}
       </NavigationContainer>
