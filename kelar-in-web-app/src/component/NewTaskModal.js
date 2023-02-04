@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Selector from "./Selector";
 
-export default function NewTaskModal({ setTasks, tasks, projectDueDate }) {
+export default function NewTaskModal({ setTasks, tasks, projectDueDate, projectStartDate }) {
   const { id } = useParams();
   const [showModal, setShowModal] = useState(false);
   const [selected, setSelected] = useState(null);
@@ -150,7 +150,7 @@ export default function NewTaskModal({ setTasks, tasks, projectDueDate }) {
                         <input
                           id="dueDate"
                           max={new Date(projectDueDate).toLocaleDateString("en-ca")}
-                          min={new Date().toLocaleDateString("en-ca")}
+                          min={new Date(projectStartDate).toLocaleDateString("en-ca")}
                           onChange={handleChange}
                           type="date"
                           className="placeholder:text-gray-300 placeholder:font-normal border-transparent p-2  ml-5"

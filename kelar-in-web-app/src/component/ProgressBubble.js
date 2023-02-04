@@ -150,7 +150,7 @@ function ProgressBubble({ status, taskAssignUser, taskId, isYourProject, isAllTa
           ]);
           break;
         case "INPROGRESS":
-          setBgColor("bg-yellow-300 text-white");
+          setBgColor("bg-yellow-500 text-white");
           setItems([
             {
               key: "3",

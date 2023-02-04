@@ -123,7 +123,7 @@ function ProjectDetails() {
           </div>
         </div>
         <div className="flex justify-evenly bg-third-color/">
-          <TaskContainer isYourProject={isYourProject} taskList={taskList} projectDueDate={project.dueDate} />
+          <TaskContainer isYourProject={isYourProject} taskList={taskList} projectStartDate={project.startDate} projectDueDate={project.dueDate} />
         </div>
       </div>
       <CommentContainer />

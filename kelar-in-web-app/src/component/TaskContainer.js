@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import NewTaskModal from "./NewTaskModal";
 import TaskCard from "./TaskCard";
 
-function TaskContainer({  isYourProject, projectDueDate }) {
+function TaskContainer({ isYourProject, projectDueDate, projectStartDate }) {
   const { id } = useParams();
   const tasks = useSelector((s) => s.tasksList);
   const dispatch = useDispatch();
@@ -50,13 +50,12 @@ function TaskContainer({  isYourProject, projectDueDate }) {
     <div>
       <div className={"relative p-2 w-full rounded-xl bg-secondary-color text-fourth-color font-extrabold text-xl "}>
         Task
-        {isYourProject ? <NewTaskModal 
-        projectDueDate={projectDueDate} /> : null}
+        {isYourProject ? <NewTaskModal projectDueDate={projectDueDate} projectStartDate={projectStartDate} /> : null}
       </div>
       <div className=" lg:w-[50rem] grid lg:grid-rows-5 lg:grid-flow-col overflow-x-auto overflow-y-auto max-h-[600px] ">
         {tasks.map((task) => (
           <div key={task.id}>
-            <TaskCard  task={task} />
+            <TaskCard task={task} />
           </div>
         ))}
       </div>
