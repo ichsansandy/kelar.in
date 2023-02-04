@@ -30,7 +30,7 @@ function ProjectCard({ project, isYourProject, isAllTaskComplete }) {
           // + (isYourProject ? "min-w-200 " : "min-w-1/4")
         }>
         <div className="absolute -top-5">
-          <DueDateBadge dueDate={project.dueDate} />
+          <DueDateBadge dueDate={project.dueDate} endData={project.endDate} />
         </div>
         <ProgressBubble status={project.status} isYourProject={isYourProject} isAllTaskComplete={isAllTaskComplete} />
         {!projectLogo ? (

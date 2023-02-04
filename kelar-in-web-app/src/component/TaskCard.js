@@ -17,7 +17,7 @@ function TaskCard({ task }) {
             <ProgressBubble status={task.status} taskAssignUser={task.assignUser.name} taskId={task.id} />
           </div>
           <div>
-            <DueDateBadge dueDate={task.dueDate} />
+            <DueDateBadge dueDate={task.dueDate} endDate={task.endDate} />
           </div>
         </div>
       </div>

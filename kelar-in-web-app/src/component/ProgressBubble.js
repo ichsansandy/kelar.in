@@ -220,7 +220,7 @@ function ProgressBubble({ status, taskAssignUser, taskId, isYourProject, isAllTa
           break;
       }
     }
-  }, []);
+  }, [id]);
 
   return (
     <>
@@ -236,7 +236,7 @@ function ProgressBubble({ status, taskAssignUser, taskId, isYourProject, isAllTa
           }}>
           <Button className={"px-3 rounded-2xl w-fit " + `${bgColor}`}>{status}</Button>
         </Dropdown>
-      ) : isYourTask ? (
+      ) : isYourTask && !isYourProject ? (
         <Dropdown
           menu={{
             items,

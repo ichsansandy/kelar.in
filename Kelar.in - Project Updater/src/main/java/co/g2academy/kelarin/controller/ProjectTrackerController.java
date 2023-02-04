@@ -332,8 +332,7 @@ public class ProjectTrackerController {
     }
 
     @PutMapping("/project/{id}/completed")
-    public ResponseEntity completeProject(@PathVariable Integer id, Principal principal
-    ) {
+    public ResponseEntity completeProject(@PathVariable Integer id, Principal principal) throws InterruptedException, ExecutionException {
         User loggedInUser = userRepo.findUserByUsername(principal.getName());
         Project project = projectRepo.findById(id).get();
         Optional<Project> opt = projectRepo.findById(project.getId());
@@ -343,6 +342,15 @@ public class ProjectTrackerController {
                 pFromDb.setEndDate(new Date());
                 pFromDb.setStatus("COMPLETED");
                 projectRepo.save(pFromDb);
+                //get all user for notification
+                List<User> members = getAllMemberInProject(pFromDb.getId());
+                members.remove(loggedInUser);
+                for (User member : members) {
+                    // make notification and send
+                    NotificationFirestoreModel notif = createNotifRelatedToProject(pFromDb, "COMPLETED_PROJECT");
+                    firestore.sendNotifToUserFirestore(notif, member.getName());
+                }
+    
                 return ResponseEntity.ok().body("Project edited Succesfully");
             }
         }
@@ -561,6 +569,10 @@ public class ProjectTrackerController {
             }
             case "REMOVE_FROM_MEMBER" -> {
                 message = project.getUser().getName() + " just remove you from Project " + project.getName();
+                break;
+            }
+            case "COMPLETED_PROJECT" -> {
+                message = "Project " + project.getName() + " has been completed";
                 break;
             }
             default ->

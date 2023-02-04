@@ -1,26 +1,46 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 
-function DueDateBadge({ dueDate }) {
+function DueDateBadge({ dueDate, endDate }) {
   const [toDate, setToDate] = useState(null);
   const [bgColor, setbgColor] = useState("");
 
   useEffect(() => {
-    var date = moment.duration(moment(dueDate) - moment(), "milliseconds").asDays();
-    if (date < 0) {
-      // setToDate(` Late ${Math.abs(Math.round(date))} Day`);
-      setToDate(` Overdue !`);
-      setbgColor("bg-rose-600 text-white ring-yellow-300");
-    } else if (date < 1) {
-      setToDate(` D-DAY`);
-      setbgColor("bg-yellow-200 text-red-600 ring-red-600");
-    } else {
-      setToDate(` D-${Math.abs(Math.round(date))} `);
-      if (date <= 3) {
-        setbgColor("bg-orange-400 text-white ring-white  ");
+    if (!endDate) {
+      var date = moment.duration(moment(dueDate) - moment(), "milliseconds").asDays();
+      if (date < 0) {
+        // setToDate(` Late ${Math.abs(Math.round(date))} Day`);
+        setToDate(` Overdue !`);
+        setbgColor("bg-rose-600 text-white ring-yellow-300");
+      } else if (date < 1) {
+        setToDate(` D-DAY`);
+        setbgColor("bg-yellow-200 text-red-600 ring-red-600");
       } else {
-        setbgColor("bg-green-700 text-white ring-white  ");
+        setToDate(` D-${Math.abs(Math.round(date))} `);
+        if (date <= 3) {
+          setbgColor("bg-orange-400 text-white ring-white  ");
+        } else {
+          setbgColor("bg-green-700 text-white ring-white  ");
+        }
       }
+    }else {
+      var date = moment.duration(moment(dueDate) - moment(endDate), "milliseconds").asDays();
+      if (date < 0) {
+        // setToDate(` Late ${Math.abs(Math.round(date))} Day`);
+        setToDate(` Past Deadline`);
+        setbgColor("bg-yellow-600 text-white ring-green-300");
+      } else if (date < 1) {
+        setToDate(` At D-DAY`);
+        setbgColor("bg-green-400 text-white ring-red-600");
+      } else {
+        setToDate(` D-${Math.abs(Math.round(date))} `);
+        if (date <= 3) {
+          setbgColor("bg-orange-400 text-white ring-white  ");
+        } else {
+          setbgColor("bg-green-700 text-white ring-white  ");
+        }
+      }
+
     }
   }, []);
 
